@@ -1,33 +1,32 @@
-// App.js
-
 import React, { useState } from 'react';
+import { TextField, Button, Typography, Container, Grid } from '@mui/material';
 import './App.css';
 
-const App = () => {
-  const [playerInput, setPlayerInput] = useState('');
-  const [playerList, setPlayerList] = useState([]);
-  const [team1, setTeam1] = useState([]);
-  const [team2, setTeam2] = useState([]);
-  const [coinResult, setCoinResult] = useState('');
+const App: React.FC = () => {
+  const [playerInput, setPlayerInput] = useState<string>('');
+  const [playerList, setPlayerList] = useState<string[]>([]);
+  const [team1, setTeam1] = useState<string[]>([]);
+  const [team2, setTeam2] = useState<string[]>([]);
+  const [coinResult, setCoinResult] = useState<string>('');
 
-  const handlePlayerInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePlayerInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPlayerInput(event.target.value);
   };
 
-  const handleAddPlayer = () => {
+  const handleAddPlayer = (): void => {
     if (playerInput.trim() !== '') {
       setPlayerList([...playerList, playerInput]);
       setPlayerInput('');
     }
   };
 
-  const handleClearList = () => {
+  const handleClearList = (): void => {
     setPlayerList([]);
     setTeam1([]);
     setTeam2([]);
   };
 
-  const handleCoinToss = () => {
+  const handleCoinToss = (): void => {
     const x = 'Kopf';
     const y = 'Zahl';
 
@@ -41,7 +40,7 @@ const App = () => {
     }, 1500);
   };
 
-  const handleGenerateTeams = () => {
+  const handleGenerateTeams = (): void => {
     const shuffledPlayers = shuffleArray(playerList);
     const halfLength = Math.ceil(shuffledPlayers.length / 2);
     const firstTeam = shuffledPlayers.slice(0, halfLength);
@@ -51,7 +50,7 @@ const App = () => {
     setTeam2(secondTeam);
   };
 
-  const shuffleArray = (array) => {
+  const shuffleArray = (array: string[]): string[] => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -60,29 +59,41 @@ const App = () => {
   };
 
   return (
-    <div>
-      <div className="header">TeamGeneraTor</div>
-      <div className="in_outContainer">
-        <div className="containerInput">
-          <input
-            type="text"
+    <Container maxWidth="sm">
+      <Typography variant="h4" gutterBottom align="center">TeamGeneraTor</Typography>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Spielername"
             value={playerInput}
             onChange={handlePlayerInputChange}
-            placeholder="playerName"
           />
-          <button onClick={handleAddPlayer}>Add player</button>
-          <button onClick={handleCoinToss}>coinToss</button>
-          <button onClick={handleGenerateTeams}>Gen teams</button>
-          <button onClick={handleClearList}>Clear List</button>
-        </div>
-        <div className="containerTeams">
-          <div className="teamContainer">Team 1: {team1.join(', ')}</div>
-          <div className="teamContainer">Team 2: {team2.join(', ')}</div>
-          <div id="parentContainer">{coinResult}</div>
-          <div id="preTeamTable">{playerList.join(', ')}</div>
-        </div>
-      </div>
-    </div>
+        </Grid>
+        <Grid item xs={12}>
+          <Button variant="contained" fullWidth onClick={handleAddPlayer} sx={{margin:'20px 0px'}}>Spieler hinzufügen</Button>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={6}>
+          <Button variant="contained" fullWidth onClick={handleCoinToss}>Münzwurf</Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button variant="contained" fullWidth onClick={handleGenerateTeams}>Teams generieren</Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button variant="contained" fullWidth onClick={handleClearList} sx={{margin:'20px 0px'}}>Liste leeren</Button>
+        </Grid>
+      </Grid>
+      <Typography variant="h6" gutterBottom>Spielerliste:</Typography>
+      <Typography>{playerList.join(', ')}</Typography>
+      <Typography variant="h6" gutterBottom>Team 1:</Typography>
+      <Typography>{team1.join(', ')}</Typography>
+      <Typography variant="h6" gutterBottom>Team 2:</Typography>
+      <Typography>{team2.join(', ')}</Typography>
+      <Typography variant="h6" gutterBottom>Münzwurf Ergebnis:</Typography>
+      <Typography>{coinResult}</Typography>
+    </Container>
   );
 };
 
