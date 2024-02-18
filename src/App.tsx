@@ -60,7 +60,7 @@ const App: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom align="center">TeamGeneraTor</Typography>
+      <Typography variant="h4" gutterBottom align="center">TeamToss</Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12}>
           <TextField
