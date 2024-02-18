@@ -88,11 +88,11 @@ const App: React.FC = () => {
       <Typography variant="h6" gutterBottom>Spielerliste:</Typography>
       <Typography>{playerList.join(', ')}</Typography>
       <Typography variant="h6" gutterBottom>Team 1:</Typography>
-      <Typography>{team1.join(', ')}</Typography>
+      <Typography variant="h5">{team1.join(', ')}</Typography>
       <Typography variant="h6" gutterBottom>Team 2:</Typography>
-      <Typography>{team2.join(', ')}</Typography>
+      <Typography variant="h5">{team2.join(', ')}</Typography>
       <Typography variant="h6" gutterBottom>Münzwurf Ergebnis:</Typography>
-      <Typography>{coinResult}</Typography>
+      <Typography variant="h3" gutterBottom>{coinResult}</Typography>
     </Container>
   );
 };
