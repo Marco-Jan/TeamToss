@@ -60,7 +60,7 @@ const App: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom align="center">TeamToss</Typography>
+      <Typography variant="h2" gutterBottom align="center">TeamToss</Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12}>
           <TextField
@@ -71,18 +71,32 @@ const App: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" fullWidth onClick={handleAddPlayer} sx={{margin:'20px 0px'}}>Spieler hinzufügen</Button>
+          <Button variant="contained" fullWidth onClick={handleAddPlayer} sx={{ margin: '20px 0px' }}>Spieler hinzufügen</Button>
         </Grid>
       </Grid>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={6}>
-          <Button variant="contained" fullWidth onClick={handleCoinToss}>Münzwurf</Button>
+          <Button variant="contained" fullWidth onClick={handleCoinToss} sx={{
+          width: 1 / 1,
+          p: 1,
+          bgcolor: (theme) =>
+            theme.palette.mode === 'dark' ? '#101010' : 'grey.100',
+          color: (theme) =>
+            theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
+          border: '1px solid',
+          borderColor: (theme) =>
+            theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+          borderRadius: 2,
+          fontSize: '0.875rem',
+          fontWeight: '700',
+          textAlign: 'center',
+        }}>Münzwurf</Button>
         </Grid>
         <Grid item xs={6}>
           <Button variant="contained" fullWidth onClick={handleGenerateTeams}>Teams generieren</Button>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" fullWidth onClick={handleClearList} sx={{margin:'20px 0px'}}>Liste leeren</Button>
+          <Button variant="contained" fullWidth onClick={handleClearList} sx={{ margin: '20px 0px', boxShadow: 3}}>Liste leeren</Button>
         </Grid>
       </Grid>
       <Typography variant="h6" gutterBottom>Spielerliste:</Typography>
