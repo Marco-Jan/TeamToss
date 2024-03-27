@@ -105,7 +105,7 @@ const App: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" fullWidth onClick={handleAddPlayer} sx={{ width: 1 / 3, margin: '20px 0px', borderRadius: 13, padding: 4 }}>Spieler hinzufügen</Button>
+          <Button variant="contained" fullWidth onClick={handleAddPlayer} sx={{ width: 1 / 2, margin: '20px 0px', borderRadius: 13, padding: 4 }}>Spieler hinzufügen</Button>
         </Grid>
       </Grid>
       <Grid container spacing={2} justifyContent="center">
