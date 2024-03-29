@@ -51,7 +51,7 @@ export const addNickname = async (nickname: string): Promise<void> => {
   if (!auth.currentUser) return;
   await addDoc(collection(db, "TeamTossNickNames"), {
     NickName: nickname,
-    userId: auth.currentUser.uid // Speichere die Benutzer-ID mit dem Nickname
+    userId: auth.currentUser.uid // Speichert die Benutzer-ID mit dem Nickname
   });
 };
 
