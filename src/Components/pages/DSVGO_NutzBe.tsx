@@ -1,27 +1,27 @@
 // In /pages/Datenschutz.js oder Datenschutz.tsx
-import React from 'react';
 
-const Datenschutz = () => {
-  return (
-    <div>
-      <h1>Datenschutzerklärung</h1>
-      {/* Dein Datenschutz-Text hier */}
-    </div>
-  );
-}
 
-export default Datenschutz;
+// const Datenschutz = () => {
+//   return (
+//     <div>
+//       <h1>Datenschutzerklärung</h1>
+//       {/* Dein Datenschutz-Text hier */}
+//     </div>
+//   );
+// }
 
-// In /pages/Nutzungsbedingungen.js oder Nutzungsbedingungen.tsx
-import React from 'react';
+// export default Datenschutz;
 
-const Nutzungsbedingungen = () => {
-  return (
-    <div>
-      <h1>Nutzungsbedingungen</h1>
-      {/* Dein Text der Nutzungsbedingungen hier */}
-    </div>
-  );
-}
+// // In /pages/Nutzungsbedingungen.js oder Nutzungsbedingungen.tsx
+// import React from 'react';
 
-export default Nutzungsbedingungen;
+// const Nutzungsbedingungen = () => {
+//   return (
+//     <div>
+//       <h1>Nutzungsbedingungen</h1>
+//       {/* Dein Text der Nutzungsbedingungen hier */}
+//     </div>
+//   );
+// }
+
+// export default Nutzungsbedingungen;
