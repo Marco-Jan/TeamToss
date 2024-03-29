@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { TextField, Typography, Container, Grid, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import './App.css';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { PlayersList } from './Components/PlayerList';
+import GoogleSignInButton from './Components/SignInBtn';
+import SignOutButton from './Components/SignOutBtn'; // Stelle sicher, dass der Import korrekt ist
+import { auth } from './firebase/firebaseInit';
+import { User, onAuthStateChanged } from 'firebase/auth';
+import NicknameManager from './Components/NickNameManager';
+
 
 const App: React.FC = () => {
   const [playerInput, setPlayerInput] = useState<string>('');
@@ -9,6 +16,21 @@ const App: React.FC = () => {
   const [teams, setTeams] = useState<string[][]>([]);
   const [coinResult, setCoinResult] = useState<string>('');
   const [teamSize, setTeamSize] = useState<string>('Team1');
+  const [user, setUser] = useState<User | null>(null);
+  const [userPhoto, setUserPhoto] = useState<string>('');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser?.photoURL) {
+        setUserPhoto(currentUser.photoURL);
+      } else {
+        setUserPhoto('');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
 
   const handleTeamSizeChange = (event: SelectChangeEvent<string>): void => {
@@ -19,12 +41,24 @@ const App: React.FC = () => {
     setPlayerInput(event.target.value);
   };
 
-  const handleAddPlayer = (): void => {
-    if (playerInput.trim() !== '') {
-      setPlayerList([...playerList, playerInput]);
-      setPlayerInput('');
+  const handleAddPlayer = (nickname?: string): void => {
+    const nameToAdd = nickname?.trim() || playerInput.trim();
+    if (nameToAdd !== '') {
+      setPlayerList(prevList => [...prevList, nameToAdd]);
+      setPlayerInput(''); // Das Eingabefeld immer zurücksetzen
     }
   };
+  
+  //  const addNicknameToPlayerList = (nickname: string) => {
+  //   setPlayerList((playerList) => {
+  //     // Überprüfe, ob der Nickname bereits in der Liste ist, um Duplikate zu vermeiden
+  //     if (!playerList.includes(nickname)) {
+  //       return [...playerList, nickname];
+  //     }
+  //     return playerList;
+  //   });
+  // };
+  
 
   const handleClearList = (): void => {
     setPlayerList([]);
@@ -48,10 +82,12 @@ const App: React.FC = () => {
   const handleGenerateTeams = (): void => {
     const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10); // Wandelt den String "Team1", "Team2" etc. in eine Nummer um
     const shuffledPlayers = shuffleArray(playerList);
-    const newTeams: string[][] = Array.from({length: numberOfTeams}, () => []);
+    console.log(playerList, 'playerList');
     
+    const newTeams: string[][] = Array.from({ length: numberOfTeams }, () => []);
+
     for (let i = 0; i < shuffledPlayers.length; i++) {
-        newTeams[i % numberOfTeams].push(shuffledPlayers[i]);
+      newTeams[i % numberOfTeams].push(shuffledPlayers[i]);
     }
 
     setTeams(newTeams); // Aktualisiert den Zustand von `teams` direkt
@@ -78,34 +114,55 @@ const App: React.FC = () => {
 
 
 
+
   return (
     <Container maxWidth="sm">
       <Typography variant="h2" gutterBottom align="center">TeamToss</Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12}>
-          <FormControl fullWidth sx={{ margin: '20px 0' }}>
-            <InputLabel id="team-size-label">Welche Team Größe soll erstellt werden?</InputLabel>
-            <Select
-              labelId="team-size-label"
-              id="TeamChoiceID"
-              value={teamSize}
-              label="Welche Team Größe soll erstellt werden?"
-              onChange={handleTeamSizeChange}
-            >
-              <MenuItem value="Team2">2 Teams</MenuItem>
-              <MenuItem value="Team3">3 Teams</MenuItem>
-              <MenuItem value="Team4">4 Teams</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            fullWidth
-            label="Spielername"
-            value={playerInput}
-            onChange={handlePlayerInputChange}
-          />
+          <Container maxWidth="sm">
+            <Container maxWidth="sm" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '20px 0' }}>
+              {user ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}> {/* Gap hinzugefügt für Abstand zwischen Bild und Button */}
+                  {userPhoto && <img src={userPhoto} alt="Profilbild" style={{ width: 50, height: 50, borderRadius: '50%' }} />}
+                  <SignOutButton />
+                </div>
+              ) : (
+                <GoogleSignInButton />
+              )}
+            </Container>
+
+            <FormControl fullWidth sx={{ margin: '20px 0' }}>
+              <InputLabel id="team-size-label">Welche Team Größe soll erstellt werden?</InputLabel>
+              <Select
+                labelId="team-size-label"
+                id="TeamChoiceID"
+                value={teamSize}
+                label="Welche Team Größe soll erstellt werden?"
+                onChange={handleTeamSizeChange}
+              >
+                <MenuItem value="Team2">2 Teams</MenuItem>
+                <MenuItem value="Team3">3 Teams</MenuItem>
+                <MenuItem value="Team4">4 Teams</MenuItem>
+              </Select>
+            </FormControl>
+            <PlayersList />
+            <NicknameManager onAddPlayer={handleAddPlayer} />
+            <TextField
+              fullWidth
+              label="Spielername"
+              value={playerInput}
+              onChange={handlePlayerInputChange}
+            />
+            {/* Dynamische Team-Anzeige */}
+            <TeamDisplay teams={teams} />
+            <Typography variant="h6" gutterBottom>Münzwurf Ergebnis:</Typography>
+            <Typography variant="h3" gutterBottom>{coinResult}</Typography>
+          </Container>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" fullWidth onClick={handleAddPlayer} sx={{ width: 1 / 2, margin: '20px 0px', borderRadius: 13, padding: 4 }}>Spieler hinzufügen</Button>
+        <Button variant="contained" fullWidth onClick={() => handleAddPlayer()} sx={{ width: 1 / 2, margin: '20px 0px', borderRadius: 13, padding: 4 }}>Spieler hinzufügen</Button>
+
         </Grid>
       </Grid>
       <Grid container spacing={2} justifyContent="center">
@@ -133,10 +190,7 @@ const App: React.FC = () => {
           <Button variant="contained" fullWidth onClick={handleClearList} sx={{ width: 1 / 2, margin: '20px 0px', boxShadow: 3 }}>Liste leeren</Button>
         </Grid>
       </Grid>
-      {/* Dynamische Team-Anzeige */}
-      <TeamDisplay teams={teams} />
-      <Typography variant="h6" gutterBottom>Münzwurf Ergebnis:</Typography>
-      <Typography variant="h3" gutterBottom>{coinResult}</Typography>
+
     </Container>
   );
 };
