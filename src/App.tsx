@@ -123,7 +123,7 @@ const App: React.FC = () => {
           <Container maxWidth="sm">
             <Container maxWidth="sm" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '20px 0' }}>
               {user ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}> {/* Gap hinzugefügt für Abstand zwischen Bild und Button */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   {userPhoto && <img src={userPhoto} alt="Profilbild" style={{ width: 50, height: 50, borderRadius: '50%' }} />}
                   <SignOutButton />
                 </div>

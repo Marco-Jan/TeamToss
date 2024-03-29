@@ -4,7 +4,7 @@ import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 function TeamSizeSelector({ teamSize, setTeamSize }: { teamSize: string, setTeamSize: (value: string) => void}) {
     return (
     <FormControl fullWidth sx={{ margin: '20px 0' }}>
-        <InputLabel id="team-size-label">Welche Team Größe soll erstellt werden?</InputLabel>
+        <InputLabel id="team-size-label">Team Größe</InputLabel>
         <Select
             labelId="team-size-label"
             id="TeamChoiceID"
