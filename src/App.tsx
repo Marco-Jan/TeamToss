@@ -43,7 +43,7 @@ const App: React.FC = () => {
 
   const handleAddPlayer = (nickname?: string): void => {
     const nameToAdd = nickname?.trim() || playerInput.trim();
-    if (nameToAdd !== '') {
+    if (nameToAdd !== '' && !playerList.includes(nameToAdd)) {
       setPlayerList(prevList => [...prevList, nameToAdd]);
       setPlayerInput(''); // Das Eingabefeld immer zurücksetzen
     }
