@@ -1,7 +1,7 @@
-// src/components/PlayersList.tsx
 import React, { useEffect, useState } from 'react';
 import { getPlayers } from '../firebase/players';
 import { Player } from '../types/player';
+import { Card, CardContent, Typography, Grid, Box } from '@mui/material';
 
 export const PlayersList: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -16,13 +16,23 @@ export const PlayersList: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Spielerliste</h2>
-      <ul>
+    <Box style={{ margin: '20px 0' }}>
+      <Typography variant="h4" gutterBottom component="div">
+        Spielerliste
+      </Typography>
+      <Grid container spacing={2}>
         {players.map(player => (
-          <li key={player.id}>{player.name}</li>
+          <Grid item xs={12} sm={6} md={4} key={player.id}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="h6" component="div" style={{ fontSize: '1.25rem' }}>
+                  {player.name}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </ul>
-    </div>
+      </Grid>
+    </Box>
   );
 };
