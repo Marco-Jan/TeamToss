@@ -63,7 +63,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer }) => {
         onClick={handleAddNickname}
         sx={{ mb: 2 }}
       >
-        Spielername Speichern
+        SpielernameSpeichern
       </Button>
       {nicknames.map(({ id, NickName }) => (
         <Box key={id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', my: 1 }}>
