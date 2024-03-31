@@ -1,1 +1,0 @@
-// TODO ich möchte gerne das die gespeicherten namen auch als auswahl erscheint, und daraus ein team generiert wird
