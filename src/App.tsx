@@ -25,21 +25,24 @@ const App: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h2" gutterBottom align="center">TeamToss</Typography>
-
-      {/* Anmeldekomponenten */}
-      <Grid container spacing={2} alignItems="center" style={{ padding: '20px 0' }}>
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexDirection: 'column' }}>
-            {userPhoto && <img src={userPhoto} alt="Profilbild" style={{ width: 50, height: 50, borderRadius: '50%' }} />}
-            <SignOutButton />
-          </div>
-        ) : (
-          <GoogleSignInButton />
-        )}
+      <Grid container alignItems="center" justifyContent="space-between" spacing={2} style={{ padding: '20px 0' }}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="h2" gutterBottom align="center">TeamToss</Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'center' }}>
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {userPhoto && <img src={userPhoto} alt="Profilbild" style={{ width: 50, height: 50, borderRadius: '50%' }} />}
+              <SignOutButton />
+            </div>
+          ) : (
+            <GoogleSignInButton />
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          <TabNavigation />
+        </Grid>
       </Grid>
-
-      <TabNavigation />
     </Container>
   );
 };

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { AppBar, Tabs, Tab, Box, Typography, Button, Grid, Container, TextField, ThemeProvider } from '@mui/material';
+import { AppBar, Tabs, Tab, Box, Typography, Button, Grid, Container, TextField, } from '@mui/material';
 import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
-import { theme } from './Thema/theme';
-
 
 
 interface TabPanelProps {
@@ -23,13 +21,19 @@ function TabPanel(props: TabPanelProps) {
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                height: '100%',
+                minHeight: '30px',
+            }}
         >
             {value === index && (
-                <ThemeProvider theme={theme}>
-                    <Box sx={{ p: 3 }}>
-                        <Typography>{children}</Typography>
-                    </Box>
-                </ThemeProvider>
+                <Box sx={{ p: 3, minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <Typography>{children}</Typography>
+                </Box>
             )}
         </div>
     );
@@ -145,74 +149,83 @@ export const TabNavigation: React.FC = () => {
                     centered // Zentriert die Tabs, wenn es nur zwei gibt
                     // Für mehr Kontrolle über das Styling kannst du das sx-Property verwenden:
                     sx={{ '.MuiTabs-flexContainer': { justifyContent: 'center' } }}
-                >                    <Tab label="Team" {...a11yProps(0)} />
-                    <Tab label="Münzwurf" {...a11yProps(1)} />
+                >                    <Tab label="TeamGenerator" {...a11yProps(0)} />
+                    <Tab label="CoinToss" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12}>
                         <Container maxWidth="sm">
-                            <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
                             <PlayersList />
-                            <NicknameManager onAddPlayer={handleAddPlayer} />
-                            <TextField
-                                fullWidth
-                                label="Neuer Spieler"
-                                value={playerInput}
-                                onChange={handlePlayerInputChange}
-                            />
-                            {/* Dynamische Team-Anzeige */}
-                            <TeamDisplay teams={teams} />
-
+                            <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} />
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, margin: 2 }}>
+                                <TextField 
+                                    fullWidth   
+                                    label="Add random player"
+                                    value={playerInput}
+                                    onChange={handlePlayerInputChange}
+                                    sx={{ flexGrow: 2}}
+                                />
+                                <Button
+                                    variant="contained"
+                                    onClick={() => handleAddPlayer()}
+                                    sx={{ mr: 1 }}>+
+                                </Button>
+                            </Box>
                         </Container>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Button variant="contained" fullWidth onClick={() => handleAddPlayer()} sx={{ width: 1 / 2, margin: '20px 0px', borderRadius: 13, padding: 4 }}>+</Button>
 
-                    </Grid>
+
                 </Grid>
                 <Grid container spacing={2} justifyContent="center">
+                    <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
 
                     <Grid item xs={6}>
-                        <Button variant="contained" fullWidth onClick={handleGenerateTeams}>Teams generieren</Button>
+                        <Button variant="contained" fullWidth onClick={handleGenerateTeams}>Generate your Teams</Button>
                     </Grid>
                     <Grid item xs={12}>
-                        <Button variant="contained" fullWidth onClick={handleClearList} sx={{ width: 1 / 2, margin: '20px 0px', boxShadow: 3 }}>Liste leeren</Button>
+                        {/* Dynamische Team-Anzeige */}
+                        <TeamDisplay teams={teams} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button variant="contained" fullWidth onClick={handleClearList} sx={{ width: 1 / 2, margin: '20px 0px', boxShadow: 3 }}>Clear</Button>
                     </Grid>
                 </Grid>
             </TabPanel>
             {/* **************************** Münzwurf Tab *********************************** */}
 
-            <TabPanel value={value} index={1}  >
-                <Typography variant="h6" gutterBottom>Münzwurf Ergebnis:</Typography>
-                <Typography variant="h3" gutterBottom>{coinResult}</Typography>
-                <Grid item xs={6} >
-                    <Button
-                        variant="contained"
-                        fullWidth
-                        onClick={handleCoinToss}
-                        sx={{
-                            width: 1 / 1,
-                            p: 0.75,
-                            bgcolor: 'primary.main', // Vereinfachte Farbzuweisung
-                            color: 'primary.contrastText', // Bessere Lesbarkeit
-                            '&:hover': { // Hover-Effekt anpassen
-                                bgcolor: 'primary.dark',
+            <TabPanel value={value} index={1}>
+                <Grid container justifyContent="center"> {/* Zentriere den Inhalt des Containers */}
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            onClick={handleCoinToss}
+                            sx={{
+                                width: 'auto', // Entferne fullWidth und definiere eine angemessene Breite, wenn gewünscht
+                                p: 1.5,
+                                bgcolor: 'primary.main',
                                 color: 'primary.contrastText',
-                            },
-                            border: '1px solid',
-                            borderColor: 'primary.light',
-                            borderRadius: 5,
-                            fontSize: '0.875rem',
-                            fontWeight: '700',
-                            textAlign: 'center',
-                        }}
-                    >
-                        Münzwurf
-                    </Button>
+                                '&:hover': {
+                                    bgcolor: 'primary.dark',
+                                    color: 'primary.contrastText',
+                                },
+                                border: '1px solid',
+                                borderColor: 'primary.light',
+                                borderRadius: 5,
+                                fontSize: '0.875rem',
+                                fontWeight: '700',
+                                textAlign: 'center',
+                                m: 0.5,
+                            }}
+                        >
+                            Münzwurf
+                        </Button>
+                    </Grid>
                 </Grid>
+                <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>{coinResult}</Typography>
             </TabPanel>
+
         </Box>
     );
 }
