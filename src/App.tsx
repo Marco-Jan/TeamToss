@@ -5,7 +5,7 @@ import { auth } from './firebase/firebaseInit';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import GoogleSignInButton from './Components/SignInBtn';
 import SignOutButton from './Components/SignOutBtn';
-import { TabNavigation } from './Components/NavigationsBar';
+import { TabNavigation } from './Components/NavigationsBar'; 
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
