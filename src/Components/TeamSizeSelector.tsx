@@ -17,9 +17,9 @@ function TeamSizeSelector({ teamSize, setTeamSize }: { teamSize: string, setTeam
           label="Team Größe"
           onChange={(e) => setTeamSize(e.target.value)}
         >
-          <MenuItem value="Team2">2 Teams</MenuItem>
-          <MenuItem value="Team3">3 Teams</MenuItem>
-          <MenuItem value="Team4">4 Teams</MenuItem>
+          <MenuItem value="Team2">2 </MenuItem>
+          <MenuItem value="Team3">3 </MenuItem>
+          <MenuItem value="Team4">4 </MenuItem>
         </Select>
       </FormControl>
     </ThemeProvider>

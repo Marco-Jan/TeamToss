@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Box, Typography, IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete'; // Für den Löschen-Button
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'; // Für den Hinzufügen-Button
+import DeleteIcon from '@mui/icons-material/Delete'; 
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'; 
 import { addNickname, getNicknames, deleteNickname } from '../firebase/firebaseInit';
 import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
 
+
 export interface NicknameManagerProps {
   onAddPlayer: (nickname: string) => void;
+  playerList: string[];
 }
 
-const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer }) => {
+const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerList }) => {
   const [nickname, setNickname] = useState<string>('');
   const [nicknames, setNicknames] = useState<Nickname[]>([]);
 
@@ -48,11 +50,12 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer }) => {
     await fetchNicknames();
   };
 
+
   return (
     <Box>
       <TextField
         fullWidth
-        label="Spielername"
+        label="Playername"
         value={nickname}
         onChange={e => setNickname(e.target.value)}
         margin="normal"
@@ -63,14 +66,16 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer }) => {
         onClick={handleAddNickname}
         sx={{ mb: 2 }}
       >
-        SpielernameSpeichern
+        Add
       </Button>
       {nicknames.map(({ id, NickName }) => (
         <Box key={id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', my: 1 }}>
-          <Typography variant="body1">{NickName}</Typography>
+
+          {/* Hier wird der Nickname angezeigt */}
+          <Typography variant="body1" sx={{color: playerList.includes(NickName) ? 'rgb(40,180,39)' : 'inherit', fontSize: '20px'}}>{NickName} </Typography>
           <Box>
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={() => onAddPlayer(NickName)}
               sx={{ mr: 1 }}
             >

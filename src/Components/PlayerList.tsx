@@ -17,8 +17,8 @@ export const PlayersList: React.FC = () => {
 
   return (
     <Box style={{ margin: '20px 0' }}>
-      <Typography variant="h4" gutterBottom component="div">
-        Spielerliste
+      <Typography variant="h6" gutterBottom component="div">
+        Save your favorite's
       </Typography>
       <Grid container spacing={2}>
         {players.map(player => (
