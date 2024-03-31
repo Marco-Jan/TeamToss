@@ -146,54 +146,40 @@ export const TabNavigation: React.FC = () => {
                     value={value}
                     onChange={handleChange}
                     aria-label="simple tabs example"
-                    centered // Zentriert die Tabs, wenn es nur zwei gibt
-                    // Für mehr Kontrolle über das Styling kannst du das sx-Property verwenden:
+                    centered
                     sx={{ '.MuiTabs-flexContainer': { justifyContent: 'center' } }}
-                >                    <Tab label="TeamGenerator" {...a11yProps(0)} />
+                >
+                    <Tab label="TeamGenerator" {...a11yProps(0)} />
                     <Tab label="CoinToss" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12}>
-                        <Container maxWidth='sm'>
-                            <PlayersList />
-                            <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} />
-                        </Container>
-
-                    </Grid>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, margin: 2 }}>
+                <Container maxWidth='sm' sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <PlayersList />
+                    <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} />
+                    <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <TextField
                             fullWidth
                             label="Add random player"
                             value={playerInput}
                             onChange={handlePlayerInputChange}
-                            sx={{ flexGrow: 1, minWidth: 'auto', }}
+                            sx={{ mr: 1 }}
                         />
                         <Button
                             variant="contained"
                             onClick={() => handleAddPlayer()}
-                            sx={{ mr: 1 }}>+
+                            sx={{ ml: 1 }}
+                        >
+                            Add
                         </Button>
                     </Box>
-
-
-                </Grid>
-                <Grid item xs={12}>
-                    <Button variant="contained" fullWidth onClick={handleGenerateTeams} sx={{ width: 1 / 1, margin: '20px 0px', boxShadow: 3 }}>Generate Teams</Button>
-                </Grid>
-                <Grid container spacing={2} justifyContent="center">
-                    <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
-
-                    
-                    <Grid item xs={12}>
-                        {/* Dynamische Team-Anzeige */}
+                    <Box sx={{ width: '100%', mt: 4 }}>
+                        <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
+                        <Button variant="contained" fullWidth onClick={handleGenerateTeams} sx={{ mt: 2 }}>Generate Teams</Button>
                         <TeamDisplay teams={teams} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button variant="contained" fullWidth onClick={handleClearList} sx={{ width: 1 / 2, margin: '20px 0px', boxShadow: 3 }}>Clear</Button>
-                    </Grid>
-                </Grid>
+                        <Button variant="contained" fullWidth onClick={handleClearList} sx={{ mt: 2, mb: 2 }}>Clear</Button>
+                    </Box>
+                </Container>
             </TabPanel>
             {/* **************************** Münzwurf Tab *********************************** */}
 
