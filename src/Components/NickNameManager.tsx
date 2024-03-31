@@ -7,6 +7,7 @@ import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
 import { theme } from './Thema/theme';
+import ElderlyOutlinedIcon from '@mui/icons-material/ElderlyOutlined';
 
 export interface NicknameManagerProps {
   onAddPlayer: (nickname: string) => void;
@@ -105,6 +106,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
 
         <Button
           variant="contained"
+          startIcon={<ElderlyOutlinedIcon />}
           onClick={handleAddSelectedPlayer}
           sx={{ mr: 1 }}
         >
