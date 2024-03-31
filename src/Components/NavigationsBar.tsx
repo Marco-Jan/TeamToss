@@ -156,34 +156,36 @@ export const TabNavigation: React.FC = () => {
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12}>
-                        <Container maxWidth="sm">
+                        <Container maxWidth='sm'>
                             <PlayersList />
                             <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} />
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, margin: 2 }}>
-                                <TextField 
-                                    fullWidth   
-                                    label="Add random player"
-                                    value={playerInput}
-                                    onChange={handlePlayerInputChange}
-                                    sx={{ flexGrow: 2}}
-                                />
-                                <Button
-                                    variant="contained"
-                                    onClick={() => handleAddPlayer()}
-                                    sx={{ mr: 1 }}>+
-                                </Button>
-                            </Box>
                         </Container>
+
                     </Grid>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, margin: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Add random player"
+                            value={playerInput}
+                            onChange={handlePlayerInputChange}
+                            sx={{ flexGrow: 1, minWidth: 'auto', }}
+                        />
+                        <Button
+                            variant="contained"
+                            onClick={() => handleAddPlayer()}
+                            sx={{ mr: 1 }}>+
+                        </Button>
+                    </Box>
 
 
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" fullWidth onClick={handleGenerateTeams} sx={{ width: 1 / 1, margin: '20px 0px', boxShadow: 3 }}>Generate Teams</Button>
                 </Grid>
                 <Grid container spacing={2} justifyContent="center">
                     <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
 
-                    <Grid item xs={6}>
-                        <Button variant="contained" fullWidth onClick={handleGenerateTeams}>Generate your Teams</Button>
-                    </Grid>
+                    
                     <Grid item xs={12}>
                         {/* Dynamische Team-Anzeige */}
                         <TeamDisplay teams={teams} />
