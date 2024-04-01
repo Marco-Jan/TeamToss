@@ -28,6 +28,9 @@ function TabPanel(props: TabPanelProps) {
                 alignItems: 'center',
                 height: '100%',
                 minHeight: '30px',
+                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
+                width: '100%',
+
             }}
         >
             {value === index && (
@@ -140,12 +143,14 @@ export const TabNavigation: React.FC = () => {
 
 
     return (
-        <Box sx={{ width: '100%' }}>
-            <AppBar position="static">
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <AppBar position="static" sx={{backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', minWidth: '100%'}}>
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label="simple tabs example"
+                    aria-label="secondary tabs example"
+                    indicatorColor='secondary'
+                    textColor='primary'
                     centered
                     sx={{ '.MuiTabs-flexContainer': { justifyContent: 'center' } }}
                 >
@@ -171,6 +176,7 @@ export const TabNavigation: React.FC = () => {
                             sx={{ ml: 1 }}
                         >
                             Add
+                            
                         </Button>
                     </Box>
                     <Box sx={{ width: '100%', mt: 4 }}>
