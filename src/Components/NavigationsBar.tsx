@@ -25,8 +25,6 @@ function TabPanel(props: TabPanelProps) {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                // boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)'
-
             }}
         >
             {value === index && (
@@ -144,7 +142,7 @@ const TabNavigation: React.FC = () => {
 
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px' }}>
+            <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', boxShadow: 'none' }}>
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -152,13 +150,13 @@ const TabNavigation: React.FC = () => {
                     scrollButtons="auto"
                     aria-label="scrollable auto tabs example"
                     sx={{
-                        '.MuiTabs-flexContainer': {
-                            justifyContent: 'center',
-                        },
+                        
                         '.MuiTab-root': {
-                            minWidth: 'auto',
+                            minWidth: 'auto',                           
                         },
-                        boxShadow: 'none',
+                        '.MuiTabs-indicator': {
+                            backgroundColor: 'secondary.main',
+                        },
 
                     }}
                 >
