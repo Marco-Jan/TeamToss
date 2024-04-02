@@ -3,6 +3,7 @@ import { AppBar, Tabs, Tab, Box, Typography, Button, Grid, Container, TextField,
 import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 
 interface TabPanelProps {
@@ -144,7 +145,7 @@ export const TabNavigation: React.FC = () => {
 
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <AppBar position="static" sx={{backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', minWidth: '100%'}}>
+            <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', minWidth: '100%' }}>
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -155,13 +156,12 @@ export const TabNavigation: React.FC = () => {
                     sx={{ '.MuiTabs-flexContainer': { justifyContent: 'center' } }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
-                    <Tab label="CoinToss" {...a11yProps(1)} />
+                    <Tab label="SavedPlayers" {...a11yProps(1)} />
+                    <Tab label="CoinToss" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
                 <Container maxWidth='sm' sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <PlayersList />
-                    <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} />
                     <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <TextField
                             fullWidth
@@ -171,12 +171,9 @@ export const TabNavigation: React.FC = () => {
                             sx={{ mr: 1 }}
                         />
                         <Button
-                            variant="contained"
                             onClick={() => handleAddPlayer()}
-                            sx={{ ml: 1 }}
+                            startIcon={<AddCircleOutlineIcon />}
                         >
-                            Add
-                            
                         </Button>
                     </Box>
                     <Box sx={{ width: '100%', mt: 4 }}>
@@ -187,9 +184,20 @@ export const TabNavigation: React.FC = () => {
                     </Box>
                 </Container>
             </TabPanel>
-            {/* **************************** Münzwurf Tab *********************************** */}
+
+            {/* **************************** SavedPlayertab Tab *********************************** */}
 
             <TabPanel value={value} index={1}>
+                {/* <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>Saved Players</Typography> */}
+                <PlayersList />
+                <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} />
+            </TabPanel>
+
+
+
+            {/* **************************** Münzwurf Tab *********************************** */}
+
+            <TabPanel value={value} index={2}>
                 <Grid container justifyContent="center"> {/* Zentriere den Inhalt des Containers */}
                     <Grid item>
                         <Button
