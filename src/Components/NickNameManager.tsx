@@ -13,13 +13,14 @@ import { Card, CardContent, Typography, CardActions } from '@mui/material';
 
 export interface NicknameManagerProps {
   onAddPlayer: (nickname: string) => void;
+  updatePlayerList: (playerList: string[]) => void;
   playerList: string[];
 }
 
-const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerList }) => {
+const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerList, updatePlayerList }) => {
   const [nickname, setNickname] = useState<string>('');
   const [nicknames, setNicknames] = useState<Nickname[]>([]);
-  const [selectedNickname, setSelectedNickname] = useState('');
+  const [, setSelectedNickname] = useState('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -50,6 +51,8 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   };
 
   const handleDeleteNickname = async (id: string) => {
+    const updatedPlayerList = playerList.filter(player => player !== id);
+    updatePlayerList(updatedPlayerList);
     await deleteNickname(id);
     await fetchNicknames();
   };
@@ -59,11 +62,17 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   // };
 
   const handleAddSelectedPlayer = (selectedNickname: string) => {
-    if (selectedNickname) {
+    const playerExists = playerList.includes(selectedNickname);
+
+    if (playerExists) {
+      const updatedPlayerList = playerList.filter(player => player !== selectedNickname);
+      updatePlayerList(updatedPlayerList);
+    } else {
       onAddPlayer(selectedNickname);
       setSelectedNickname('');
     }
   };
+
 
   {/* PlayerCard Bull */ }
   return (
@@ -88,22 +97,20 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
 
       <Box sx={{ minWidth: 275, display: 'flex', flexWrap: 'wrap', }}>
         {nicknames.map(({ id, NickName }) => (
-          <Card sx={{ m: 1, minWidth: 'auto', backgroundColor: '#1976d2' }}>
+          <Card sx={{ m: 1, minWidth: 'auto', backgroundColor: playerList.includes(NickName) ? 'green' : '#1976d2' }}>
             <CardActionArea onClick={() => handleAddSelectedPlayer(NickName)}>
               <CardContent key={id}>
-                <Typography sx={{ color: playerList.includes(NickName) ? 'red' : 'white' }} variant="body1">{NickName}</Typography>
+                <Typography sx={{ color: 'white' }} variant="body1">{NickName}</Typography>
               </CardContent>
-
+              <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton color="error" onClick={() => handleDeleteNickname(id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </CardActions>
             </CardActionArea>
           </Card>
         ))}
-        <CardActions>
-          {selectedNickname && (
-            <IconButton color="info" onClick={() => handleDeleteNickname(nicknames.find(nick => nick.NickName === selectedNickname)?.id || '')}>
-              <DeleteIcon />
-            </IconButton>
-          )}
-        </CardActions>
+
       </Box>
 
       {/*/  playerList hier löschen wenn fertig */}

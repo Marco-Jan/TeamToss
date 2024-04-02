@@ -87,7 +87,7 @@ export const TabNavigation: React.FC = () => {
         const nameToAdd = nickname?.trim() || playerInput.trim();
         if (nameToAdd !== '' && !playerList.includes(nameToAdd)) {
             setPlayerList(prevList => [...prevList, nameToAdd]);
-            setPlayerInput(''); // Das Eingabefeld immer zurücksetzen
+            setPlayerInput('');
         }
     };
 
@@ -105,6 +105,10 @@ export const TabNavigation: React.FC = () => {
     const handleClearList = (): void => {
         setPlayerList([]);
         setTeams([]);
+    };
+
+    const updatePlayerList = (updatedPlayerList: string[]) => {
+        setPlayerList(updatedPlayerList);
     };
 
 
@@ -190,7 +194,7 @@ export const TabNavigation: React.FC = () => {
             <TabPanel value={value} index={1}>
                 {/* <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>Saved Players</Typography> */}
                 <PlayersList />
-                <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} />
+                <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList}/>
             </TabPanel>
 
 
