@@ -4,6 +4,10 @@ import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { isLogginCheck } from '../firebase/firebaseInit';
+import { set } from 'firebase/database';
+
+
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -51,7 +55,7 @@ const TabNavigation: React.FC = () => {
     const [playerInput, setPlayerInput] = useState<string>('');
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [teams, setTeams] = useState<string[][]>([]);
-
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [teamSize, setTeamSize] = useState<string>('Team2');
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -104,6 +108,9 @@ const TabNavigation: React.FC = () => {
         setPlayerList(updatedPlayerList);
     };
 
+    const isLoggedInTrue = (isLogginCheck) => {
+        setIsLoggedIn(true);
+    }
 
 
     const handleGenerateTeams = (): void => {
@@ -150,9 +157,9 @@ const TabNavigation: React.FC = () => {
                     scrollButtons="auto"
                     aria-label="scrollable auto tabs example"
                     sx={{
-                        
+
                         '.MuiTab-root': {
-                            minWidth: 'auto',                           
+                            minWidth: 'auto',
                         },
                         '.MuiTabs-indicator': {
                             backgroundColor: 'secondary.main',
@@ -161,7 +168,7 @@ const TabNavigation: React.FC = () => {
                     }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
-                    <Tab label="Saved Players" {...a11yProps(1)} />
+                    {isLoggedIn && <Tab label="Saved Players" {...a11yProps(1)} />}
                     <Tab label="CoinToss" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
@@ -191,11 +198,13 @@ const TabNavigation: React.FC = () => {
             </TabPanel>
 
             {/* **************************** SavedPlayertab Tab *********************************** */}
-
             <TabPanel value={value} index={1}>
-                {/* <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>Saved Players</Typography> */}
-                <PlayersList />
-                <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList} />
+                {isLoggedIn && (
+                    <>
+                        <PlayersList />
+                        <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList} />
+                    </>
+                )}
             </TabPanel>
 
 

@@ -4,6 +4,8 @@ import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { Nickname } from "../types/nickname";
 
+
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,6 +18,7 @@ const firebaseConfig = {
   messagingSenderId: "184900601836",
   appId: "1:184900601836:web:420b1e223127bfeb1ae2c9"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -31,6 +34,7 @@ export const signInWithGoogle = () => {
       // const token = result.user.getIdToken();
       // The signed-in user
       const user = result.user;
+      isLogginCheck(true);
       console.log(user);
     }).catch((error) => {
       // Error handling
@@ -55,6 +59,14 @@ export const addNickname = async (nickname: string): Promise<void> => {
   });
 };
 
+export const isLogginCheck = (isLoggin: boolean) => {
+  if(isLoggin){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 // Funktion zum Lesen aller Nicknames
 
 export const getNicknames = async (): Promise<Nickname[]> => {
@@ -72,6 +84,8 @@ export const getNicknames = async (): Promise<Nickname[]> => {
 export const deleteNickname = async (nicknameId: string): Promise<void> => {
   await deleteDoc(doc(db, "TeamTossNickNames", nicknameId));
 };
+
+
 
 
 export default app;
