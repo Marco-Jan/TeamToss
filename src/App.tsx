@@ -5,7 +5,8 @@ import { auth } from './firebase/firebaseInit';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import GoogleSignInButton from './Components/SignInBtn';
 import SignOutButton from './Components/SignOutBtn';
-import { TabNavigation } from './Components/NavigationsBar'; 
+import TabNavigation  from './Components/NavigationsBar';
+// import { theme } from './Components/Thema/theme';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -24,20 +25,11 @@ const App: React.FC = () => {
   }, []);
 
 
-
-
-
-
-
-
-  
-
   return (
-    
     <Container maxWidth="sm">
-      <Grid container alignItems="center" justifyContent="space-between" spacing={2} style={{ padding: '20px 0' }}>
+      <Grid container alignItems="center" justifyContent="space-between"  style={{ padding: '20px 0px'}}>
         <Grid item xs={12} sm={6}>
-          <Typography variant="h2" gutterBottom align="center">TeamToss</Typography>
+          <Typography variant="h2" gutterBottom align="center" sx={{ fontFamily: 'Roboto', fontWeight: 600 }}>TeamToss</Typography>
         </Grid>
         <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'center' }}>
           {user ? (
