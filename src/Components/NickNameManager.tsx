@@ -6,9 +6,23 @@ import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
 import { theme } from './Thema/theme';
-import { Card, CardContent, Typography, CardActions, IconButton, Box, Button, TextField, ThemeProvider, CardActionArea} from '@mui/material';
-
-
+import {
+  Card,
+  CardContent,
+  Typography,
+  CardActions,
+  IconButton,
+  Box,
+  Button,
+  TextField,
+  ThemeProvider,
+  CardActionArea,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from '@mui/material';
 
 export interface NicknameManagerProps {
   onAddPlayer: (nickname: string) => void;
@@ -16,12 +30,12 @@ export interface NicknameManagerProps {
   playerList: string[];
 }
 
-
-
 const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerList, updatePlayerList }) => {
   const [nickname, setNickname] = useState<string>('');
   const [nicknames, setNicknames] = useState<Nickname[]>([]);
   const [, setSelectedNickname] = useState('');
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+  const [selectedPlayerId, setSelectedPlayerId] = useState<string>('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -52,15 +66,21 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   };
 
   const handleDeleteNickname = async (id: string) => {
-    const updatedPlayerList = playerList.filter(player => player !== id);
-    updatePlayerList(updatedPlayerList);
-    await deleteNickname(id);
-    await fetchNicknames();
+    setSelectedPlayerId(id);
+    setOpenDeleteDialog(true);
   };
 
-  // const handleSelectChange = (event: SelectChangeEvent) => {
-  //   setSelectedNickname(event.target.value as string);
-  // };
+  const handleConfirmDelete = async () => {
+    const updatedPlayerList = playerList.filter(player => player !== selectedPlayerId);
+    updatePlayerList(updatedPlayerList);
+    await deleteNickname(selectedPlayerId);
+    await fetchNicknames();
+    setOpenDeleteDialog(false);
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false);
+  };
 
   const handleAddSelectedPlayer = (selectedNickname: string) => {
     const playerExists = playerList.includes(selectedNickname);
@@ -74,29 +94,39 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
     }
   };
 
-
-
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: '100%', mt: 2, display: 'flex'}}>
+      <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
         <TextField
           fullWidth
           label="Playername"
           value={nickname}
           onChange={e => setNickname(e.target.value)}
           margin="normal"
+          sx={{ margin: '10px' }}
         />
         <Button
+          variant="contained"
           startIcon={<AddCircleOutlineIcon />}
           onClick={handleAddNickname}
-        // sx={{ mb: 1, p: 0,  }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'end',
+            alignItems: 'center',
+            margin: 'auto',
+            height: '56px',
+            backgroundColor: theme.palette.primary.main,
+            '&:hover': {
+              backgroundColor: 'green',
+            },
+          }}
         >
         </Button>
       </Box>
 
       {/*/  player Cards hier ändern */}
 
-      <Box sx={{ display: 'flex', justifyContent: 'center' ,flexWrap: 'wrap', overflowWrap: 'break-word' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', overflowWrap: 'break-word' }}>
         {nicknames.map(({ id, NickName }) => (
           <Card sx={{ m: 1, width: '120px', height: '120px', backgroundColor: playerList.includes(NickName) ? 'green' : '#1976d2' }}>
             <CardActionArea onClick={() => handleAddSelectedPlayer(NickName)}>
@@ -113,6 +143,19 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
         ))}
 
       </Box>
+
+      <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this player?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+        </DialogActions>
+      </Dialog>
     </ThemeProvider>
   );
 };

@@ -22,11 +22,14 @@ function TabPanel(props: TabPanelProps) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
             style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
             }}
         >
             {value === index && (
-                <Box sx={{ minHeight: 'auto', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <Box sx={{ minHeight: 'auto',display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
@@ -151,7 +154,7 @@ const TabNavigation: React.FC = () => {
                     sx={{ '.MuiTabs-flexContainer': { justifyContent: 'center' } }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
-                    <Tab label="SavedPlayers" {...a11yProps(1)} />
+                    <Tab label="Saved Players" {...a11yProps(1)} />
                     <Tab label="CoinToss" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
@@ -193,7 +196,7 @@ const TabNavigation: React.FC = () => {
             {/* **************************** Münzwurf Tab *********************************** */}
 
             <TabPanel value={value} index={2}>
-                <Grid container justifyContent="center"> {/* Zentriere den Inhalt des Containers */}
+                <Grid container style={{justifyContent: 'center'}}> 
                     <Grid item>
                         <Button
                             variant="contained"
@@ -213,7 +216,7 @@ const TabNavigation: React.FC = () => {
                                 fontSize: '0.875rem',
                                 fontWeight: '700',
                                 textAlign: 'center',
-                                m: 0.5,
+                                m:5,
                             }}
                         >
                             Münzwurf
