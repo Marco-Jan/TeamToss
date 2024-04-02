@@ -5,7 +5,6 @@ import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-
 interface TabPanelProps {
     children?: React.ReactNode;
     index: unknown;
@@ -16,30 +15,22 @@ function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
-        <div
+        <Container
             role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
             style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                height: '100%',
-                minHeight: '30px',
                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
-                width: '100%',
-
             }}
         >
             {value === index && (
-                <Box sx={{ p: 3, minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Box sx={{ minHeight: 'auto', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
-        </div>
+        </Container>
     );
 }
 
@@ -52,7 +43,7 @@ function a11yProps(index: unknown) {
 
 
 
-export const TabNavigation: React.FC = () => {
+const TabNavigation: React.FC = () => {
     const [value, setValue] = useState(0);
     const [coinResult, setCoinResult] = useState<string>('');
     const [playerInput, setPlayerInput] = useState<string>('');
@@ -208,7 +199,7 @@ export const TabNavigation: React.FC = () => {
                             variant="contained"
                             onClick={handleCoinToss}
                             sx={{
-                                width: 'auto', // Entferne fullWidth und definiere eine angemessene Breite, wenn gewünscht
+                                width: 'auto', 
                                 p: 1.5,
                                 bgcolor: 'primary.main',
                                 color: 'primary.contrastText',
@@ -235,3 +226,5 @@ export const TabNavigation: React.FC = () => {
         </Box>
     );
 }
+
+export default TabNavigation;

@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 
-
 export const theme = createTheme({
   palette: {
     primary: {
@@ -19,17 +18,13 @@ export const theme = createTheme({
       fontWeight: 600,
     },
   },
-});
-
-theme.components = {
-  MuiButton: {
-    styleOverrides: {
-      root: {
-        // Direkte Angabe von Margin, um den oben genannten Fehler zu vermeiden
-        margin: '0 auto', // Entsprechend theme.spacing(1) bei einem Standardfaktor von 8
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          margin: '10px',
+        },
       },
     },
   },
-};
-
-
+});

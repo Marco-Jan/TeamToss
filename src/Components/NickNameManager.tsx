@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, IconButton, ThemeProvider, CardActionArea } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { addNickname, getNicknames, deleteNickname } from '../firebase/firebaseInit';
@@ -7,7 +6,7 @@ import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
 import { theme } from './Thema/theme';
-import { Card, CardContent, Typography, CardActions } from '@mui/material';
+import { Card, CardContent, Typography, CardActions, IconButton, Box, Button, TextField, ThemeProvider, CardActionArea} from '@mui/material';
 
 
 
@@ -16,6 +15,8 @@ export interface NicknameManagerProps {
   updatePlayerList: (playerList: string[]) => void;
   playerList: string[];
 }
+
+
 
 const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerList, updatePlayerList }) => {
   const [nickname, setNickname] = useState<string>('');
@@ -74,10 +75,10 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   };
 
 
-  {/* PlayerCard Bull */ }
+
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mt: 2, display: 'flex'}}>
         <TextField
           fullWidth
           label="Playername"
@@ -95,9 +96,9 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
 
       {/*/  player Cards hier ändern */}
 
-      <Box sx={{ minWidth: 275, display: 'flex', flexWrap: 'wrap', }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' ,flexWrap: 'wrap', overflowWrap: 'break-word' }}>
         {nicknames.map(({ id, NickName }) => (
-          <Card sx={{ m: 1, minWidth: 'auto', backgroundColor: playerList.includes(NickName) ? 'green' : '#1976d2' }}>
+          <Card sx={{ m: 1, width: '120px', height: '120px', backgroundColor: playerList.includes(NickName) ? 'green' : '#1976d2' }}>
             <CardActionArea onClick={() => handleAddSelectedPlayer(NickName)}>
               <CardContent key={id}>
                 <Typography sx={{ color: 'white' }} variant="body1">{NickName}</Typography>
@@ -112,38 +113,6 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
         ))}
 
       </Box>
-
-      {/*/  playerList hier löschen wenn fertig */}
-
-      {/* <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel id="nickname-select-label">Saved Players</InputLabel>
-          <Select
-            labelId="nickname-select-label"
-            value={selectedNickname}
-            label="Saved Players"
-            onChange={handleSelectChange}
-          >
-            {nicknames.map(({ id, NickName }) => (
-              <MenuItem
-                key={id}
-                value={NickName}
-                sx={{
-                  color: playerList.includes(NickName) ? 'rgb(40,180,39)' : 'inherit',
-                }}
-              >
-                {NickName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button
-          startIcon={<AddCircleOutlineIcon />}
-          onClick={handleAddSelectedPlayer}
-        // sx={{ mr: 1, p: 0 }}
-        >
-        </Button> 
-      </Box> */}
     </ThemeProvider>
   );
 };
