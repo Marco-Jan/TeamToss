@@ -27,14 +27,4 @@ export const theme = createTheme({
       },
     },
   },
-  overrides: {
-    MuiTableCell: {
-      root: {
-        backgroundColor: 'lightblue'
-      },
-      paddingDefault: {
-        padding: '40px 24px 40px 16px',
-      },
-    },
-  },
 });
