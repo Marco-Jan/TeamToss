@@ -25,12 +25,13 @@ function TabPanel(props: TabPanelProps) {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
+                // boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)'
+
             }}
         >
             {value === index && (
-                <Box sx={{ minHeight: 'auto',display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
-                    <Typography>{children}</Typography>
+                <Box sx={{ minHeight: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
+                    <Typography sx={{ fontSize: '20px' }}>{children}</Typography>
                 </Box>
             )}
         </Container>
@@ -143,15 +144,23 @@ const TabNavigation: React.FC = () => {
 
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', minWidth: '100%' }}>
+            <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px' }}>
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label="secondary tabs example"
-                    indicatorColor='secondary'
-                    textColor='primary'
-                    centered
-                    sx={{ '.MuiTabs-flexContainer': { justifyContent: 'center' } }}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
+                    sx={{
+                        '.MuiTabs-flexContainer': {
+                            justifyContent: 'center',
+                        },
+                        '.MuiTab-root': {
+                            minWidth: 'auto',
+                        },
+                        boxShadow: 'none',
+
+                    }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
                     <Tab label="Saved Players" {...a11yProps(1)} />
@@ -188,7 +197,7 @@ const TabNavigation: React.FC = () => {
             <TabPanel value={value} index={1}>
                 {/* <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>Saved Players</Typography> */}
                 <PlayersList />
-                <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList}/>
+                <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList} />
             </TabPanel>
 
 
@@ -196,13 +205,13 @@ const TabNavigation: React.FC = () => {
             {/* **************************** Münzwurf Tab *********************************** */}
 
             <TabPanel value={value} index={2}>
-                <Grid container style={{justifyContent: 'center'}}> 
+                <Grid container style={{ justifyContent: 'center' }}>
                     <Grid item>
                         <Button
                             variant="contained"
                             onClick={handleCoinToss}
                             sx={{
-                                width: 'auto', 
+                                width: 'auto',
                                 p: 1.5,
                                 bgcolor: 'primary.main',
                                 color: 'primary.contrastText',
@@ -216,7 +225,7 @@ const TabNavigation: React.FC = () => {
                                 fontSize: '0.875rem',
                                 fontWeight: '700',
                                 textAlign: 'center',
-                                m:5,
+                                m: 5,
                             }}
                         >
                             Münzwurf
