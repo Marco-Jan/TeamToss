@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, IconButton, FormControl, InputLabel, Select, MenuItem, ThemeProvider, SelectChangeEvent } from '@mui/material';
+import { Box, Button, TextField, IconButton, ThemeProvider, CardActionArea } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { addNickname, getNicknames, deleteNickname } from '../firebase/firebaseInit';
@@ -7,7 +7,9 @@ import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
 import { theme } from './Thema/theme';
-import ElderlyOutlinedIcon from '@mui/icons-material/ElderlyOutlined';
+import { Card, CardContent, Typography, CardActions } from '@mui/material';
+
+
 
 export interface NicknameManagerProps {
   onAddPlayer: (nickname: string) => void;
@@ -52,19 +54,21 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
     await fetchNicknames();
   };
 
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    setSelectedNickname(event.target.value as string);
-  };
+  // const handleSelectChange = (event: SelectChangeEvent) => {
+  //   setSelectedNickname(event.target.value as string);
+  // };
 
-  const handleAddSelectedPlayer = () => {
+  const handleAddSelectedPlayer = (selectedNickname: string) => {
     if (selectedNickname) {
       onAddPlayer(selectedNickname);
+      setSelectedNickname('');
     }
   };
 
+  {/* PlayerCard Bull */ }
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ my: 2 }}>
+      <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <TextField
           fullWidth
           label="Playername"
@@ -73,14 +77,38 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
           margin="normal"
         />
         <Button
-          variant="contained"
           startIcon={<AddCircleOutlineIcon />}
           onClick={handleAddNickname}
-          sx={{ mb: 2 }}
+        // sx={{ mb: 1, p: 0,  }}
         >
-          Add
         </Button>
+      </Box>
 
+      {/*/  player Cards hier ändern */}
+
+      <Box sx={{ minWidth: 275, display: 'flex', flexWrap: 'wrap', }}>
+        {nicknames.map(({ id, NickName }) => (
+          <Card sx={{ m: 1, minWidth: 'auto', backgroundColor: '#1976d2' }}>
+            <CardActionArea onClick={() => handleAddSelectedPlayer(NickName)}>
+              <CardContent key={id}>
+                <Typography sx={{ color: playerList.includes(NickName) ? 'red' : 'white' }} variant="body1">{NickName}</Typography>
+              </CardContent>
+
+            </CardActionArea>
+          </Card>
+        ))}
+        <CardActions>
+          {selectedNickname && (
+            <IconButton color="info" onClick={() => handleDeleteNickname(nicknames.find(nick => nick.NickName === selectedNickname)?.id || '')}>
+              <DeleteIcon />
+            </IconButton>
+          )}
+        </CardActions>
+      </Box>
+
+      {/*/  playerList hier löschen wenn fertig */}
+
+      {/* <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <FormControl fullWidth sx={{ mb: 2 }}>
           <InputLabel id="nickname-select-label">Saved Players</InputLabel>
           <Select
@@ -94,7 +122,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                 key={id}
                 value={NickName}
                 sx={{
-                  color: playerList.includes(NickName) ? 'rgb(40,180,39)' : 'inherit', 
+                  color: playerList.includes(NickName) ? 'rgb(40,180,39)' : 'inherit',
                 }}
               >
                 {NickName}
@@ -102,23 +130,13 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
             ))}
           </Select>
         </FormControl>
-
-
         <Button
-          variant="contained"
-          startIcon={<ElderlyOutlinedIcon />}
+          startIcon={<AddCircleOutlineIcon />}
           onClick={handleAddSelectedPlayer}
-          sx={{ mr: 1 }}
+        // sx={{ mr: 1, p: 0 }}
         >
-          Add to Team
-        </Button>
-
-        {selectedNickname && (
-          <IconButton color="error" onClick={() => handleDeleteNickname(nicknames.find(nick => nick.NickName === selectedNickname)?.id || '')}>
-            <DeleteIcon />
-          </IconButton>
-        )}
-      </Box>
+        </Button> 
+      </Box> */}
     </ThemeProvider>
   );
 };

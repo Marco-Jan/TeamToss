@@ -1,0 +1,6 @@
+// TODO: Randomplayer nur für nicht angemeldete Spieler
+// eigene Seite für Gespeicherte Spieler mache, 
+die Spieler in Kacheln und mit vl Favoriten (Herz oder so) 
+abspeichern, 
+
+//TODO: als erster anzeigen und nach alphabeth sortieren
