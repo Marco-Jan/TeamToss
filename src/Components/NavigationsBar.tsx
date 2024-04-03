@@ -51,7 +51,7 @@ const TabNavigation: React.FC = () => {
     const [playerInput, setPlayerInput] = useState<string>('');
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [teams, setTeams] = useState<string[][]>([]);
-
+    const [isLoggedIn] = useState<boolean>(true);
     const [teamSize, setTeamSize] = useState<string>('Team2');
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -139,6 +139,10 @@ const TabNavigation: React.FC = () => {
         </Grid>
     );
 
+    const getDisabled = (): boolean => {
+        return !isLoggedIn;
+    }
+
 
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -150,9 +154,9 @@ const TabNavigation: React.FC = () => {
                     scrollButtons="auto"
                     aria-label="scrollable auto tabs example"
                     sx={{
-                        
+
                         '.MuiTab-root': {
-                            minWidth: 'auto',                           
+                            minWidth: 'auto',
                         },
                         '.MuiTabs-indicator': {
                             backgroundColor: 'secondary.main',
@@ -161,7 +165,7 @@ const TabNavigation: React.FC = () => {
                     }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
-                    <Tab label="Saved Players" {...a11yProps(1)} />
+                    <Tab label="Saved Players" {...a11yProps(1)} disabled={getDisabled()} />
                     <Tab label="CoinToss" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
