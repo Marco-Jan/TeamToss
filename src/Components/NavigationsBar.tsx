@@ -148,6 +148,10 @@ const TabNavigation: React.FC = () => {
         </Grid>
     );
 
+    const getDisabled = () : boolean => {
+        return !isLoggedIn;
+    }
+
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', boxShadow: 'none' }}>
@@ -167,7 +171,7 @@ const TabNavigation: React.FC = () => {
                     }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
-                    {isLoggedIn && <Tab label="Saved Players" {...a11yProps(1)} />}
+                    <Tab label="Saved Players" {...a11yProps(1)} disabled={getDisabled()} />
                     <Tab label="CoinToss" {...a11yProps(newIndex)} />
                 </Tabs>
             </AppBar>
@@ -200,12 +204,11 @@ const TabNavigation: React.FC = () => {
             {/****************************************Saved Players****************************************************/}
 
             <TabPanel value={value} index={1}>
-                {isLoggedIn && (
-                    <>
+                <>
                         <PlayersList />
                         <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList} />
-                    </>
-                )}
+                </>
+            
             </TabPanel>
 
             {/*****************************************Cointoss*******************************************************/}
