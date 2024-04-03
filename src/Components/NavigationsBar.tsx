@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { AppBar, Tabs, Tab, Box, Typography, Button, Grid, Container, TextField, } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { AppBar, Tabs, Tab, Box, Typography, Button, Grid, Container, TextField } from '@mui/material';
 import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/firebaseInit';
 
 interface TabPanelProps {
     children?: React.ReactNode;
-    index: unknown;
-    value: unknown;
+    index: number;
+    value: number;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -36,23 +38,46 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
-function a11yProps(index: unknown) {
+function a11yProps(index: number) {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
 
-
-
 const TabNavigation: React.FC = () => {
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(2);
     const [coinResult, setCoinResult] = useState<string>('');
     const [playerInput, setPlayerInput] = useState<string>('');
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [teams, setTeams] = useState<string[][]>([]);
-    const [isLoggedIn] = useState<boolean>(true);
+
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
     const [teamSize, setTeamSize] = useState<string>('Team2');
+    const [newIndex, setNewIndex] = useState<number>(2);
+
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setIsLoggedIn(true);
+            } else {
+                setIsLoggedIn(false);
+            }
+        });
+
+        return unsubscribe;
+    }, []);
+
+    
+    useEffect(() => {
+        if (!isLoggedIn && newIndex === 1) {
+            setNewIndex(2); // auf value ausbessern
+        }
+    }, [isLoggedIn, newIndex]);
+    console.log(newIndex, 'newIndex');
+    
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -84,17 +109,6 @@ const TabNavigation: React.FC = () => {
         }
     };
 
-    //  const addNicknameToPlayerList = (nickname: string) => {
-    //   setPlayerList((playerList) => {
-    //     // Überprüfe, ob der Nickname bereits in der Liste ist, um Duplikate zu vermeiden
-    //     if (!playerList.includes(nickname)) {
-    //       return [...playerList, nickname];
-    //     }
-    //     return playerList;
-    //   });
-    // };
-
-
     const handleClearList = (): void => {
         setPlayerList([]);
         setTeams([]);
@@ -104,12 +118,9 @@ const TabNavigation: React.FC = () => {
         setPlayerList(updatedPlayerList);
     };
 
-
-
     const handleGenerateTeams = (): void => {
-        const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10); // Wandelt den String "Team1", "Team2" etc. in eine Nummer um
+        const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10);
         const shuffledPlayers = shuffleArray(playerList);
-        console.log(playerList, 'playerList');
 
         const newTeams: string[][] = Array.from({ length: numberOfTeams }, () => []);
 
@@ -117,7 +128,7 @@ const TabNavigation: React.FC = () => {
             newTeams[i % numberOfTeams].push(shuffledPlayers[i]);
         }
 
-        setTeams(newTeams); // Aktualisiert den Zustand von `teams` direkt
+        setTeams(newTeams);
     };
 
     const shuffleArray = (array: string[]): string[] => {
@@ -139,7 +150,7 @@ const TabNavigation: React.FC = () => {
         </Grid>
     );
 
-    const getDisabled = (): boolean => {
+    const getDisabled = () : boolean => {
         return !isLoggedIn;
     }
 
@@ -155,21 +166,23 @@ const TabNavigation: React.FC = () => {
                     aria-label="scrollable auto tabs example"
                     sx={{
 
+
                         '.MuiTab-root': {
                             minWidth: 'auto',
                         },
                         '.MuiTabs-indicator': {
                             backgroundColor: 'secondary.main',
                         },
-
                     }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
                     <Tab label="Saved Players" {...a11yProps(1)} disabled={getDisabled()} />
                     <Tab label="CoinToss" {...a11yProps(2)} />
+
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
+
                 <Container maxWidth='sm' sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <TextField
@@ -194,19 +207,19 @@ const TabNavigation: React.FC = () => {
                 </Container>
             </TabPanel>
 
-            {/* **************************** SavedPlayertab Tab *********************************** */}
+            {/****************************************Saved Players****************************************************/}
 
             <TabPanel value={value} index={1}>
-                {/* <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>Saved Players</Typography> */}
-                <PlayersList />
-                <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList} />
+                <>
+                        <PlayersList />
+                        <NicknameManager playerList={playerList} onAddPlayer={handleAddPlayer} updatePlayerList={updatePlayerList} />
+                </>
+            
             </TabPanel>
 
+            {/*****************************************Cointoss*******************************************************/}
 
-
-            {/* **************************** Münzwurf Tab *********************************** */}
-
-            <TabPanel value={value} index={2}>
+            <TabPanel value={value} index={newIndex}>
                 <Grid container style={{ justifyContent: 'center' }}>
                     <Grid item>
                         <Button
@@ -236,7 +249,6 @@ const TabNavigation: React.FC = () => {
                 </Grid>
                 <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>{coinResult}</Typography>
             </TabPanel>
-
         </Box>
     );
 }

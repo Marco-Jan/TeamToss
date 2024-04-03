@@ -9,7 +9,7 @@ const SignOutButton: React.FC = () => {
       onClick={handleSignOut}
       style={{ margin: '20px 20px'}}
     >
-      Abmelden
+      Log out
     </Button>
   );
 }
