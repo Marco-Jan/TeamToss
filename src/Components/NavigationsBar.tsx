@@ -4,13 +4,13 @@ import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { onAuthStateChanged } from 'firebase/auth'; 
-import { auth } from '../firebase/firebaseInit'; 
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/firebaseInit';
 
 interface TabPanelProps {
     children?: React.ReactNode;
-    index: unknown;
-    value: unknown;
+    index: number;
+    value: number;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -24,13 +24,13 @@ function TabPanel(props: TabPanelProps) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
             style={{
-                // display: 'flex',
-                // justifyContent: 'center',
-                // alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
             }}
         >
             {value === index && (
-                <Box sx={{ minHeight: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ minHeight: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
                     <Typography sx={{ fontSize: '20px' }}>{children}</Typography>
                 </Box>
             )}
@@ -38,7 +38,7 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
-function a11yProps(index: unknown) {
+function a11yProps(index: number) {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
@@ -46,7 +46,7 @@ function a11yProps(index: unknown) {
 }
 
 const TabNavigation: React.FC = () => {
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(2);
     const [coinResult, setCoinResult] = useState<string>('');
     const [playerInput, setPlayerInput] = useState<string>('');
     const [playerList, setPlayerList] = useState<string[]>([]);
@@ -57,7 +57,6 @@ const TabNavigation: React.FC = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log(user, 'user');          
                 setIsLoggedIn(true);
             } else {
                 setIsLoggedIn(false);
@@ -66,6 +65,15 @@ const TabNavigation: React.FC = () => {
 
         return unsubscribe;
     }, []);
+
+
+    useEffect(() => {
+        if (!isLoggedIn && value === 1) {
+            setValue(2);
+        }
+    }, [isLoggedIn, value]);
+
+
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -78,6 +86,7 @@ const TabNavigation: React.FC = () => {
         setTimeout(() => setCoinResult('.'), 200);
         setTimeout(() => setCoinResult('..'), 500);
         setTimeout(() => setCoinResult('...'), 800);
+
         setTimeout(() => {
             const coinToss = Math.random() <= 0.5 ? x : y;
             setCoinResult(coinToss);
@@ -106,9 +115,8 @@ const TabNavigation: React.FC = () => {
     };
 
     const handleGenerateTeams = (): void => {
-        const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10); // Wandelt den String "Team1", "Team2" etc. in eine Nummer um
+        const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10);
         const shuffledPlayers = shuffleArray(playerList);
-        console.log(playerList, 'playerList');
 
         const newTeams: string[][] = Array.from({ length: numberOfTeams }, () => []);
 
@@ -116,7 +124,7 @@ const TabNavigation: React.FC = () => {
             newTeams[i % numberOfTeams].push(shuffledPlayers[i]);
         }
 
-        setTeams(newTeams); // Aktualisiert den Zustand von `teams` direkt
+        setTeams(newTeams);
     };
 
     const shuffleArray = (array: string[]): string[] => {
@@ -162,6 +170,7 @@ const TabNavigation: React.FC = () => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
+
                 <Container maxWidth='sm' sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <Box sx={{ width: '100%', mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <TextField
@@ -186,6 +195,8 @@ const TabNavigation: React.FC = () => {
                 </Container>
             </TabPanel>
 
+            {/****************************************Saved Players****************************************************/}
+
             <TabPanel value={value} index={1}>
                 {isLoggedIn && (
                     <>
@@ -194,7 +205,9 @@ const TabNavigation: React.FC = () => {
                     </>
                 )}
             </TabPanel>
-                            {/**************************************Münzwurf*************************************** */}
+
+            {/*****************************************Cointoss*******************************************************/}
+
             <TabPanel value={value} index={2}>
                 <Grid container style={{ justifyContent: 'center' }}>
                     <Grid item>
@@ -207,7 +220,7 @@ const TabNavigation: React.FC = () => {
                                 bgcolor: 'primary.main',
                                 color: 'primary.contrastText',
                                 '&:hover': {
-                                    bgcolor: 'primary.light',
+                                    bgcolor: 'primary.dark',
                                     color: 'primary.contrastText',
                                 },
                                 border: '1px solid',
@@ -219,7 +232,7 @@ const TabNavigation: React.FC = () => {
                                 m: 5,
                             }}
                         >
-                            CoinToss
+                            Münzwurf
                         </Button>
                     </Grid>
                 </Grid>
