@@ -51,7 +51,9 @@ const TabNavigation: React.FC = () => {
     const [playerInput, setPlayerInput] = useState<string>('');
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [teams, setTeams] = useState<string[][]>([]);
+
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
     const [teamSize, setTeamSize] = useState<string>('Team2');
     const [newIndex, setNewIndex] = useState<number>(2);
 
@@ -152,6 +154,7 @@ const TabNavigation: React.FC = () => {
         return !isLoggedIn;
     }
 
+
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', boxShadow: 'none' }}>
@@ -162,6 +165,8 @@ const TabNavigation: React.FC = () => {
                     scrollButtons="auto"
                     aria-label="scrollable auto tabs example"
                     sx={{
+
+
                         '.MuiTab-root': {
                             minWidth: 'auto',
                         },
@@ -172,7 +177,8 @@ const TabNavigation: React.FC = () => {
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
                     <Tab label="Saved Players" {...a11yProps(1)} disabled={getDisabled()} />
-                    <Tab label="CoinToss" {...a11yProps(newIndex)} />
+                    <Tab label="CoinToss" {...a11yProps(2)} />
+
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
