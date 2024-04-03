@@ -223,7 +223,7 @@ const TabNavigation: React.FC = () => {
                                     bgcolor: 'primary.dark',
                                     color: 'primary.contrastText',
                                 },
-                                border: '1px solid',
+                                border: '1px solid'
                                 borderColor: 'primary.light',
                                 borderRadius: 5,
                                 fontSize: '0.875rem',
