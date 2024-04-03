@@ -53,7 +53,6 @@ const TabNavigation: React.FC = () => {
     const [teams, setTeams] = useState<string[][]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [teamSize, setTeamSize] = useState<string>('Team2');
-    const [newIndex, setNewIndex] = useState<number>(2);
 
 
     useEffect(() => {
@@ -69,12 +68,7 @@ const TabNavigation: React.FC = () => {
     }, []);
 
     
-    useEffect(() => {
-        if (!isLoggedIn && newIndex === 1) {
-            setNewIndex(2); // auf value ausbessern
-        }
-    }, [isLoggedIn, newIndex]);
-    console.log(newIndex, 'newIndex');
+    
     
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -172,7 +166,7 @@ const TabNavigation: React.FC = () => {
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
                     <Tab label="Saved Players" {...a11yProps(1)} disabled={getDisabled()} />
-                    <Tab label="CoinToss" {...a11yProps(newIndex)} />
+                    <Tab label="CoinToss" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
@@ -213,7 +207,7 @@ const TabNavigation: React.FC = () => {
 
             {/*****************************************Cointoss*******************************************************/}
 
-            <TabPanel value={value} index={newIndex}>
+            <TabPanel value={value} index={2}>
                 <Grid container style={{ justifyContent: 'center' }}>
                     <Grid item>
                         <Button
