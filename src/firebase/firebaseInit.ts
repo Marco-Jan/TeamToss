@@ -20,7 +20,7 @@ const firebaseConfig = {
 };
 
 
-// Initialize Firebase
+// Init Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
@@ -34,7 +34,6 @@ export const signInWithGoogle = () => {
       // const token = result.user.getIdToken();
       // The signed-in user
       const user = result.user;
-      isLogginCheck(true);
       console.log(user);
     }).catch((error) => {
       // Error handling
@@ -75,17 +74,13 @@ export const getNicknames = async (): Promise<Nickname[]> => {
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => ({
     id: doc.id,
-    NickName: doc.data().NickName as string, // Typ explizit angeben
-  })) as Nickname[]; // Bestätige dem Compiler, dass dies ein Array von Nicknames ist
+    NickName: doc.data().NickName as string, 
+  })) as Nickname[]; 
 };
-
 
 // Funktion zum Löschen eines Nicknames anhand seiner ID
 export const deleteNickname = async (nicknameId: string): Promise<void> => {
   await deleteDoc(doc(db, "TeamTossNickNames", nicknameId));
 };
-
-
-
 
 export default app;

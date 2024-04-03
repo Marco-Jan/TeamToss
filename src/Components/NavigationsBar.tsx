@@ -53,6 +53,8 @@ const TabNavigation: React.FC = () => {
     const [teams, setTeams] = useState<string[][]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [teamSize, setTeamSize] = useState<string>('Team2');
+    const [newIndex, setNewIndex] = useState<number>(2);
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -66,14 +68,14 @@ const TabNavigation: React.FC = () => {
         return unsubscribe;
     }, []);
 
-
+    
     useEffect(() => {
-        if (!isLoggedIn && value === 1) {
-            setValue(2);
+        if (!isLoggedIn && newIndex === 1) {
+            setNewIndex(2); // auf value ausbessern
         }
-    }, [isLoggedIn, value]);
-
-
+    }, [isLoggedIn, newIndex]);
+    console.log(newIndex, 'newIndex');
+    
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -166,7 +168,7 @@ const TabNavigation: React.FC = () => {
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
                     {isLoggedIn && <Tab label="Saved Players" {...a11yProps(1)} />}
-                    <Tab label="CoinToss" {...a11yProps(2)} />
+                    <Tab label="CoinToss" {...a11yProps(newIndex)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
@@ -208,7 +210,7 @@ const TabNavigation: React.FC = () => {
 
             {/*****************************************Cointoss*******************************************************/}
 
-            <TabPanel value={value} index={2}>
+            <TabPanel value={value} index={newIndex}>
                 <Grid container style={{ justifyContent: 'center' }}>
                     <Grid item>
                         <Button
@@ -223,7 +225,7 @@ const TabNavigation: React.FC = () => {
                                     bgcolor: 'primary.dark',
                                     color: 'primary.contrastText',
                                 },
-                                border: '1px solid'
+                                border: '1px solid',
                                 borderColor: 'primary.light',
                                 borderRadius: 5,
                                 fontSize: '0.875rem',
