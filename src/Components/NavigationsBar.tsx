@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import { AppBar, Tabs, Tab, Box, Typography, Button, Grid, Container, TextField, } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { AppBar, Tabs, Tab, Box, Typography, Button, Grid, Container, TextField } from '@mui/material';
 import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { isLogginCheck } from '../firebase/firebaseInit';
-import { set } from 'firebase/database';
-
-
+import { onAuthStateChanged } from 'firebase/auth'; 
+import { auth } from '../firebase/firebaseInit'; 
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -26,13 +24,13 @@ function TabPanel(props: TabPanelProps) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
             style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                // display: 'flex',
+                // justifyContent: 'center',
+                // alignItems: 'center',
             }}
         >
             {value === index && (
-                <Box sx={{ minHeight: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
+                <Box sx={{ minHeight: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography sx={{ fontSize: '20px' }}>{children}</Typography>
                 </Box>
             )}
@@ -47,8 +45,6 @@ function a11yProps(index: unknown) {
     };
 }
 
-
-
 const TabNavigation: React.FC = () => {
     const [value, setValue] = useState(0);
     const [coinResult, setCoinResult] = useState<string>('');
@@ -57,6 +53,19 @@ const TabNavigation: React.FC = () => {
     const [teams, setTeams] = useState<string[][]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [teamSize, setTeamSize] = useState<string>('Team2');
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log(user, 'user');          
+                setIsLoggedIn(true);
+            } else {
+                setIsLoggedIn(false);
+            }
+        });
+
+        return unsubscribe;
+    }, []);
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -69,7 +78,6 @@ const TabNavigation: React.FC = () => {
         setTimeout(() => setCoinResult('.'), 200);
         setTimeout(() => setCoinResult('..'), 500);
         setTimeout(() => setCoinResult('...'), 800);
-
         setTimeout(() => {
             const coinToss = Math.random() <= 0.5 ? x : y;
             setCoinResult(coinToss);
@@ -88,17 +96,6 @@ const TabNavigation: React.FC = () => {
         }
     };
 
-    //  const addNicknameToPlayerList = (nickname: string) => {
-    //   setPlayerList((playerList) => {
-    //     // Überprüfe, ob der Nickname bereits in der Liste ist, um Duplikate zu vermeiden
-    //     if (!playerList.includes(nickname)) {
-    //       return [...playerList, nickname];
-    //     }
-    //     return playerList;
-    //   });
-    // };
-
-
     const handleClearList = (): void => {
         setPlayerList([]);
         setTeams([]);
@@ -107,11 +104,6 @@ const TabNavigation: React.FC = () => {
     const updatePlayerList = (updatedPlayerList: string[]) => {
         setPlayerList(updatedPlayerList);
     };
-
-    const isLoggedInTrue = (isLogginCheck) => {
-        setIsLoggedIn(true);
-    }
-
 
     const handleGenerateTeams = (): void => {
         const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10); // Wandelt den String "Team1", "Team2" etc. in eine Nummer um
@@ -146,7 +138,6 @@ const TabNavigation: React.FC = () => {
         </Grid>
     );
 
-
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <AppBar position="static" sx={{ backgroundColor: 'transparent', borderRadius: '8px', maxWidth: '1200px', boxShadow: 'none' }}>
@@ -157,14 +148,12 @@ const TabNavigation: React.FC = () => {
                     scrollButtons="auto"
                     aria-label="scrollable auto tabs example"
                     sx={{
-
                         '.MuiTab-root': {
                             minWidth: 'auto',
                         },
                         '.MuiTabs-indicator': {
                             backgroundColor: 'secondary.main',
                         },
-
                     }}
                 >
                     <Tab label="TeamGenerator" {...a11yProps(0)} />
@@ -197,7 +186,6 @@ const TabNavigation: React.FC = () => {
                 </Container>
             </TabPanel>
 
-            {/* **************************** SavedPlayertab Tab *********************************** */}
             <TabPanel value={value} index={1}>
                 {isLoggedIn && (
                     <>
@@ -206,11 +194,7 @@ const TabNavigation: React.FC = () => {
                     </>
                 )}
             </TabPanel>
-
-
-
-            {/* **************************** Münzwurf Tab *********************************** */}
-
+                            {/**************************************Münzwurf*************************************** */}
             <TabPanel value={value} index={2}>
                 <Grid container style={{ justifyContent: 'center' }}>
                     <Grid item>
@@ -223,7 +207,7 @@ const TabNavigation: React.FC = () => {
                                 bgcolor: 'primary.main',
                                 color: 'primary.contrastText',
                                 '&:hover': {
-                                    bgcolor: 'primary.dark',
+                                    bgcolor: 'primary.light',
                                     color: 'primary.contrastText',
                                 },
                                 border: '1px solid',
@@ -235,13 +219,12 @@ const TabNavigation: React.FC = () => {
                                 m: 5,
                             }}
                         >
-                            Münzwurf
+                            CoinToss
                         </Button>
                     </Grid>
                 </Grid>
                 <Typography variant="h1" gutterBottom sx={{ height: '50px', m: 4 }}>{coinResult}</Typography>
             </TabPanel>
-
         </Box>
     );
 }

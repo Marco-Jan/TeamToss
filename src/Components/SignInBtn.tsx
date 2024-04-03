@@ -15,7 +15,7 @@ const SignInButton: React.FC = () => {
       onClick={signInWithGoogle}
       style={{ margin: '20px 0'}}
     >
-      Mit Google anmelden
+      Log in
     </Button>
     </Grid>
   );
