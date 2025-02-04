@@ -4,8 +4,11 @@ TeamToss ist eine Webanwendung, die dazu dient, Teams für verschiedene Aktivit�
 
 ## Funktionen
 
+[TeamTossImage](/src/assets/loginTeams.JPG);
 - Hinzufügen von Spielern: Benutzer können Spieler zur Spielerliste hinzufügen, indem sie deren Namen in das Textfeld eingeben und auf die Schaltfläche "Spieler hinzufügen" klicken.
 - Generieren von Teams: Benutzer können Teams generieren, indem sie auf die Schaltfläche "Teams generieren" klicken. Die Spieler werden dann zufällig auf zwei Teams verteilt.
+
+[CoinTossImage](/src/assets/coinToss.JPG);
 - Münzwurf: Benutzer können einen Münzwurf durchführen, um zufällig zu entscheiden, welches Team beginnt. Der Münzwurf wird simuliert und das Ergebnis (Kopf oder Zahl) angezeigt.
 
 ## Installation
