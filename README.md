@@ -12,19 +12,27 @@ TeamToss ist eine Webanwendung, die dazu dient, Teams für verschiedene Aktivit�
 
 1. Klonen Sie das Repository auf Ihren lokalen Computer:
 
+```bash
 git clone https://github.com/dein-benutzername/TeamToss.git
+```
 
 2. Navigieren Sie in das Projektverzeichnis:
 
+```bash
 cd TeamToss
+```
 
 3. Installieren Sie die Abhängigkeiten:
 
+```bash
 npm install
+```
 
 4. Starten Sie die Anwendung:
 
+```bash
 npm start
+```
 
 Die Anwendung wird dann unter http://localhost:3000 in Ihrem Webbrowser gestartet.
 
