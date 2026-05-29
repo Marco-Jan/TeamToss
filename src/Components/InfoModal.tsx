@@ -51,7 +51,13 @@ const InfoModal: React.FC = () => {
         <InfoOutlinedIcon sx={{ fontSize: '1.2rem' }} />
       </IconButton>
 
-      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="xs"
+        fullWidth
+        sx={{ '& .MuiDialog-container': { alignItems: 'flex-start', pt: 10 } }}
+      >
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1 }}>
           <Box>
             <Box component="span" sx={{ color: '#e8670a' }}>TEAM</Box>
