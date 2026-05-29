@@ -45,7 +45,12 @@ const TabNavigation: React.FC = () => {
     const [value, setValue] = useState(0);
     const [coinResult, setCoinResult] = useState<string>('');
     const [playerInput, setPlayerInput] = useState<string>('');
-    const [playerList, setPlayerList] = useState<string[]>([]);
+    const [playerList, setPlayerList] = useState<string[]>(() => {
+        try {
+            const saved = localStorage.getItem('tt_queue');
+            return saved ? JSON.parse(saved) : [];
+        } catch { return []; }
+    });
     const [teams, setTeams] = useState<string[][]>([]);
 
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -59,6 +64,10 @@ const TabNavigation: React.FC = () => {
         });
         return unsubscribe;
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem('tt_queue', JSON.stringify(playerList));
+    }, [playerList]);
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -94,6 +103,7 @@ const TabNavigation: React.FC = () => {
         setPlayerList([]);
         setTeams([]);
         setShowQueue(false);
+        localStorage.removeItem('tt_queue');
     };
 
     const updatePlayerList = (updatedPlayerList: string[]) => {
