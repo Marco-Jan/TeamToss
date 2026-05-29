@@ -42,7 +42,7 @@ function a11yProps(index: number) {
 const TEAM_COLORS = ['#e8670a', '#2dd4bf', '#f0c030', '#a855f7'];
 
 const TabNavigation: React.FC = () => {
-    const [value, setValue] = useState(2);
+    const [value, setValue] = useState(0);
     const [coinResult, setCoinResult] = useState<string>('');
     const [playerInput, setPlayerInput] = useState<string>('');
     const [playerList, setPlayerList] = useState<string[]>([]);
