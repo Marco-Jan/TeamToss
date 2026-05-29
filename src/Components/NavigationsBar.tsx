@@ -245,27 +245,27 @@ const TabNavigation: React.FC = () => {
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'space-between',
-                                                px: 1.5,
-                                                py: 0.75,
+                                                px: 2,
+                                                py: 1.25,
                                                 borderTop: i === 0 ? 'none' : '1px solid #1e2128',
                                                 '&:hover': { backgroundColor: 'rgba(232, 103, 10, 0.04)' },
                                             }}
                                         >
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                                 <Typography sx={{
-                                                    fontSize: '0.6rem',
+                                                    fontSize: '0.75rem',
                                                     color: '#4a4d55',
                                                     fontFamily: '"Rajdhani", sans-serif',
                                                     fontWeight: 700,
                                                     letterSpacing: '0.1em',
-                                                    minWidth: 16,
+                                                    minWidth: 20,
                                                 }}>
                                                     {String(i + 1).padStart(2, '0')}
                                                 </Typography>
                                                 <Typography sx={{
                                                     fontFamily: '"Rajdhani", sans-serif',
                                                     fontWeight: 600,
-                                                    fontSize: '0.9rem',
+                                                    fontSize: '1.1rem',
                                                     letterSpacing: '0.05em',
                                                     color: '#c9d1d9',
                                                 }}>
@@ -277,7 +277,7 @@ const TabNavigation: React.FC = () => {
                                                 onClick={() => handleRemoveFromQueue(name)}
                                                 sx={{
                                                     color: '#3a3d45',
-                                                    p: 0.25,
+                                                    p: 0.5,
                                                     borderRadius: 0,
                                                     '&:hover': {
                                                         color: '#f85149',
@@ -285,7 +285,7 @@ const TabNavigation: React.FC = () => {
                                                     },
                                                 }}
                                             >
-                                                <CloseIcon sx={{ fontSize: '0.85rem' }} />
+                                                <CloseIcon sx={{ fontSize: '1rem' }} />
                                             </IconButton>
                                         </Box>
                                     ))}
