@@ -10,6 +10,7 @@ import GoogleSignInButton from './Components/SignInBtn';
 import SignOutButton from './Components/SignOutBtn';
 import TabNavigation from './Components/NavigationsBar';
 import LegalPage from './Components/pages/LegalPage';
+import InfoModal from './Components/InfoModal';
 import { theme } from './Components/Thema/theme';
 
 const NAV_LINKS = [
@@ -76,6 +77,7 @@ const App: React.FC = () => {
           </RouterLink>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <InfoModal />
             {user ? (
               <>
                 {userPhoto && (
