@@ -1,8 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding: 0;
   min-width: 320px;
-  min-height: 100%;
-  overflow-y:initial;
+  min-height: 100vh;
+  background-color: #08090a;
+  color: #c9d1d9;
+  font-family: 'Rajdhani', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  overflow-y: auto;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232, 103, 10, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 103, 10, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08090a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e8670a;
 }
