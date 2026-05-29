@@ -11,9 +11,9 @@ function TeamSizeSelector({ teamSize, setTeamSize }: { teamSize: string, setTeam
         label="Number of Squads"
         onChange={(e) => setTeamSize(e.target.value)}
       >
-        <MenuItem value="Team2">2 Squads</MenuItem>
-        <MenuItem value="Team3">3 Squads</MenuItem>
-        <MenuItem value="Team4">4 Squads</MenuItem>
+        {Array.from({ length: 9 }, (_, i) => i + 2).map(n => (
+          <MenuItem key={n} value={`Team${n}`}>{n} Squads</MenuItem>
+        ))}
       </Select>
     </FormControl>
   );
