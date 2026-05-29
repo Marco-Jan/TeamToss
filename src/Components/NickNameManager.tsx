@@ -5,18 +5,12 @@ import { addNickname, getNicknames, deleteNickname } from '../firebase/firebaseI
 import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
-import { theme } from './Thema/theme';
 import {
-  Card,
-  CardContent,
   Typography,
-  CardActions,
   IconButton,
   Box,
   Button,
   TextField,
-  ThemeProvider,
-  CardActionArea,
   Dialog,
   DialogActions,
   DialogContent,
@@ -83,80 +77,130 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   };
 
   const handleAddSelectedPlayer = (selectedNickname: string) => {
-    const playerExists = playerList.includes(selectedNickname);
-
-    if (playerExists) {
-      const updatedPlayerList = playerList.filter(player => player !== selectedNickname);
-      updatePlayerList(updatedPlayerList);
+    if (playerList.includes(selectedNickname)) {
+      updatePlayerList(playerList.filter(p => p !== selectedNickname));
     } else {
       onAddPlayer(selectedNickname);
       setSelectedNickname('');
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleAddNickname();
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ width: '100%', mt: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
         <TextField
           fullWidth
-          label="Playername"
+          label="Save Operator"
           value={nickname}
           onChange={e => setNickname(e.target.value)}
-          margin="normal"
-          sx={{ margin: '10px' }}
+          onKeyDown={handleKeyDown}
         />
         <Button
           variant="contained"
-          startIcon={<AddCircleOutlineIcon />}
           onClick={handleAddNickname}
-          sx={{
-            display: 'flex',
-            justifyContent: 'end',
-            alignItems: 'center',
-            margin: 'auto',
-            height: '56px',
-            backgroundColor: theme.palette.primary.main,
-            '&:hover': {
-              backgroundColor: 'green',
-            },
-          }}
+          sx={{ minWidth: 56, height: 56, m: 0, px: 1 }}
         >
+          <AddCircleOutlineIcon />
         </Button>
       </Box>
 
-      {/*/  player Cards hier ändern */}
-
-      <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', overflowWrap: 'break-word' }}>
-        {nicknames.map(({ id, NickName }) => (
-          <Card sx={{ m: 1, width: '120px', height: '120px', backgroundColor: playerList.includes(NickName) ? 'green' : '#1976d2' }}>
-            <CardActionArea onClick={() => handleAddSelectedPlayer(NickName)}>
-              <CardContent key={id}>
-                <Typography sx={{ color: 'white' }} variant="body1">{NickName}</Typography>
-              </CardContent>
-              <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton color="error" onClick={() => handleDeleteNickname(id)}>
-                  <DeleteIcon />
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        {nicknames.map(({ id, NickName }) => {
+          const isSelected = playerList.includes(NickName);
+          return (
+            <Box
+              key={id}
+              sx={{
+                width: 112,
+                height: 112,
+                border: `1px solid ${isSelected ? '#e8670a' : '#2a2d35'}`,
+                borderTop: `2px solid ${isSelected ? '#e8670a' : '#3a3d45'}`,
+                backgroundColor: isSelected ? 'rgba(232, 103, 10, 0.1)' : '#111318',
+                boxShadow: isSelected ? '0 0 16px rgba(232, 103, 10, 0.25)' : 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                p: 1,
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
+                position: 'relative',
+                '&:hover': {
+                  borderColor: '#e8670a',
+                  backgroundColor: isSelected ? 'rgba(232, 103, 10, 0.15)' : 'rgba(232, 103, 10, 0.05)',
+                },
+              }}
+              onClick={() => handleAddSelectedPlayer(NickName)}
+            >
+              <Typography sx={{
+                color: isSelected ? '#e8670a' : '#c9d1d9',
+                fontFamily: '"Rajdhani", sans-serif',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                letterSpacing: '0.04em',
+                wordBreak: 'break-word',
+                lineHeight: 1.2,
+                flex: 1,
+              }}>
+                {NickName}
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton
+                  size="small"
+                  onClick={(e) => { e.stopPropagation(); handleDeleteNickname(id); }}
+                  sx={{
+                    color: '#3a3d45',
+                    p: 0.25,
+                    borderRadius: 0,
+                    '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
                 </IconButton>
-              </CardActions>
-            </CardActionArea>
-          </Card>
-        ))}
-
+              </Box>
+            </Box>
+          );
+        })}
       </Box>
 
       <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ pt: 2 }}>
           <DialogContentText>
-            Are you sure you want to delete this player?
+            Remove this operator from the saved roster?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancelDelete}>Cancel</Button>
-          <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+        <DialogActions sx={{ borderTop: '1px solid #2a2d35', px: 2, py: 1.5 }}>
+          <Button
+            onClick={handleCancelDelete}
+            sx={{
+              color: '#8b949e',
+              borderColor: '#2a2d35',
+              border: '1px solid #2a2d35',
+              m: 0,
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            sx={{
+              color: '#f85149',
+              borderColor: '#f85149',
+              border: '1px solid #f85149',
+              m: 0,
+              ml: 1,
+              '&:hover': { backgroundColor: 'rgba(248, 81, 73, 0.08)' },
+            }}
+          >
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
-    </ThemeProvider>
+    </Box>
   );
 };
 

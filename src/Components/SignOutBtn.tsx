@@ -4,14 +4,25 @@ import { handleSignOut } from '../firebase/firebaseInit';
 const SignOutButton: React.FC = () => {
   return (
     <Button
-      variant="contained"
-      color="secondary"
+      variant="outlined"
       onClick={handleSignOut}
-      style={{ margin: '20px 20px'}}
+      sx={{
+        m: 0,
+        borderColor: '#2a2d35',
+        color: '#8b949e',
+        fontSize: '0.72rem',
+        py: 0.6,
+        px: 1.25,
+        '&:hover': {
+          borderColor: '#f85149',
+          color: '#f85149',
+          backgroundColor: 'rgba(248, 81, 73, 0.06)',
+        },
+      }}
     >
-      Log out
+      Sign Out
     </Button>
   );
-}
+};
 
 export default SignOutButton;
