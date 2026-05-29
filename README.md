@@ -4,27 +4,50 @@ TeamToss ist eine Webanwendung, die dazu dient, Teams für verschiedene Aktivit�
 
 ## Funktionen
 
+
+
+<img src="src/assets/loginTeams.JPG" alt="TeamTossImage" width="400">
+ 
+Team auswahl
+
+
 - Hinzufügen von Spielern: Benutzer können Spieler zur Spielerliste hinzufügen, indem sie deren Namen in das Textfeld eingeben und auf die Schaltfläche "Spieler hinzufügen" klicken.
 - Generieren von Teams: Benutzer können Teams generieren, indem sie auf die Schaltfläche "Teams generieren" klicken. Die Spieler werden dann zufällig auf zwei Teams verteilt.
+
+<br>
+
+<img src="src/assets/coinToss.JPG" alt="TeamTossImage" width="400">
+
+Münzwurf
+
 - Münzwurf: Benutzer können einen Münzwurf durchführen, um zufällig zu entscheiden, welches Team beginnt. Der Münzwurf wird simuliert und das Ergebnis (Kopf oder Zahl) angezeigt.
 
+<br>
 ## Installation
 
 1. Klonen Sie das Repository auf Ihren lokalen Computer:
 
+```bash
 git clone https://github.com/dein-benutzername/TeamToss.git
+```
 
 2. Navigieren Sie in das Projektverzeichnis:
 
+```bash
 cd TeamToss
+```
 
 3. Installieren Sie die Abhängigkeiten:
 
+```bash
 npm install
+```
 
 4. Starten Sie die Anwendung:
 
+```bash
 npm start
+```
 
 Die Anwendung wird dann unter http://localhost:3000 in Ihrem Webbrowser gestartet.
 

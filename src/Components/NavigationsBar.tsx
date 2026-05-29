@@ -47,7 +47,9 @@ const TabNavigation: React.FC = () => {
     const [playerInput, setPlayerInput] = useState<string>('');
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [teams, setTeams] = useState<string[][]>([]);
+
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
     const [teamSize, setTeamSize] = useState<string>('Team2');
     const [showQueue, setShowQueue] = useState<boolean>(false);
 
