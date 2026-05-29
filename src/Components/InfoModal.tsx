@@ -28,7 +28,12 @@ const features = [
 ];
 
 const InfoModal: React.FC = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => !localStorage.getItem('tt_info_seen'));
+
+  const handleClose = () => {
+    localStorage.setItem('tt_info_seen', '1');
+    setOpen(false);
+  };
 
   return (
     <>
@@ -46,7 +51,7 @@ const InfoModal: React.FC = () => {
         <InfoOutlinedIcon sx={{ fontSize: '1.2rem' }} />
       </IconButton>
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xs" fullWidth>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1 }}>
           <Box>
             <Box component="span" sx={{ color: '#e8670a' }}>TEAM</Box>
@@ -61,7 +66,7 @@ const InfoModal: React.FC = () => {
               WAS IST DAS HIER?
             </Box>
           </Box>
-          <IconButton onClick={() => setOpen(false)} size="small" sx={{ color: '#3a3d45', '&:hover': { color: '#c9d1d9', backgroundColor: 'transparent' } }}>
+          <IconButton onClick={handleClose} size="small" sx={{ color: '#3a3d45', '&:hover': { color: '#c9d1d9', backgroundColor: 'transparent' } }}>
             <CloseIcon sx={{ fontSize: '1rem' }} />
           </IconButton>
         </DialogTitle>
