@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc, query, where } from "firebase/firestore";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { Nickname } from "../types/nickname";
 
@@ -81,6 +81,13 @@ export const getNicknames = async (): Promise<Nickname[]> => {
 // Funktion zum Löschen eines Nicknames anhand seiner ID
 export const deleteNickname = async (nicknameId: string): Promise<void> => {
   await deleteDoc(doc(db, "TeamTossNickNames", nicknameId));
+};
+
+// Funktion zum Umbenennen eines Nicknames anhand seiner ID
+export const updateNickname = async (nicknameId: string, newName: string): Promise<void> => {
+  await updateDoc(doc(db, "TeamTossNickNames", nicknameId), {
+    NickName: newName,
+  });
 };
 
 export default app;

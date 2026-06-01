@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { addNickname, getNicknames, deleteNickname } from '../firebase/firebaseInit';
+import { addNickname, getNicknames, deleteNickname, updateNickname } from '../firebase/firebaseInit';
 import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -30,6 +33,8 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   const [, setSelectedNickname] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>('');
+  const [editingId, setEditingId] = useState<string>('');
+  const [editValue, setEditValue] = useState<string>('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -76,6 +81,41 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
     setOpenDeleteDialog(false);
   };
 
+  const handleStartEdit = (id: string, currentName: string) => {
+    setEditingId(id);
+    setEditValue(currentName);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId('');
+    setEditValue('');
+  };
+
+  const handleSaveEdit = async (id: string, oldName: string) => {
+    const newName = editValue.trim();
+    if (newName === '' || newName === oldName) {
+      handleCancelEdit();
+      return;
+    }
+    // Doppelte Namen vermeiden
+    if (nicknames.some(n => n.id !== id && n.NickName === newName)) {
+      handleCancelEdit();
+      return;
+    }
+    await updateNickname(id, newName);
+    // Falls der Operator gerade in der Queue ist, dort ebenfalls umbenennen
+    if (playerList.includes(oldName)) {
+      updatePlayerList(playerList.map(p => (p === oldName ? newName : p)));
+    }
+    handleCancelEdit();
+    await fetchNicknames();
+  };
+
+  const handleEditKeyDown = (e: React.KeyboardEvent, id: string, oldName: string) => {
+    if (e.key === 'Enter') handleSaveEdit(id, oldName);
+    if (e.key === 'Escape') handleCancelEdit();
+  };
+
   const handleAddSelectedPlayer = (selectedNickname: string) => {
     if (playerList.includes(selectedNickname)) {
       updatePlayerList(playerList.filter(p => p !== selectedNickname));
@@ -111,6 +151,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
         {nicknames.map(({ id, NickName }) => {
           const isSelected = playerList.includes(NickName);
+          const isEditing = editingId === id;
           return (
             <Box
               key={id}
@@ -126,41 +167,105 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                 justifyContent: 'space-between',
                 p: 1,
                 transition: 'all 0.2s ease',
-                cursor: 'pointer',
+                cursor: isEditing ? 'default' : 'pointer',
                 position: 'relative',
                 '&:hover': {
                   borderColor: '#e8670a',
                   backgroundColor: isSelected ? 'rgba(232, 103, 10, 0.15)' : 'rgba(232, 103, 10, 0.05)',
                 },
               }}
-              onClick={() => handleAddSelectedPlayer(NickName)}
+              onClick={() => { if (!isEditing) handleAddSelectedPlayer(NickName); }}
             >
-              <Typography sx={{
-                color: isSelected ? '#e8670a' : '#c9d1d9',
-                fontFamily: '"Rajdhani", sans-serif',
-                fontWeight: 700,
-                fontSize: '0.9rem',
-                letterSpacing: '0.04em',
-                wordBreak: 'break-word',
-                lineHeight: 1.2,
-                flex: 1,
-              }}>
-                {NickName}
-              </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton
-                  size="small"
-                  onClick={(e) => { e.stopPropagation(); handleDeleteNickname(id); }}
-                  sx={{
-                    color: '#3a3d45',
-                    p: 0.25,
-                    borderRadius: 0,
-                    '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
-                  }}
-                >
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </Box>
+              {isEditing ? (
+                <>
+                  <TextField
+                    value={editValue}
+                    onChange={e => setEditValue(e.target.value)}
+                    onKeyDown={e => handleEditKeyDown(e, id, NickName)}
+                    onClick={e => e.stopPropagation()}
+                    autoFocus
+                    variant="standard"
+                    size="small"
+                    sx={{
+                      flex: 1,
+                      '& .MuiInputBase-input': {
+                        color: '#c9d1d9',
+                        fontFamily: '"Rajdhani", sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.9rem',
+                        p: 0,
+                      },
+                    }}
+                  />
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => { e.stopPropagation(); handleSaveEdit(id, NickName); }}
+                      sx={{
+                        color: '#3a3d45',
+                        p: 0.25,
+                        borderRadius: 0,
+                        '&:hover': { color: '#2dd4bf', backgroundColor: 'transparent' },
+                      }}
+                    >
+                      <CheckIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => { e.stopPropagation(); handleCancelEdit(); }}
+                      sx={{
+                        color: '#3a3d45',
+                        p: 0.25,
+                        borderRadius: 0,
+                        '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Typography sx={{
+                    color: isSelected ? '#e8670a' : '#c9d1d9',
+                    fontFamily: '"Rajdhani", sans-serif',
+                    fontWeight: 700,
+                    fontSize: '0.9rem',
+                    letterSpacing: '0.04em',
+                    wordBreak: 'break-word',
+                    lineHeight: 1.2,
+                    flex: 1,
+                  }}>
+                    {NickName}
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => { e.stopPropagation(); handleStartEdit(id, NickName); }}
+                      sx={{
+                        color: '#3a3d45',
+                        p: 0.25,
+                        borderRadius: 0,
+                        '&:hover': { color: '#e8670a', backgroundColor: 'transparent' },
+                      }}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => { e.stopPropagation(); handleDeleteNickname(id); }}
+                      sx={{
+                        color: '#3a3d45',
+                        p: 0.25,
+                        borderRadius: 0,
+                        '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
+                      }}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </>
+              )}
             </Box>
           );
         })}

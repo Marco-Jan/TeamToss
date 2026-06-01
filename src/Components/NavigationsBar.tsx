@@ -5,6 +5,8 @@ import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/firebaseInit';
@@ -57,6 +59,8 @@ const TabNavigation: React.FC = () => {
 
     const [teamSize, setTeamSize] = useState<string>('Team2');
     const [showQueue, setShowQueue] = useState<boolean>(false);
+    const [editingIndex, setEditingIndex] = useState<number>(-1);
+    const [editValue, setEditValue] = useState<string>('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -97,6 +101,37 @@ const TabNavigation: React.FC = () => {
 
     const handleRemoveFromQueue = (name: string): void => {
         setPlayerList(prev => prev.filter(p => p !== name));
+    };
+
+    const handleStartEditQueue = (index: number, currentName: string): void => {
+        setEditingIndex(index);
+        setEditValue(currentName);
+    };
+
+    const handleCancelEditQueue = (): void => {
+        setEditingIndex(-1);
+        setEditValue('');
+    };
+
+    const handleSaveEditQueue = (index: number): void => {
+        const newName = editValue.trim();
+        const oldName = playerList[index];
+        if (newName === '' || newName === oldName) {
+            handleCancelEditQueue();
+            return;
+        }
+        // Doppelte Namen vermeiden
+        if (playerList.some((p, i) => i !== index && p === newName)) {
+            handleCancelEditQueue();
+            return;
+        }
+        setPlayerList(prev => prev.map((p, i) => (i === index ? newName : p)));
+        handleCancelEditQueue();
+    };
+
+    const handleEditQueueKeyDown = (e: React.KeyboardEvent, index: number): void => {
+        if (e.key === 'Enter') handleSaveEditQueue(index);
+        if (e.key === 'Escape') handleCancelEditQueue();
     };
 
     const handleClearList = (): void => {
@@ -248,7 +283,9 @@ const TabNavigation: React.FC = () => {
                                     borderLeft: '2px solid #e8670a',
                                     backgroundColor: '#111318',
                                 }}>
-                                    {playerList.map((name, i) => (
+                                    {playerList.map((name, i) => {
+                                        const isEditing = editingIndex === i;
+                                        return (
                                         <Box
                                             key={name}
                                             sx={{
@@ -261,7 +298,7 @@ const TabNavigation: React.FC = () => {
                                                 '&:hover': { backgroundColor: 'rgba(232, 103, 10, 0.04)' },
                                             }}
                                         >
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, minWidth: 0 }}>
                                                 <Typography sx={{
                                                     fontSize: '0.75rem',
                                                     color: '#4a4d55',
@@ -272,33 +309,101 @@ const TabNavigation: React.FC = () => {
                                                 }}>
                                                     {String(i + 1).padStart(2, '0')}
                                                 </Typography>
-                                                <Typography sx={{
-                                                    fontFamily: '"Rajdhani", sans-serif',
-                                                    fontWeight: 600,
-                                                    fontSize: '1.1rem',
-                                                    letterSpacing: '0.05em',
-                                                    color: '#c9d1d9',
-                                                }}>
-                                                    {name}
-                                                </Typography>
+                                                {isEditing ? (
+                                                    <TextField
+                                                        value={editValue}
+                                                        onChange={e => setEditValue(e.target.value)}
+                                                        onKeyDown={e => handleEditQueueKeyDown(e, i)}
+                                                        autoFocus
+                                                        variant="standard"
+                                                        size="small"
+                                                        sx={{
+                                                            flex: 1,
+                                                            '& .MuiInputBase-input': {
+                                                                color: '#c9d1d9',
+                                                                fontFamily: '"Rajdhani", sans-serif',
+                                                                fontWeight: 600,
+                                                                fontSize: '1.1rem',
+                                                                letterSpacing: '0.05em',
+                                                                p: 0,
+                                                            },
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <Typography sx={{
+                                                        fontFamily: '"Rajdhani", sans-serif',
+                                                        fontWeight: 600,
+                                                        fontSize: '1.1rem',
+                                                        letterSpacing: '0.05em',
+                                                        color: '#c9d1d9',
+                                                    }}>
+                                                        {name}
+                                                    </Typography>
+                                                )}
                                             </Box>
-                                            <IconButton
-                                                size="small"
-                                                onClick={() => handleRemoveFromQueue(name)}
-                                                sx={{
-                                                    color: '#3a3d45',
-                                                    p: 0.5,
-                                                    borderRadius: 0,
-                                                    '&:hover': {
-                                                        color: '#f85149',
-                                                        backgroundColor: 'transparent',
-                                                    },
-                                                }}
-                                            >
-                                                <CloseIcon sx={{ fontSize: '1rem' }} />
-                                            </IconButton>
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                {isEditing ? (
+                                                    <>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => handleSaveEditQueue(i)}
+                                                            sx={{
+                                                                color: '#3a3d45',
+                                                                p: 0.5,
+                                                                borderRadius: 0,
+                                                                '&:hover': { color: '#2dd4bf', backgroundColor: 'transparent' },
+                                                            }}
+                                                        >
+                                                            <CheckIcon sx={{ fontSize: '1rem' }} />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={handleCancelEditQueue}
+                                                            sx={{
+                                                                color: '#3a3d45',
+                                                                p: 0.5,
+                                                                borderRadius: 0,
+                                                                '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
+                                                            }}
+                                                        >
+                                                            <CloseIcon sx={{ fontSize: '1rem' }} />
+                                                        </IconButton>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => handleStartEditQueue(i, name)}
+                                                            sx={{
+                                                                color: '#3a3d45',
+                                                                p: 0.5,
+                                                                borderRadius: 0,
+                                                                '&:hover': { color: '#e8670a', backgroundColor: 'transparent' },
+                                                            }}
+                                                        >
+                                                            <EditIcon sx={{ fontSize: '1rem' }} />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => handleRemoveFromQueue(name)}
+                                                            sx={{
+                                                                color: '#3a3d45',
+                                                                p: 0.5,
+                                                                borderRadius: 0,
+                                                                '&:hover': {
+                                                                    color: '#f85149',
+                                                                    backgroundColor: 'transparent',
+                                                                },
+                                                            }}
+                                                        >
+                                                            <CloseIcon sx={{ fontSize: '1rem' }} />
+                                                        </IconButton>
+                                                    </>
+                                                )}
+                                            </Box>
                                         </Box>
-                                    ))}
+                                        );
+                                    })}
                                 </Box>
                             </Collapse>
                         </Box>
