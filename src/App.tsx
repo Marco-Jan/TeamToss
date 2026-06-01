@@ -35,7 +35,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container
-        maxWidth="sm"
+        maxWidth="md"
         sx={{ minHeight: '100vh', py: 3, display: 'flex', flexDirection: 'column' }}
       >
         {/* ── Header ── */}
