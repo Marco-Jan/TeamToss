@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Tabs, Tab, Box, Typography, Button, TextField, IconButton, Collapse, Tooltip } from '@mui/material';
+import { AppBar, Tabs, Tab, Box, Typography, Button, TextField, IconButton, Collapse, Tooltip, Snackbar, Alert } from '@mui/material';
 import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
@@ -75,6 +75,8 @@ const TabNavigation: React.FC = () => {
     const [showQueue, setShowQueue] = useState<boolean>(true);
     const [editingIndex, setEditingIndex] = useState<number>(-1);
     const [editValue, setEditValue] = useState<string>('');
+    // Hinweis, wenn ein bereits vorhandener Name in die Queue soll.
+    const [duplicateWarning, setDuplicateWarning] = useState<string>('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -120,10 +122,13 @@ const TabNavigation: React.FC = () => {
 
     const handleAddPlayer = (nickname?: string): void => {
         const nameToAdd = nickname?.trim() || playerInput.trim();
-        if (nameToAdd !== '' && !playerList.includes(nameToAdd)) {
-            setPlayerList(prev => [...prev, nameToAdd]);
-            setPlayerInput('');
+        if (nameToAdd === '') return;
+        if (playerList.includes(nameToAdd)) {
+            setDuplicateWarning(t('builder.duplicate', { name: nameToAdd }));
+            return;
         }
+        setPlayerList(prev => [...prev, nameToAdd]);
+        setPlayerInput('');
     };
 
     const handleRemoveFromQueue = (name: string): void => {
@@ -712,6 +717,22 @@ const TabNavigation: React.FC = () => {
                     </Typography>
                 </Box>
             </TabPanel>
+
+            <Snackbar
+                open={!!duplicateWarning}
+                autoHideDuration={3000}
+                onClose={() => setDuplicateWarning('')}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    severity="warning"
+                    variant="filled"
+                    onClose={() => setDuplicateWarning('')}
+                    sx={{ fontFamily: '"Rajdhani", sans-serif', fontWeight: 600, letterSpacing: '0.04em' }}
+                >
+                    {duplicateWarning}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
