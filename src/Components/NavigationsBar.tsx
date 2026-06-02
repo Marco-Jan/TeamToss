@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Tabs, Tab, Box, Typography, Button, TextField, IconButton, Collapse } from '@mui/material';
+import { AppBar, Tabs, Tab, Box, Typography, Button, TextField, IconButton, Collapse, Tooltip } from '@mui/material';
 import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
@@ -8,6 +8,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/firebaseInit';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -59,6 +61,13 @@ const TabNavigation: React.FC = () => {
     });
     const [teams, setTeams] = useState<string[][]>([]);
     const [leaders, setLeaders] = useState<Record<number, string>>({});
+    // Vorab in der Queue markierte Captains (werden beim Generieren auf verschiedene Squads verteilt).
+    const [captains, setCaptains] = useState<string[]>(() => {
+        try {
+            const saved = localStorage.getItem('tt_captains');
+            return saved ? JSON.parse(saved) : [];
+        } catch { return []; }
+    });
 
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
@@ -78,6 +87,14 @@ const TabNavigation: React.FC = () => {
     useEffect(() => {
         localStorage.setItem('tt_queue', JSON.stringify(playerList));
     }, [playerList]);
+
+    useEffect(() => {
+        localStorage.setItem('tt_captains', JSON.stringify(captains));
+    }, [captains]);
+
+    const handleToggleCaptain = (name: string): void => {
+        setCaptains(prev => prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]);
+    };
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -111,6 +128,7 @@ const TabNavigation: React.FC = () => {
 
     const handleRemoveFromQueue = (name: string): void => {
         setPlayerList(prev => prev.filter(p => p !== name));
+        setCaptains(prev => prev.filter(c => c !== name));
     };
 
     const handleStartEditQueue = (index: number, currentName: string): void => {
@@ -136,6 +154,8 @@ const TabNavigation: React.FC = () => {
             return;
         }
         setPlayerList(prev => prev.map((p, i) => (i === index ? newName : p)));
+        // Captain-Markierung beim Umbenennen mitnehmen
+        setCaptains(prev => prev.map(c => (c === oldName ? newName : c)));
         handleCancelEditQueue();
     };
 
@@ -148,7 +168,9 @@ const TabNavigation: React.FC = () => {
         setPlayerList([]);
         setTeams([]);
         setLeaders({});
+        setCaptains([]);
         localStorage.removeItem('tt_queue');
+        localStorage.removeItem('tt_captains');
     };
 
     const updatePlayerList = (updatedPlayerList: string[]) => {
@@ -165,13 +187,35 @@ const TabNavigation: React.FC = () => {
 
     const handleGenerateTeams = (): void => {
         const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10);
-        const shuffledPlayers = shuffleArray([...playerList]);
         const newTeams: string[][] = Array.from({ length: numberOfTeams }, () => []);
-        for (let i = 0; i < shuffledPlayers.length; i++) {
-            newTeams[i % numberOfTeams].push(shuffledPlayers[i]);
-        }
+
+        // Markierte Captains zuerst – je einer pro Squad (Round-Robin), damit sie sich verteilen.
+        const activeCaptains = shuffleArray(playerList.filter(p => captains.includes(p)));
+        const others = shuffleArray(playerList.filter(p => !captains.includes(p)));
+
+        activeCaptains.forEach((captain, i) => {
+            newTeams[i % numberOfTeams].push(captain);
+        });
+
+        // Restliche Spieler immer ins aktuell kleinste Squad – hält die Teams ausgeglichen.
+        others.forEach(player => {
+            let minIdx = 0;
+            for (let i = 1; i < numberOfTeams; i++) {
+                if (newTeams[i].length < newTeams[minIdx].length) minIdx = i;
+            }
+            newTeams[minIdx].push(player);
+        });
+
+        // Captain an Position 0 eines Squads wird automatisch Anführer.
+        const newLeaders: Record<number, string> = {};
+        newTeams.forEach((team, i) => {
+            if (team.length > 0 && captains.includes(team[0])) {
+                newLeaders[i] = team[0];
+            }
+        });
+
         setTeams(newTeams);
-        setLeaders({});
+        setLeaders(newLeaders);
     };
 
     const handleSelectLeader = (squadIndex: number, member: string): void => {
@@ -408,6 +452,7 @@ const TabNavigation: React.FC = () => {
                             ) : (
                                 playerList.map((name, i) => {
                                     const isEditing = editingIndex === i;
+                                    const isCaptain = captains.includes(name);
                                     return (
                                     <Box
                                         key={name}
@@ -421,7 +466,24 @@ const TabNavigation: React.FC = () => {
                                             '&:hover': { backgroundColor: 'rgba(232, 103, 10, 0.04)' },
                                         }}
                                     >
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, minWidth: 0 }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1, minWidth: 0 }}>
+                                            <Tooltip title={t('builder.captainTooltip')} placement="top" arrow>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => handleToggleCaptain(name)}
+                                                    aria-label={t('builder.captainTooltip')}
+                                                    sx={{
+                                                        p: 0.25,
+                                                        borderRadius: 0,
+                                                        color: isCaptain ? '#e8670a' : '#3a3d45',
+                                                        '&:hover': { color: '#e8670a', backgroundColor: 'transparent' },
+                                                    }}
+                                                >
+                                                    {isCaptain
+                                                        ? <StarIcon sx={{ fontSize: '1.1rem' }} />
+                                                        : <StarBorderIcon sx={{ fontSize: '1.1rem' }} />}
+                                                </IconButton>
+                                            </Tooltip>
                                             <Typography sx={{
                                                 fontSize: '0.75rem',
                                                 color: '#4a4d55',
@@ -455,10 +517,10 @@ const TabNavigation: React.FC = () => {
                                             ) : (
                                                 <Typography sx={{
                                                     fontFamily: '"Rajdhani", sans-serif',
-                                                    fontWeight: 600,
+                                                    fontWeight: isCaptain ? 700 : 600,
                                                     fontSize: '1.1rem',
                                                     letterSpacing: '0.05em',
-                                                    color: '#c9d1d9',
+                                                    color: isCaptain ? '#e8670a' : '#c9d1d9',
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap',

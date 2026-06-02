@@ -39,6 +39,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'builder.queuedOther': '{n} Spieler in der Warteschlange',
     'builder.noQueued': 'Keine Spieler in der Warteschlange',
     'builder.squad': 'Squad {n}',
+    'builder.captainTooltip': 'Als Captain markieren (wird auf eigenes Squad verteilt)',
 
     // Coin Flip
     'coin.flip': 'WURF',
@@ -119,6 +120,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'builder.queuedOther': '{n} Operators Queued',
     'builder.noQueued': 'No operators queued',
     'builder.squad': 'Squad {n}',
+    'builder.captainTooltip': 'Mark as captain (placed in their own squad)',
 
     // Coin Flip
     'coin.flip': 'FLIP',
