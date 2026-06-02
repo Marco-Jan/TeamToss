@@ -4,6 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import { addNickname, getNicknames, deleteNickname, updateNickname } from '../firebase/firebaseInit';
 import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
@@ -127,6 +129,19 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
     }
   };
 
+  // Sind bereits alle gespeicherten Spieler in der Queue?
+  const allSelected = nicknames.length > 0 && nicknames.every(n => playerList.includes(n.NickName));
+
+  const handleToggleAll = () => {
+    if (allSelected) {
+      // Nur die Roster-Namen entfernen – manuell eingegebene Spieler bleiben erhalten.
+      updatePlayerList(playerList.filter(p => !nicknames.some(n => n.NickName === p)));
+    } else {
+      const namesToAdd = nicknames.map(n => n.NickName).filter(name => !playerList.includes(name));
+      updatePlayerList([...playerList, ...namesToAdd]);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleAddNickname();
   };
@@ -149,6 +164,34 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
           <AddCircleOutlineIcon />
         </Button>
       </Box>
+
+      {nicknames.length > 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+          <Button
+            onClick={handleToggleAll}
+            startIcon={allSelected ? <RemoveDoneIcon /> : <DoneAllIcon />}
+            sx={{
+              m: 0,
+              px: 1.25,
+              py: 0.5,
+              color: allSelected ? '#8b949e' : '#e8670a',
+              border: `1px solid ${allSelected ? '#2a2d35' : '#e8670a'}`,
+              borderRadius: 0,
+              fontFamily: '"Rajdhani", sans-serif',
+              fontWeight: 600,
+              fontSize: '0.7rem',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              '&:hover': {
+                backgroundColor: allSelected ? 'rgba(139, 148, 158, 0.08)' : 'rgba(232, 103, 10, 0.08)',
+                borderColor: allSelected ? '#8b949e' : '#ff8c3a',
+              },
+            }}
+          >
+            {allSelected ? t('roster.deselectAll') : t('roster.selectAll')}
+          </Button>
+        </Box>
+      )}
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
         {nicknames.map(({ id, NickName }) => {

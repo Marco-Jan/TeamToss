@@ -51,6 +51,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     // Roster / Nicknames
     'roster.savedOperators': 'Gespeicherte Spieler',
     'roster.saveOperator': 'Spieler speichern',
+    'roster.selectAll': 'Alle auswählen',
+    'roster.deselectAll': 'Alle abwählen',
     'roster.confirmDelete': 'Löschen bestätigen',
     'roster.removePrompt': 'Diesen Spieler aus dem gespeicherten Kader entfernen?',
     'common.cancel': 'Abbrechen',
@@ -132,6 +134,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     // Roster / Nicknames
     'roster.savedOperators': 'Saved Operators',
     'roster.saveOperator': 'Save Operator',
+    'roster.selectAll': 'Select all',
+    'roster.deselectAll': 'Deselect all',
     'roster.confirmDelete': 'Confirm Delete',
     'roster.removePrompt': 'Remove this operator from the saved roster?',
     'common.cancel': 'Cancel',
