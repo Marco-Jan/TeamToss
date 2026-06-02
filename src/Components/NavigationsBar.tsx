@@ -722,7 +722,13 @@ const TabNavigation: React.FC = () => {
                 open={!!duplicateWarning}
                 autoHideDuration={3000}
                 onClose={() => setDuplicateWarning('')}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                sx={{
+                    top: '50% !important',
+                    left: '50% !important',
+                    right: 'auto !important',
+                    transform: 'translate(-50%, -50%)',
+                }}
             >
                 <Alert
                     severity="warning"
