@@ -4,12 +4,14 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Routes, Route, Link as RouterLink } from 'react-router-dom';
 import './App.css';
-import { auth } from './firebase/firebaseInit';
+import { auth, registerUserPresence } from './firebase/firebaseInit';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import GoogleSignInButton from './Components/SignInBtn';
+import GuestSignInButton from './Components/GuestSignInBtn';
 import SignOutButton from './Components/SignOutBtn';
 import TabNavigation from './Components/NavigationsBar';
 import LegalPage from './Components/pages/LegalPage';
+import AdminDashboard from './Components/pages/AdminDashboard';
 import InfoModal from './Components/InfoModal';
 import { theme } from './Components/Thema/theme';
 
@@ -27,6 +29,10 @@ const App: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setUserPhoto(currentUser?.photoURL ?? '');
+      if (currentUser) {
+        // Zähl-Datensatz für Admin-Statistik anlegen/aktualisieren (Gäste mit Ablaufdatum).
+        void registerUserPresence(currentUser);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -98,7 +104,10 @@ const App: React.FC = () => {
                 <SignOutButton />
               </>
             ) : (
-              <GoogleSignInButton />
+              <>
+                <GuestSignInButton />
+                <GoogleSignInButton />
+              </>
             )}
           </Box>
         </Box>
@@ -110,6 +119,7 @@ const App: React.FC = () => {
             <Route path="/impressum"   element={<LegalPage type="impressum" />} />
             <Route path="/agb"         element={<LegalPage type="agb" />} />
             <Route path="/datenschutz" element={<LegalPage type="datenschutz" />} />
+            <Route path="/admin"       element={<AdminDashboard />} />
           </Routes>
         </Box>
 

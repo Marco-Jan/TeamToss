@@ -67,7 +67,8 @@ const TabNavigation: React.FC = () => {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setIsLoggedIn(!!user);
+            // Roster (Firestore) nur für vollwertige Google-Konten – nicht für anonyme Gäste.
+            setIsLoggedIn(!!user && !user.isAnonymous);
         });
         return unsubscribe;
     }, []);

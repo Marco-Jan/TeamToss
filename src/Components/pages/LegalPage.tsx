@@ -148,14 +148,31 @@ function AgbContent() {
 
       <Section title="§ 3 – Nutzungsbedingungen">
         <BulletList items={[
-          'Die Nutzung von TeamToss ist kostenlos. Eine Anmeldung ist optional und ausschließlich über Google Sign-In möglich.',
+          'Die Nutzung von TeamToss ist kostenlos. Eine Anmeldung ist optional und wahlweise über Google Sign-In oder als anonymer Gast-Zugang möglich.',
           'Nutzerinnen und Nutzer sind für alle von ihnen eingegebenen Inhalte (z. B. Spielernamen) selbst verantwortlich.',
           'Die Nutzung zu rechtswidrigen, belästigenden oder diskriminierenden Zwecken ist untersagt.',
           'Es besteht kein Anspruch auf einen bestimmten Funktionsumfang oder auf ununterbrochene Verfügbarkeit.',
         ]} />
       </Section>
 
-      <Section title="§ 4 – Haftungsausschluss">
+      <Section title="§ 4 – Gast-Zugänge">
+        <BulletList items={[
+          'Gast-Zugänge sind anonym und temporär. Sie werden mitsamt den zugehörigen Daten spätestens 30 Tage nach Erstellung automatisch und unwiderruflich gelöscht.',
+          'Eingaben im Gast-Modus (z. B. Spielerlisten) werden ausschließlich lokal im Browser des Nutzers gespeichert und sind nicht geräteübergreifend verfügbar.',
+          'Die Funktion zum dauerhaften Speichern von Rostern steht ausschließlich angemeldeten Google-Nutzern zur Verfügung.',
+          'Es besteht kein Anspruch auf Wiederherstellung gelöschter Gast-Daten.',
+        ]} />
+      </Section>
+
+      <Section title="§ 5 – Nutzungsstatistik">
+        <Para>
+          Der Betreiber erhebt zur Überwachung des laufenden Betriebs aggregierte, nicht zu
+          Werbezwecken verwendete Nutzungszahlen (z. B. Anzahl der angemeldeten Konten und der
+          aktiven Nutzer). Näheres regelt die Datenschutzerklärung.
+        </Para>
+      </Section>
+
+      <Section title="§ 6 – Haftungsausschluss">
         <Para>
           Der Betreiber übernimmt keine Haftung für Schäden, die durch die Nutzung oder
           Nichtverfügbarkeit des Dienstes entstehen. Dies gilt insbesondere für direkte, indirekte
@@ -163,14 +180,14 @@ function AgbContent() {
         </Para>
       </Section>
 
-      <Section title="§ 5 – Änderungen">
+      <Section title="§ 7 – Änderungen">
         <Para>
           Der Betreiber behält sich vor, den Dienst und diese Nutzungsbedingungen jederzeit
           ohne Vorankündigung zu ändern oder den Betrieb einzustellen.
         </Para>
       </Section>
 
-      <Section title="§ 6 – Anwendbares Recht">
+      <Section title="§ 8 – Anwendbares Recht">
         <Para>
           Es gilt österreichisches Recht unter Ausschluss des UN-Kaufrechts.
           Gerichtsstand ist Graz, Österreich.
@@ -209,6 +226,14 @@ function DatenschutzContent() {
           'Eindeutige Google-User-ID',
           'Manuell gespeicherte Spielernamen (Nicknames)',
         ]} />
+        <Para><Strong>Bei Gast-Nutzung (anonym, optional)</Strong></Para>
+        <Para>
+          Wählst du den anonymen Gast-Zugang, wird kein Name und keine E-Mail-Adresse erhoben.
+          Gespeichert wird lediglich eine zufällig erzeugte, anonyme Kennung sowie Zeitstempel
+          (Erstellung, letzte Aktivität) und ein Ablaufdatum. Spielerlisten und sonstige Eingaben
+          im Gast-Modus verbleiben ausschließlich lokal in deinem Browser (localStorage) und werden
+          nicht an unsere Datenbank übertragen.
+        </Para>
       </Section>
 
       <Section title="2 – Zweck und Rechtsgrundlage">
@@ -237,12 +262,30 @@ function DatenschutzContent() {
 
       <Section title="4 – Speicherdauer">
         <Para>
-          Gespeicherte Daten verbleiben, bis du dein Konto löschst oder aktiv die Löschung
-          anforderst. Gespeicherte Spielernamen kannst du jederzeit selbst in der App löschen.
+          <Strong>Google-Konten:</Strong> Gespeicherte Daten verbleiben, bis du dein Konto löschst
+          oder aktiv die Löschung anforderst. Gespeicherte Spielernamen kannst du jederzeit selbst
+          in der App löschen.
+        </Para>
+        <Para>
+          <Strong>Gast-Zugänge:</Strong> Der anonyme Zähl-Datensatz wird spätestens 30 Tage nach
+          Erstellung automatisch und unwiderruflich gelöscht (technische Umsetzung über eine
+          Firestore-TTL-Richtlinie). Lokal im Browser gespeicherte Eingaben kannst du jederzeit
+          selbst durch Löschen der Browserdaten entfernen.
         </Para>
       </Section>
 
-      <Section title="5 – Deine Rechte (Art. 15–22 DSGVO)">
+      <Section title="5 – Nutzungsstatistik">
+        <Para>
+          Zur Sicherstellung des laufenden Betriebs kann der Betreiber aggregierte Kennzahlen
+          einsehen, etwa die Gesamtzahl der angemeldeten Konten, die Anzahl aktiver Nutzer
+          sowie das Verhältnis von Gast- zu Google-Zugängen. Es erfolgt keine Auswertung des
+          individuellen Nutzungsverhaltens und keine Weitergabe zu Werbezwecken.
+          Rechtsgrundlage: <Strong>Art. 6 Abs. 1 lit. f DSGVO</Strong> (berechtigtes Interesse am
+          sicheren und stabilen Betrieb des Dienstes).
+        </Para>
+      </Section>
+
+      <Section title="6 – Deine Rechte (Art. 15–22 DSGVO)">
         <BulletList items={[
           'Auskunft über gespeicherte Daten (Art. 15)',
           'Berichtigung unrichtiger Daten (Art. 16)',
@@ -254,7 +297,7 @@ function DatenschutzContent() {
         <Para>Zur Ausübung deiner Rechte: <Strong>contact@walk-buddy.app</Strong></Para>
       </Section>
 
-      <Section title="6 – Beschwerderecht">
+      <Section title="7 – Beschwerderecht">
         <Para>
           Du hast das Recht, dich bei der österreichischen Datenschutzbehörde zu beschweren:
         </Para>
@@ -265,7 +308,7 @@ function DatenschutzContent() {
         </Para>
       </Section>
 
-      <Section title="7 – Cookies und Tracking">
+      <Section title="8 – Cookies und Tracking">
         <Para>
           TeamToss verwendet keine Tracking-Cookies und kein Web-Analytics.
           Firebase kann technisch notwendige Sitzungsdaten (Session-Token) verwenden.
@@ -273,7 +316,7 @@ function DatenschutzContent() {
       </Section>
 
       <Section title="Stand">
-        <Para>Mai 2026</Para>
+        <Para>Juni 2026</Para>
       </Section>
     </>
   );

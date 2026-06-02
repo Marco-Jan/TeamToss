@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc, query, where } from "firebase/firestore";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc, setDoc, getDoc, query, where, serverTimestamp, Timestamp, getCountFromServer } from "firebase/firestore";
+import { getAuth, signInWithPopup, signInAnonymously, GoogleAuthProvider, signOut, User } from "firebase/auth";
 import { Nickname } from "../types/nickname";
 
 
@@ -41,6 +41,17 @@ export const signInWithGoogle = () => {
     });
 };
 
+// Anonyme Gast-Anmeldung (kein Google-Konto nötig).
+// Gast-Daten werden nach GUEST_TTL_DAYS automatisch gelöscht (siehe registerUserPresence + TTL-Policy).
+export const signInAsGuest = async (): Promise<void> => {
+  try {
+    await signInAnonymously(auth);
+    console.log('Als Gast angemeldet');
+  } catch (error) {
+    console.error('Gast-Anmeldung fehlgeschlagen', error);
+  }
+};
+
 export const handleSignOut = async () => {
   try {
     await signOut(auth);
@@ -48,6 +59,76 @@ export const handleSignOut = async () => {
   } catch (error) {
     console.error('Fehler bei der Abmeldung', error);
   }
+};
+
+// ── Nutzer-Tracking & Admin ──────────────────────────────────────────────
+// Lebensdauer eines Gast-Zugangs in Tagen.
+const GUEST_TTL_DAYS = 30;
+
+// WICHTIG: Trage hier deine eigene Google-User-UID ein.
+// Zu finden in der Firebase-Konsole → Authentication → Users → Spalte "User UID"
+// (nachdem du dich einmal per Google eingeloggt hast).
+// Nur diese UID(s) sehen das Admin-Dashboard unter /admin.
+// Dieselbe UID muss zusätzlich in firestore.rules (Funktion isAdmin) eingetragen werden!
+export const ADMIN_UIDS: string[] = [
+ 'VjVwvVysQUPvds6GW04kaRSy0rH2'
+];
+
+export const isAdmin = (user: User | null): boolean =>
+  !!user && ADMIN_UIDS.includes(user.uid);
+
+// Legt/aktualisiert den Zähl-Datensatz users/{uid}. Wird bei jeder Anmeldung aufgerufen.
+// Für Gäste wird ein Ablaufdatum (expiresAt) gesetzt, das die TTL-Policy zum Löschen nutzt.
+export const registerUserPresence = async (user: User): Promise<void> => {
+  try {
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    const data: Record<string, unknown> = {
+      uid: user.uid,
+      isAnonymous: user.isAnonymous,
+      displayName: user.displayName ?? null,
+      email: user.email ?? null,
+      lastActiveAt: serverTimestamp(),
+    };
+    if (user.isAnonymous) {
+      data.expiresAt = Timestamp.fromMillis(Date.now() + GUEST_TTL_DAYS * 24 * 60 * 60 * 1000);
+    }
+    if (!snap.exists()) {
+      data.createdAt = serverTimestamp();
+    }
+    await setDoc(ref, data, { merge: true });
+  } catch (error) {
+    // Tracking ist nicht kritisch für die App-Funktion — Fehler nur loggen.
+    console.error('Nutzer-Tracking fehlgeschlagen', error);
+  }
+};
+
+export interface AdminStats {
+  totalUsers: number;
+  guests: number;
+  googleUsers: number;
+  activeLast7Days: number;
+}
+
+// Zählt Nutzer über serverseitige Aggregation (count) — günstig und ohne alle Dokumente zu laden.
+export const getAdminStats = async (): Promise<AdminStats> => {
+  const usersCol = collection(db, 'users');
+  const sevenDaysAgo = Timestamp.fromMillis(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  const [totalSnap, guestSnap, activeSnap] = await Promise.all([
+    getCountFromServer(query(usersCol)),
+    getCountFromServer(query(usersCol, where('isAnonymous', '==', true))),
+    getCountFromServer(query(usersCol, where('lastActiveAt', '>=', sevenDaysAgo))),
+  ]);
+
+  const totalUsers = totalSnap.data().count;
+  const guests = guestSnap.data().count;
+  return {
+    totalUsers,
+    guests,
+    googleUsers: totalUsers - guests,
+    activeLast7Days: activeSnap.data().count,
+  };
 };
 
 export const addNickname = async (nickname: string): Promise<void> => {
