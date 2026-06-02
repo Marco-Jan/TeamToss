@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { auth, isAdmin, getAdminStats, AdminStats } from '../../firebase/firebaseInit';
 import { User, onAuthStateChanged } from 'firebase/auth';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 // ── Sub-components ───────────────────────────────────────────────────────
 
@@ -58,10 +59,11 @@ function Notice({ children }: { children: React.ReactNode }) {
 // ── Page ─────────────────────────────────────────────────────────────────
 
 const AdminDashboard: React.FC = () => {
+  const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [stats, setStats] = useState<AdminStats | null>(null);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -77,7 +79,7 @@ const AdminDashboard: React.FC = () => {
       .then(setStats)
       .catch((e) => {
         console.error(e);
-        setError('Statistik konnte nicht geladen werden. Sind die Firestore-Rules korrekt deployt?');
+        setError(true);
       });
   }, [user]);
 
@@ -95,7 +97,7 @@ const AdminDashboard: React.FC = () => {
           fontWeight: 600,
           '&:hover': { color: '#c9d1d9' },
         }}>
-          Zurück zur App
+          {t('legal.backToApp')}
         </Typography>
       </RouterLink>
 
@@ -110,28 +112,28 @@ const AdminDashboard: React.FC = () => {
           color: '#c9d1d9',
           lineHeight: 1,
         }}>
-          Admin Terminal
+          {t('admin.title')}
         </Typography>
       </Box>
 
       {!authReady ? (
-        <Notice>Lade…</Notice>
+        <Notice>{t('admin.loading')}</Notice>
       ) : !isAdmin(user) ? (
-        <Notice>Kein Zugriff. Dieses Terminal ist nur für den Betreiber sichtbar.</Notice>
+        <Notice>{t('admin.noAccess')}</Notice>
       ) : error ? (
-        <Notice>{error}</Notice>
+        <Notice>{t('admin.error')}</Notice>
       ) : !stats ? (
-        <Notice>Lade Statistik…</Notice>
+        <Notice>{t('admin.loadingStats')}</Notice>
       ) : (
         <Box sx={{
           display: 'grid',
           gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
           gap: 1.5,
         }}>
-          <StatCard label="Nutzer gesamt" value={stats.totalUsers} color="#e8670a" />
-          <StatCard label="Aktiv (7 Tage)" value={stats.activeLast7Days} color="#2dd4bf" />
-          <StatCard label="Google-Konten" value={stats.googleUsers} color="#f0c030" />
-          <StatCard label="Gäste" value={stats.guests} color="#a855f7" />
+          <StatCard label={t('admin.totalUsers')} value={stats.totalUsers} color="#e8670a" />
+          <StatCard label={t('admin.active7')} value={stats.activeLast7Days} color="#2dd4bf" />
+          <StatCard label={t('admin.googleAccounts')} value={stats.googleUsers} color="#f0c030" />
+          <StatCard label={t('admin.guests')} value={stats.guests} color="#a855f7" />
         </Box>
       )}
     </Box>

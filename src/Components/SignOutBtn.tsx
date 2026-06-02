@@ -1,7 +1,9 @@
 import Button from '@mui/material/Button';
 import { handleSignOut } from '../firebase/firebaseInit';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const SignOutButton: React.FC = () => {
+  const { t } = useLanguage();
   return (
     <Button
       variant="outlined"
@@ -20,7 +22,7 @@ const SignOutButton: React.FC = () => {
         },
       }}
     >
-      Sign Out
+      {t('auth.signOut')}
     </Button>
   );
 };

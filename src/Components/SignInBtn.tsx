@@ -2,8 +2,10 @@ import React from 'react';
 import { signInWithGoogle } from '../firebase/firebaseInit';
 import Button from '@mui/material/Button';
 import GoogleIcon from '@mui/icons-material/Google';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const SignInButton: React.FC = () => {
+  const { t } = useLanguage();
   return (
     <Button
       variant="outlined"
@@ -23,7 +25,7 @@ const SignInButton: React.FC = () => {
         },
       }}
     >
-      Sign In
+      {t('auth.signIn')}
     </Button>
   );
 };

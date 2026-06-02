@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { getPlayers } from '../firebase/players';
 import { Player } from '../types/player';
 import { Typography, Grid, Box } from '@mui/material';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export const PlayersList: React.FC = () => {
+  const { t } = useLanguage();
   const [players, setPlayers] = useState<Player[]>([]);
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export const PlayersList: React.FC = () => {
           textTransform: 'uppercase',
           color: '#8b949e',
         }}>
-          Saved Operators
+          {t('roster.savedOperators')}
         </Typography>
         {players.length > 0 && (
           <Typography sx={{

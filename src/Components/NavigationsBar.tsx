@@ -10,6 +10,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/firebaseInit';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -44,6 +45,7 @@ function a11yProps(index: number) {
 const TEAM_COLORS = ['#e8670a', '#2dd4bf', '#f0c030', '#a855f7'];
 
 const TabNavigation: React.FC = () => {
+    const { t } = useLanguage();
     const [value, setValue] = useState(0);
     const [coinRotation, setCoinRotation] = useState<number>(0);
     const [hasFlipped, setHasFlipped] = useState<boolean>(false);
@@ -217,7 +219,7 @@ const TabNavigation: React.FC = () => {
                             mb: 0.5,
                             fontFamily: '"Rajdhani", sans-serif',
                         }}>
-                            Squad {index + 1}
+                            {t('builder.squad', { n: index + 1 })}
                         </Typography>
                         {team.length > 0 ? (
                             team.map((member, mi) => {
@@ -279,9 +281,9 @@ const TabNavigation: React.FC = () => {
                     variant="fullWidth"
                     aria-label="navigation tabs"
                 >
-                    <Tab label="Team Builder" {...a11yProps(0)} />
-                    <Tab label="Roster" {...a11yProps(1)} disabled={!isLoggedIn} />
-                    <Tab label="Coin Flip" {...a11yProps(2)} />
+                    <Tab label={t('tab.teamBuilder')} {...a11yProps(0)} />
+                    <Tab label={t('tab.roster')} {...a11yProps(1)} disabled={!isLoggedIn} />
+                    <Tab label={t('tab.coinFlip')} {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
 
@@ -298,7 +300,7 @@ const TabNavigation: React.FC = () => {
                         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                             <TextField
                                 fullWidth
-                                label="Add Operator"
+                                label={t('builder.addOperator')}
                                 value={playerInput}
                                 onChange={handlePlayerInputChange}
                                 onKeyDown={handleKeyDown}
@@ -320,7 +322,7 @@ const TabNavigation: React.FC = () => {
                             onClick={handleGenerateTeams}
                             sx={{ m: 0, py: 1.5 }}
                         >
-                            Generate Squads
+                            {t('builder.generate')}
                         </Button>
 
                         {teams.length > 0 && <TeamDisplay teams={teams} />}
@@ -341,7 +343,7 @@ const TabNavigation: React.FC = () => {
                                 },
                             }}
                         >
-                            Clear Roster
+                            {t('builder.clear')}
                         </Button>
                     </Box>
 
@@ -370,7 +372,9 @@ const TabNavigation: React.FC = () => {
                                 transition: 'color 0.15s ease',
                                 flex: 1,
                             }}>
-                                {playerList.length} Operator{playerList.length !== 1 ? 's' : ''} Queued
+                                {playerList.length === 1
+                                    ? t('builder.queuedOne', { n: playerList.length })
+                                    : t('builder.queuedOther', { n: playerList.length })}
                             </Typography>
                             <KeyboardArrowDownIcon sx={{
                                 fontSize: '1rem',
@@ -399,7 +403,7 @@ const TabNavigation: React.FC = () => {
                                     fontWeight: 600,
                                     textAlign: 'center',
                                 }}>
-                                    No operators queued
+                                    {t('builder.noQueued')}
                                 </Typography>
                             ) : (
                                 playerList.map((name, i) => {
@@ -599,7 +603,7 @@ const TabNavigation: React.FC = () => {
                                     textTransform: 'uppercase',
                                     textShadow: '0 0 24px rgba(232, 103, 10, 0.6)',
                                 }}>
-                                    {hasFlipped ? 'HEADS' : 'FLIP'}
+                                    {hasFlipped ? t('coin.heads') : t('coin.flip')}
                                 </Typography>
                             </Box>
 
@@ -626,7 +630,7 @@ const TabNavigation: React.FC = () => {
                                     textTransform: 'uppercase',
                                     textShadow: '0 0 24px rgba(45, 212, 191, 0.6)',
                                 }}>
-                                    TAILS
+                                    {t('coin.tails')}
                                 </Typography>
                             </Box>
                         </Box>
@@ -642,7 +646,7 @@ const TabNavigation: React.FC = () => {
                         transition: 'opacity 0.3s ease',
                         opacity: isFlipping ? 1 : 0.6,
                     }}>
-                        {isFlipping ? 'Flipping…' : 'Tap the coin to flip'}
+                        {isFlipping ? t('coin.flipping') : t('coin.tap')}
                     </Typography>
                 </Box>
             </TabPanel>
