@@ -8,27 +8,29 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupsIcon from '@mui/icons-material/Groups';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CasinoIcon from '@mui/icons-material/Casino';
-
-const features = [
-  {
-    icon: <GroupsIcon sx={{ fontSize: '1.1rem', color: '#e8670a' }} />,
-    title: 'Squad Generator',
-    desc: 'Trag deine Spieler ein, wähle die Anzahl der Squads — und TeamToss verteilt alle fair per Zufall.',
-  },
-  {
-    icon: <BookmarkIcon sx={{ fontSize: '1.1rem', color: '#2dd4bf' }} />,
-    title: 'Roster speichern',
-    desc: 'Mit Google-Login kannst du dein Team vorab im Roster speichern. Beim nächsten Mal einfach laden — kein Eintippen mehr.',
-  },
-  {
-    icon: <CasinoIcon sx={{ fontSize: '1.1rem', color: '#f0c030' }} />,
-    title: 'Coin Flip',
-    desc: 'Wer darf zuerst wählen? Wirf eine Münze und lass das Schicksal entscheiden.',
-  },
-];
+import { useLanguage } from '../i18n/LanguageContext';
 
 const InfoModal: React.FC = () => {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(() => !localStorage.getItem('tt_info_seen'));
+
+  const features = [
+    {
+      icon: <GroupsIcon sx={{ fontSize: '1.1rem', color: '#e8670a' }} />,
+      title: t('info.feat1.title'),
+      desc: t('info.feat1.desc'),
+    },
+    {
+      icon: <BookmarkIcon sx={{ fontSize: '1.1rem', color: '#2dd4bf' }} />,
+      title: t('info.feat2.title'),
+      desc: t('info.feat2.desc'),
+    },
+    {
+      icon: <CasinoIcon sx={{ fontSize: '1.1rem', color: '#f0c030' }} />,
+      title: t('info.feat3.title'),
+      desc: t('info.feat3.desc'),
+    },
+  ];
 
   const handleClose = () => {
     localStorage.setItem('tt_info_seen', '1');
@@ -69,7 +71,7 @@ const InfoModal: React.FC = () => {
               mt: 0.5,
               fontWeight: 600,
             }}>
-              WAS IST DAS HIER?
+              {t('info.whatIsThis')}
             </Box>
           </Box>
           <IconButton onClick={handleClose} size="small" sx={{ color: '#3a3d45', '&:hover': { color: '#c9d1d9', backgroundColor: 'transparent' } }}>
@@ -86,7 +88,7 @@ const InfoModal: React.FC = () => {
             lineHeight: 1.6,
             mb: 3,
           }}>
-            TeamToss ist ein kostenloser Squad Generator — perfekt wenn ihr schnell faire Teams aus eurer Gruppe braucht, ohne lange zu diskutieren.
+            {t('info.intro')}
           </Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

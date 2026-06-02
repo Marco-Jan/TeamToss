@@ -13,15 +13,18 @@ import TabNavigation from './Components/NavigationsBar';
 import LegalPage from './Components/pages/LegalPage';
 import AdminDashboard from './Components/pages/AdminDashboard';
 import InfoModal from './Components/InfoModal';
+import LanguageToggle from './Components/LanguageToggle';
+import { useLanguage } from './i18n/LanguageContext';
 import { theme } from './Components/Thema/theme';
 
 const NAV_LINKS = [
-  { to: '/impressum', label: 'Impressum' },
-  { to: '/agb',       label: 'AGB' },
-  { to: '/datenschutz', label: 'Datenschutz' },
+  { to: '/impressum',   key: 'footer.impressum' },
+  { to: '/agb',         key: 'footer.agb' },
+  { to: '/datenschutz', key: 'footer.datenschutz' },
 ];
 
 const App: React.FC = () => {
+  const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [userPhoto, setUserPhoto] = useState<string>('');
 
@@ -76,13 +79,14 @@ const App: React.FC = () => {
                   fontFamily: '"Rajdhani", sans-serif',
                   fontWeight: 600,
                 }}>
-                  Squad Generator
+                  {t('header.subtitle')}
                 </Typography>
               </Box>
             </Box>
           </RouterLink>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <LanguageToggle />
             <InfoModal />
             {user ? (
               <>
@@ -99,7 +103,7 @@ const App: React.FC = () => {
                       transition: 'color 0.15s ease',
                       '&:hover': { color: '#e8670a' },
                     }}>
-                      Admin
+                      {t('nav.admin')}
                     </Typography>
                   </RouterLink>
                 )}
@@ -149,7 +153,7 @@ const App: React.FC = () => {
           justifyContent: 'center',
           gap: 4,
         }}>
-          {NAV_LINKS.map(({ to, label }) => (
+          {NAV_LINKS.map(({ to, key }) => (
             <RouterLink key={to} to={to} style={{ textDecoration: 'none' }}>
               <Typography sx={{
                 fontSize: '0.58rem',
@@ -161,7 +165,7 @@ const App: React.FC = () => {
                 transition: 'color 0.15s ease',
                 '&:hover': { color: '#8b949e' },
               }}>
-                {label}
+                {t(key)}
               </Typography>
             </RouterLink>
           ))}

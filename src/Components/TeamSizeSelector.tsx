@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const MIN_SQUADS = 2;
 const parseCount = (value: string): string => value.replace('Team', '');
 
 function TeamSizeSelector({ teamSize, setTeamSize }: { teamSize: string, setTeamSize: (value: string) => void }) {
+  const { t } = useLanguage();
   // Lokaler Text, damit man frei tippen/löschen kann; nach oben gemeldet wird nur ein gültiger Wert.
   const [text, setText] = useState<string>(parseCount(teamSize));
 
@@ -33,7 +35,7 @@ function TeamSizeSelector({ teamSize, setTeamSize }: { teamSize: string, setTeam
       fullWidth
       type="number"
       id="TeamChoiceID"
-      label="Number of Squads"
+      label={t('builder.numSquads')}
       value={text}
       onChange={handleChange}
       onBlur={handleBlur}

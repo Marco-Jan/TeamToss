@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { signInAsGuest } from '../firebase/firebaseInit';
 import { Button, Dialog, DialogContent, DialogActions, Box, Typography } from '@mui/material';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const GuestSignInButton: React.FC = () => {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   const handleConfirm = async () => {
@@ -29,7 +31,7 @@ const GuestSignInButton: React.FC = () => {
           },
         }}
       >
-        Als Gast
+        {t('auth.guest')}
       </Button>
 
       <Dialog
@@ -55,15 +57,15 @@ const GuestSignInButton: React.FC = () => {
             color: '#e8670a',
             mb: 2,
           }}>
-            Als Gast fortfahren
+            {t('guest.title')}
           </Typography>
 
           <Box component="ul" sx={{ m: 0, pl: 2.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
             {[
-              'Dein Gast-Zugang und die zugehörigen Daten werden spätestens nach 30 Tagen automatisch gelöscht.',
-              'Deine Eingaben (z. B. Spielerliste) werden lokal in deinem Browser gespeichert – nicht in deinem Konto.',
-              'Beim Wechsel des Geräts oder Löschen der Browserdaten gehen diese Eingaben verloren.',
-              'Gespeicherte Roster stehen nur mit Google-Anmeldung zur Verfügung.',
+              t('guest.bullet1'),
+              t('guest.bullet2'),
+              t('guest.bullet3'),
+              t('guest.bullet4'),
             ].map((line, i) => (
               <Box component="li" key={i}>
                 <Typography sx={{
@@ -85,7 +87,7 @@ const GuestSignInButton: React.FC = () => {
             variant="contained"
             sx={{ m: 0, fontSize: '0.75rem', px: 2 }}
           >
-            Verstanden & fortfahren
+            {t('guest.confirm')}
           </Button>
         </DialogActions>
       </Dialog>

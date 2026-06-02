@@ -8,6 +8,7 @@ import { addNickname, getNicknames, deleteNickname, updateNickname } from '../fi
 import { Nickname } from '../types/nickname';
 import { auth } from '../firebase/firebaseInit';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useLanguage } from '../i18n/LanguageContext';
 import {
   Typography,
   IconButton,
@@ -28,6 +29,7 @@ export interface NicknameManagerProps {
 }
 
 const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerList, updatePlayerList }) => {
+  const { t } = useLanguage();
   const [nickname, setNickname] = useState<string>('');
   const [nicknames, setNicknames] = useState<Nickname[]>([]);
   const [, setSelectedNickname] = useState('');
@@ -134,7 +136,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
         <TextField
           fullWidth
-          label="Save Operator"
+          label={t('roster.saveOperator')}
           value={nickname}
           onChange={e => setNickname(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -272,10 +274,10 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
       </Box>
 
       <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle>{t('roster.confirmDelete')}</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
           <DialogContentText>
-            Remove this operator from the saved roster?
+            {t('roster.removePrompt')}
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ borderTop: '1px solid #2a2d35', px: 2, py: 1.5 }}>
@@ -288,7 +290,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
               m: 0,
             }}
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             onClick={handleConfirmDelete}
@@ -301,7 +303,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
               '&:hover': { backgroundColor: 'rgba(248, 81, 73, 0.08)' },
             }}
           >
-            Delete
+            {t('common.delete')}
           </Button>
         </DialogActions>
       </Dialog>
