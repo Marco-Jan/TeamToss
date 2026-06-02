@@ -21,7 +21,9 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Snackbar,
+  Alert
 } from '@mui/material';
 
 export interface NicknameManagerProps {
@@ -39,6 +41,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>('');
   const [editingId, setEditingId] = useState<string>('');
   const [editValue, setEditValue] = useState<string>('');
+  const [duplicateWarning, setDuplicateWarning] = useState<string>('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -61,11 +64,15 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
   }, []);
 
   const handleAddNickname = async () => {
-    if (nickname.trim() !== '') {
-      await addNickname(nickname);
-      setNickname('');
-      await fetchNicknames();
+    const trimmed = nickname.trim();
+    if (trimmed === '') return;
+    if (nicknames.some(n => n.NickName === trimmed)) {
+      setDuplicateWarning(t('roster.duplicate', { name: trimmed }));
+      return;
     }
+    await addNickname(trimmed);
+    setNickname('');
+    await fetchNicknames();
   };
 
   const handleDeleteNickname = async (id: string) => {
@@ -350,6 +357,28 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={!!duplicateWarning}
+        autoHideDuration={3000}
+        onClose={() => setDuplicateWarning('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{
+          top: '50% !important',
+          left: '50% !important',
+          right: 'auto !important',
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
+        <Alert
+          severity="warning"
+          variant="filled"
+          onClose={() => setDuplicateWarning('')}
+          sx={{ fontFamily: '"Rajdhani", sans-serif', fontWeight: 600, letterSpacing: '0.04em' }}
+        >
+          {duplicateWarning}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

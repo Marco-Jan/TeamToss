@@ -40,6 +40,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'builder.noQueued': 'Keine Spieler in der Warteschlange',
     'builder.squad': 'Squad {n}',
     'builder.captainTooltip': 'Als Captain markieren (wird auf eigenes Squad verteilt)',
+    'builder.duplicate': '„{name}" ist bereits in der Warteschlange',
 
     // Coin Flip
     'coin.flip': 'WURF',
@@ -53,6 +54,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'roster.saveOperator': 'Spieler speichern',
     'roster.selectAll': 'Alle auswählen',
     'roster.deselectAll': 'Alle abwählen',
+    'roster.duplicate': '„{name}" ist bereits gespeichert',
     'roster.confirmDelete': 'Löschen bestätigen',
     'roster.removePrompt': 'Diesen Spieler aus dem gespeicherten Kader entfernen?',
     'common.cancel': 'Abbrechen',
@@ -123,6 +125,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'builder.noQueued': 'No operators queued',
     'builder.squad': 'Squad {n}',
     'builder.captainTooltip': 'Mark as captain (placed in their own squad)',
+    'builder.duplicate': '"{name}" is already in the queue',
 
     // Coin Flip
     'coin.flip': 'FLIP',
@@ -136,6 +139,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'roster.saveOperator': 'Save Operator',
     'roster.selectAll': 'Select all',
     'roster.deselectAll': 'Deselect all',
+    'roster.duplicate': '"{name}" is already saved',
     'roster.confirmDelete': 'Confirm Delete',
     'roster.removePrompt': 'Remove this operator from the saved roster?',
     'common.cancel': 'Cancel',
