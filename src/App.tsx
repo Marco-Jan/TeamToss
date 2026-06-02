@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Routes, Route, Link as RouterLink } from 'react-router-dom';
 import './App.css';
-import { auth, registerUserPresence } from './firebase/firebaseInit';
+import { auth, registerUserPresence, isAdmin } from './firebase/firebaseInit';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import GoogleSignInButton from './Components/SignInBtn';
 import GuestSignInButton from './Components/GuestSignInBtn';
@@ -86,6 +86,23 @@ const App: React.FC = () => {
             <InfoModal />
             {user ? (
               <>
+                {isAdmin(user) && (
+                  <RouterLink to="/admin" style={{ textDecoration: 'none' }}>
+                    <Typography sx={{
+                      fontFamily: '"Rajdhani", sans-serif',
+                      fontWeight: 600,
+                      fontSize: '0.72rem',
+                      letterSpacing: '0.16em',
+                      textTransform: 'uppercase',
+                      color: '#8b949e',
+                      px: 1,
+                      transition: 'color 0.15s ease',
+                      '&:hover': { color: '#e8670a' },
+                    }}>
+                      Admin
+                    </Typography>
+                  </RouterLink>
+                )}
                 {userPhoto && (
                   <Box sx={{
                     width: 36,
