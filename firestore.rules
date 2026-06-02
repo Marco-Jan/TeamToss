@@ -1,0 +1,53 @@
+rules_version = '2';
+
+// TeamToss Firestore Security Rules
+// ----------------------------------
+// Diese Regeln verwaltest du in der Firebase-Konsole:
+//   Firestore Database → Rules → Inhalt dieser Datei einfügen → "Veröffentlichen".
+// (Es gibt keine lokale firebase.json in diesem Projekt – daher kein "firebase deploy".)
+//
+// WICHTIG: Trage unten in isAdmin() deine eigene Google-User-UID ein.
+//          Dieselbe UID muss auch in src/firebase/firebaseInit.ts (ADMIN_UIDS) stehen.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.uid in [
+        '1dxhVBDydXu1oXQTUFNG' // ⚠️ prüfen: muss die 28-stellige Auth-UID sein (Authentication → Users → "User UID")
+      ];
+    }
+
+    // ── Zähl-Datensätze pro Nutzer (für das Admin-Dashboard) ──
+    // Jeder darf nur seinen eigenen Datensatz lesen/anlegen/ändern.
+    // Nur der Admin darf die gesamte Sammlung lesen/zählen.
+    match /users/{uid} {
+      allow read:          if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow create, update: if isSignedIn() && request.auth.uid == uid;
+      allow delete:        if false; // Löschung nur serverseitig via TTL-Policy
+    }
+
+    // ── Gespeicherte Spieler (Roster) – nur für Google-Konten, je Eigentümer ──
+    match /players/{id} {
+      allow read:           if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create:         if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // ── Gespeicherte Nicknames – je Eigentümer ──
+    match /TeamTossNickNames/{id} {
+      allow read:           if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create:         if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Alles andere standardmäßig verboten.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
