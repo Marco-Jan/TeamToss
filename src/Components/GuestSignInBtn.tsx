@@ -21,12 +21,12 @@ const GuestSignInButton: React.FC = () => {
         onClick={() => setOpen(true)}
         sx={{
           m: 0,
-          color: '#8b949e',
+          color: '#9AA4B2',
           fontSize: '0.75rem',
           py: 0.75,
           px: 1.5,
           '&:hover': {
-            color: '#c9d1d9',
+            color: '#EAEDF2',
             backgroundColor: 'rgba(139, 148, 158, 0.08)',
           },
         }}
@@ -39,9 +39,9 @@ const GuestSignInButton: React.FC = () => {
         onClose={() => setOpen(false)}
         PaperProps={{
           sx: {
-            backgroundColor: '#111318',
-            border: '1px solid #2a2d35',
-            borderTop: '2px solid #e8670a',
+            backgroundColor: '#161A22',
+            border: '1px solid #272D39',
+            borderTop: '2px solid #FF6A2B',
             backgroundImage: 'none',
             maxWidth: 420,
           },
@@ -49,12 +49,12 @@ const GuestSignInButton: React.FC = () => {
       >
         <DialogContent sx={{ px: 3, pt: 3, pb: 1 }}>
           <Typography sx={{
-            fontFamily: '"Rajdhani", sans-serif',
+            fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
             fontWeight: 700,
             fontSize: '0.7rem',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
-            color: '#e8670a',
+            color: '#FF6A2B',
             mb: 2,
           }}>
             {t('guest.title')}
@@ -69,9 +69,9 @@ const GuestSignInButton: React.FC = () => {
             ].map((line, i) => (
               <Box component="li" key={i}>
                 <Typography sx={{
-                  fontFamily: '"Rajdhani", sans-serif',
+                  fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
                   fontSize: '0.92rem',
-                  color: '#8b949e',
+                  color: '#9AA4B2',
                   lineHeight: 1.6,
                 }}>
                   {line}

@@ -10,14 +10,14 @@ const SignOutButton: React.FC = () => {
       onClick={handleSignOut}
       sx={{
         m: 0,
-        borderColor: '#2a2d35',
-        color: '#8b949e',
+        borderColor: '#272D39',
+        color: '#9AA4B2',
         fontSize: '0.72rem',
         py: 0.6,
         px: 1.25,
         '&:hover': {
-          borderColor: '#f85149',
-          color: '#f85149',
+          borderColor: '#FB5A52',
+          color: '#FB5A52',
           backgroundColor: 'rgba(248, 81, 73, 0.06)',
         },
       }}

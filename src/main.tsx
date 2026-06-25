@@ -5,10 +5,9 @@ import App from './App.tsx'
 import { LanguageProvider } from './i18n/LanguageContext'
 import './index.css'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
+// Self-hosted fonts (DSGVO-konform – kein externer Google-Fonts-Request).
+import '@fontsource-variable/archivo'
+import '@fontsource-variable/plus-jakarta-sans'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

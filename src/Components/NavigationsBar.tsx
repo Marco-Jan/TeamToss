@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Tabs, Tab, Box, Typography, Button, TextField, IconButton, Collapse, Tooltip, Snackbar, Alert } from '@mui/material';
+import { Box, Tabs, Tab, Typography, Button, TextField, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
 import TeamSizeSelector from './TeamSizeSelector';
 import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
-import CheckIcon from '@mui/icons-material/Check';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import ShuffleIcon from '@mui/icons-material/Shuffle';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/firebaseInit';
 import { useLanguage } from '../i18n/LanguageContext';
+import { tokens, DISPLAY_FONT, BODY_FONT, TEAM_COLORS } from './Thema/theme';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -28,23 +27,24 @@ function TabPanel({ children, value, index }: TabPanelProps) {
             id={`tabpanel-${index}`}
             aria-labelledby={`tab-${index}`}
         >
-            {value === index && (
-                <Box sx={{ pt: 3 }}>
-                    {children}
-                </Box>
-            )}
+            {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
         </Box>
     );
 }
 
 function a11yProps(index: number) {
-    return {
-        id: `tab-${index}`,
-        'aria-controls': `tabpanel-${index}`,
-    };
+    return { id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` };
 }
 
-const TEAM_COLORS = ['#e8670a', '#2dd4bf', '#f0c030', '#a855f7'];
+// Small section eyebrow with an accent dot.
+const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.25 }}>
+        <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: tokens.brand }} />
+        <Typography component="h2" sx={{ fontFamily: DISPLAY_FONT, fontWeight: 700, fontSize: '0.95rem', color: tokens.ink }}>
+            {children}
+        </Typography>
+    </Box>
+);
 
 const TabNavigation: React.FC = () => {
     const { t } = useLanguage();
@@ -61,7 +61,7 @@ const TabNavigation: React.FC = () => {
     });
     const [teams, setTeams] = useState<string[][]>([]);
     const [leaders, setLeaders] = useState<Record<number, string>>({});
-    // Vorab in der Queue markierte Captains (werden beim Generieren auf verschiedene Squads verteilt).
+    // Vorab markierte Captains (werden beim Generieren auf verschiedene Teams verteilt).
     const [captains, setCaptains] = useState<string[]>(() => {
         try {
             const saved = localStorage.getItem('tt_captains');
@@ -70,12 +70,8 @@ const TabNavigation: React.FC = () => {
     });
 
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
     const [teamSize, setTeamSize] = useState<string>('Team2');
-    const [showQueue, setShowQueue] = useState<boolean>(true);
-    const [editingIndex, setEditingIndex] = useState<number>(-1);
-    const [editValue, setEditValue] = useState<string>('');
-    // Hinweis, wenn ein bereits vorhandener Name in die Queue soll.
+    // Hinweis, wenn ein bereits vorhandener Name in die Liste soll.
     const [duplicateWarning, setDuplicateWarning] = useState<string>('');
 
     useEffect(() => {
@@ -116,10 +112,6 @@ const TabNavigation: React.FC = () => {
         setTimeout(() => setIsFlipping(false), 2000);
     };
 
-    const handlePlayerInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        setPlayerInput(event.target.value);
-    };
-
     const handleAddPlayer = (nickname?: string): void => {
         const nameToAdd = nickname?.trim() || playerInput.trim();
         if (nameToAdd === '') return;
@@ -134,39 +126,6 @@ const TabNavigation: React.FC = () => {
     const handleRemoveFromQueue = (name: string): void => {
         setPlayerList(prev => prev.filter(p => p !== name));
         setCaptains(prev => prev.filter(c => c !== name));
-    };
-
-    const handleStartEditQueue = (index: number, currentName: string): void => {
-        setEditingIndex(index);
-        setEditValue(currentName);
-    };
-
-    const handleCancelEditQueue = (): void => {
-        setEditingIndex(-1);
-        setEditValue('');
-    };
-
-    const handleSaveEditQueue = (index: number): void => {
-        const newName = editValue.trim();
-        const oldName = playerList[index];
-        if (newName === '' || newName === oldName) {
-            handleCancelEditQueue();
-            return;
-        }
-        // Doppelte Namen vermeiden
-        if (playerList.some((p, i) => i !== index && p === newName)) {
-            handleCancelEditQueue();
-            return;
-        }
-        setPlayerList(prev => prev.map((p, i) => (i === index ? newName : p)));
-        // Captain-Markierung beim Umbenennen mitnehmen
-        setCaptains(prev => prev.map(c => (c === oldName ? newName : c)));
-        handleCancelEditQueue();
-    };
-
-    const handleEditQueueKeyDown = (e: React.KeyboardEvent, index: number): void => {
-        if (e.key === 'Enter') handleSaveEditQueue(index);
-        if (e.key === 'Escape') handleCancelEditQueue();
     };
 
     const handleClearList = (): void => {
@@ -194,7 +153,7 @@ const TabNavigation: React.FC = () => {
         const numberOfTeams = parseInt(teamSize.replace('Team', ''), 10);
         const newTeams: string[][] = Array.from({ length: numberOfTeams }, () => []);
 
-        // Markierte Captains zuerst – je einer pro Squad (Round-Robin), damit sie sich verteilen.
+        // Markierte Captains zuerst – je einer pro Team (Round-Robin), damit sie sich verteilen.
         const activeCaptains = shuffleArray(playerList.filter(p => captains.includes(p)));
         const others = shuffleArray(playerList.filter(p => !captains.includes(p)));
 
@@ -202,7 +161,7 @@ const TabNavigation: React.FC = () => {
             newTeams[i % numberOfTeams].push(captain);
         });
 
-        // Restliche Spieler immer ins aktuell kleinste Squad – hält die Teams ausgeglichen.
+        // Restliche Spieler immer ins aktuell kleinste Team – hält die Teams ausgeglichen.
         others.forEach(player => {
             let minIdx = 0;
             for (let i = 1; i < numberOfTeams; i++) {
@@ -211,7 +170,7 @@ const TabNavigation: React.FC = () => {
             newTeams[minIdx].push(player);
         });
 
-        // Captain an Position 0 eines Squads wird automatisch Anführer.
+        // Captain an Position 0 eines Teams wird automatisch Anführer.
         const newLeaders: Record<number, string> = {};
         newTeams.forEach((team, i) => {
             if (team.length > 0 && captains.includes(team[0])) {
@@ -230,7 +189,7 @@ const TabNavigation: React.FC = () => {
             [squadIndex]: isCurrentLeader ? '' : member,
         }));
         if (!isCurrentLeader) {
-            // Leader sofort an die erste Stelle des Squads setzen
+            // Leader sofort an die erste Stelle des Teams setzen
             setTeams(prev => prev.map((team, i) =>
                 i === squadIndex ? [member, ...team.filter(m => m !== member)] : team
             ));
@@ -241,80 +200,95 @@ const TabNavigation: React.FC = () => {
         if (e.key === 'Enter') handleAddPlayer();
     };
 
+    const canGenerate = playerList.length >= 2;
+
+    // ── Team result cards (neon jerseys) ──
     const TeamDisplay = ({ teams }: { teams: string[][] }) => (
         <Box sx={{
             width: '100%',
-            mt: 2,
             display: 'grid',
             gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' },
-            gap: 1,
+            gap: 1.5,
         }}>
             {teams.map((team, index) => {
                 const color = TEAM_COLORS[index % TEAM_COLORS.length];
                 return (
                     <Box key={index} sx={{
-                        border: '1px solid #2a2d35',
-                        borderTopWidth: '2px',
-                        borderTopColor: color,
-                        p: 1.25,
-                        backgroundColor: '#111318',
+                        position: 'relative',
+                        borderRadius: '14px',
+                        overflow: 'hidden',
+                        border: `1px solid ${tokens.border}`,
+                        backgroundColor: tokens.surface,
+                        animation: 'tt-deal-in 0.35s ease both',
+                        animationDelay: `${index * 0.06}s`,
                     }}>
-                        <Typography sx={{
-                            fontSize: '0.55rem',
-                            letterSpacing: '0.18em',
-                            color: color,
-                            textTransform: 'uppercase',
-                            fontWeight: 700,
-                            mb: 0.5,
-                            fontFamily: '"Rajdhani", sans-serif',
-                        }}>
-                            {t('builder.squad', { n: index + 1 })}
-                        </Typography>
-                        {team.length > 0 ? (
-                            team.map((member, mi) => {
-                                const isLeader = leaders[index] === member;
-                                return (
-                                <Typography
-                                    key={mi}
-                                    onClick={() => handleSelectLeader(index, member)}
-                                    sx={{
-                                        color: isLeader ? color : '#c9d1d9',
-                                        fontWeight: isLeader ? 700 : 600,
-                                        letterSpacing: '0.04em',
-                                        fontFamily: '"Rajdhani", sans-serif',
-                                        fontSize: '1rem',
-                                        lineHeight: 1.5,
-                                        wordBreak: 'break-word',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 0.5,
-                                        transition: 'color 0.15s ease',
-                                        '&:hover': { color: color },
-                                    }}
-                                >
-                                    <Box component="span" sx={{
-                                        fontSize: '0.75rem',
-                                        color: isLeader ? color : 'transparent',
-                                        lineHeight: 1,
-                                    }}>
-                                        ★
-                                    </Box>
-                                    {member}
+                        {/* colour band */}
+                        <Box sx={{ height: 4, backgroundColor: color }} />
+                        <Box sx={{ p: 1.5 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                                <Typography sx={{
+                                    fontFamily: DISPLAY_FONT,
+                                    fontWeight: 900,
+                                    fontSize: '1.6rem',
+                                    lineHeight: 1,
+                                    color: color,
+                                }}>
+                                    {index + 1}
                                 </Typography>
-                                );
-                            })
-                        ) : (
-                            <Typography sx={{
-                                color: '#c9d1d9',
-                                fontWeight: 600,
-                                fontFamily: '"Rajdhani", sans-serif',
-                                fontSize: '1rem',
-                                lineHeight: 1.5,
-                            }}>
-                                —
-                            </Typography>
-                        )}
+                                <Typography component="h3" sx={{
+                                    fontSize: '0.62rem',
+                                    letterSpacing: '0.12em',
+                                    textTransform: 'uppercase',
+                                    color: tokens.muted,
+                                    fontWeight: 700,
+                                }}>
+                                    {t('builder.squad', { n: index + 1 })}
+                                </Typography>
+                            </Box>
+
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                                {team.length > 0 ? team.map((member, mi) => {
+                                    const isLeader = leaders[index] === member;
+                                    return (
+                                        <Box
+                                            key={mi}
+                                            onClick={() => handleSelectLeader(index, member)}
+                                            role="button"
+                                            tabIndex={0}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSelectLeader(index, member)}
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 0.5,
+                                                py: 0.4,
+                                                cursor: 'pointer',
+                                                transition: 'color 0.12s ease',
+                                                color: isLeader ? color : tokens.ink,
+                                                fontWeight: isLeader ? 800 : 600,
+                                                '&:hover': { color: color },
+                                            }}
+                                        >
+                                            <StarIcon sx={{
+                                                fontSize: '0.85rem',
+                                                color: isLeader ? color : 'transparent',
+                                                flexShrink: 0,
+                                            }} />
+                                            <Typography component="span" sx={{
+                                                fontFamily: BODY_FONT,
+                                                fontWeight: 'inherit',
+                                                color: 'inherit',
+                                                fontSize: '0.98rem',
+                                                wordBreak: 'break-word',
+                                            }}>
+                                                {member}
+                                            </Typography>
+                                        </Box>
+                                    );
+                                }) : (
+                                    <Typography sx={{ color: tokens.faint, fontSize: '0.98rem' }}>—</Typography>
+                                )}
+                            </Box>
+                        </Box>
                     </Box>
                 );
             })}
@@ -323,284 +297,177 @@ const TabNavigation: React.FC = () => {
 
     return (
         <Box sx={{ width: '100%' }}>
-            <AppBar position="static" sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+            {/* ── Segmented tabs ── */}
+            <Box sx={{
+                display: 'inline-flex',
+                width: '100%',
+                p: 0.5,
+                borderRadius: '14px',
+                border: `1px solid ${tokens.border}`,
+                backgroundColor: tokens.surface,
+            }}>
                 <Tabs
                     value={value}
                     onChange={handleChange}
                     variant="fullWidth"
                     aria-label="navigation tabs"
+                    sx={{ width: '100%', minHeight: 'unset' }}
                 >
                     <Tab label={t('tab.teamBuilder')} {...a11yProps(0)} />
                     <Tab label={t('tab.roster')} {...a11yProps(1)} disabled={!isLoggedIn} />
                     <Tab label={t('tab.coinFlip')} {...a11yProps(2)} />
                 </Tabs>
-            </AppBar>
+            </Box>
 
             {/* ── Team Builder ── */}
             <TabPanel value={value} index={0}>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    gap: 3,
-                    alignItems: 'flex-start',
-                }}>
-                    {/* Left: controls */}
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, flex: 1, width: '100%', minWidth: 0 }}>
-                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    {/* Step 1 — add players */}
+                    <Box>
+                        <SectionLabel>{t('builder.addOperator')}</SectionLabel>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
                             <TextField
                                 fullWidth
-                                label={t('builder.addOperator')}
+                                placeholder={t('builder.addOperator')}
                                 value={playerInput}
-                                onChange={handlePlayerInputChange}
+                                onChange={(e) => setPlayerInput(e.target.value)}
                                 onKeyDown={handleKeyDown}
+                                inputProps={{ 'aria-label': t('builder.addOperator') }}
                             />
                             <Button
                                 variant="contained"
                                 onClick={() => handleAddPlayer()}
-                                sx={{ minWidth: 56, height: 56, m: 0, px: 1 }}
+                                aria-label={t('builder.addOperator')}
+                                sx={{ minWidth: 56, px: 1.5 }}
                             >
-                                <AddCircleOutlineIcon />
+                                <AddIcon />
                             </Button>
                         </Box>
 
-                        <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
-
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            onClick={handleGenerateTeams}
-                            sx={{ m: 0, py: 1.5 }}
-                        >
-                            {t('builder.generate')}
-                        </Button>
-
-                        {teams.length > 0 && <TeamDisplay teams={teams} />}
-
-                        <Button
-                            variant="outlined"
-                            fullWidth
-                            onClick={handleClearList}
-                            sx={{
-                                m: 0,
-                                py: 1,
-                                borderColor: '#2a2d35',
-                                color: '#8b949e',
-                                '&:hover': {
-                                    borderColor: '#f85149',
-                                    color: '#f85149',
-                                    backgroundColor: 'rgba(248, 81, 73, 0.06)',
-                                },
-                            }}
-                        >
-                            {t('builder.clear')}
-                        </Button>
-                    </Box>
-
-                    {/* Right: collapsible operator queue */}
-                    <Box sx={{ width: { xs: '100%', md: 300 }, flexShrink: 0 }}>
-                        <Box
-                            onClick={() => setShowQueue(prev => !prev)}
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
-                                px: 0.5,
-                                cursor: 'pointer',
-                                userSelect: 'none',
-                                '&:hover .queue-label': { color: '#c9d1d9' },
-                            }}
-                        >
-                            <Box sx={{ width: 8, height: 8, backgroundColor: '#e8670a', flexShrink: 0 }} />
-                            <Typography className="queue-label" sx={{
-                                fontSize: '0.62rem',
-                                letterSpacing: '0.18em',
-                                color: '#8b949e',
-                                textTransform: 'uppercase',
-                                fontFamily: '"Rajdhani", sans-serif',
-                                fontWeight: 600,
-                                transition: 'color 0.15s ease',
-                                flex: 1,
-                            }}>
+                        {/* Player count + clear */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, mb: 1 }}>
+                            <Typography sx={{ fontWeight: 700, fontSize: '0.82rem', color: tokens.muted }}>
                                 {playerList.length === 1
                                     ? t('builder.queuedOne', { n: playerList.length })
                                     : t('builder.queuedOther', { n: playerList.length })}
                             </Typography>
-                            <KeyboardArrowDownIcon sx={{
-                                fontSize: '1rem',
-                                color: '#8b949e',
-                                transition: 'transform 0.2s ease',
-                                transform: showQueue ? 'rotate(180deg)' : 'rotate(0deg)',
-                            }} />
+                            {playerList.length > 0 && (
+                                <Button
+                                    onClick={handleClearList}
+                                    sx={{
+                                        py: 0.25, px: 1, minWidth: 0,
+                                        fontSize: '0.78rem', fontWeight: 600,
+                                        color: tokens.faint,
+                                        '&:hover': { color: tokens.danger, backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    {t('builder.clear')}
+                                </Button>
+                            )}
                         </Box>
 
-                        <Collapse in={showQueue}>
-                        <Box sx={{
-                            mt: 1,
-                            border: '1px solid #2a2d35',
-                            borderLeft: '2px solid #e8670a',
-                            backgroundColor: '#111318',
-                        }}>
-                            {playerList.length === 0 ? (
-                                <Typography sx={{
-                                    px: 2,
-                                    py: 2.5,
-                                    fontSize: '0.7rem',
-                                    letterSpacing: '0.12em',
-                                    color: '#4a4d55',
-                                    textTransform: 'uppercase',
-                                    fontFamily: '"Rajdhani", sans-serif',
-                                    fontWeight: 600,
-                                    textAlign: 'center',
-                                }}>
-                                    {t('builder.noQueued')}
+                        {playerList.length === 0 ? (
+                            <Box sx={{
+                                py: 3, px: 2,
+                                borderRadius: '12px',
+                                border: `1px dashed ${tokens.border2}`,
+                                textAlign: 'center',
+                            }}>
+                                <Typography sx={{ color: tokens.muted, fontSize: '0.92rem' }}>
+                                    {t('builder.emptyHint')}
                                 </Typography>
-                            ) : (
-                                playerList.map((name, i) => {
-                                    const isEditing = editingIndex === i;
-                                    const isCaptain = captains.includes(name);
-                                    return (
-                                    <Box
-                                        key={name}
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            px: 2,
-                                            py: 1.25,
-                                            borderTop: i === 0 ? 'none' : '1px solid #1e2128',
-                                            '&:hover': { backgroundColor: 'rgba(232, 103, 10, 0.04)' },
-                                        }}
-                                    >
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1, minWidth: 0 }}>
-                                            <Tooltip title={t('builder.captainTooltip')} placement="top" arrow>
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={() => handleToggleCaptain(name)}
-                                                    aria-label={t('builder.captainTooltip')}
-                                                    sx={{
-                                                        p: 0.25,
-                                                        borderRadius: 0,
-                                                        color: isCaptain ? '#e8670a' : '#3a3d45',
-                                                        '&:hover': { color: '#e8670a', backgroundColor: 'transparent' },
-                                                    }}
-                                                >
-                                                    {isCaptain
-                                                        ? <StarIcon sx={{ fontSize: '1.1rem' }} />
-                                                        : <StarBorderIcon sx={{ fontSize: '1.1rem' }} />}
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Typography sx={{
-                                                fontSize: '0.75rem',
-                                                color: '#4a4d55',
-                                                fontFamily: '"Rajdhani", sans-serif',
-                                                fontWeight: 700,
-                                                letterSpacing: '0.1em',
-                                                minWidth: 20,
+                            </Box>
+                        ) : (
+                            <>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                    {playerList.map((name) => {
+                                        const isCaptain = captains.includes(name);
+                                        return (
+                                            <Box key={name} sx={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: 0.25,
+                                                pl: 0.5, pr: 0.25, py: 0.25,
+                                                borderRadius: 999,
+                                                border: `1px solid ${isCaptain ? tokens.brand : tokens.border2}`,
+                                                backgroundColor: isCaptain ? 'rgba(255,106,43,0.12)' : tokens.surface2,
                                             }}>
-                                                {String(i + 1).padStart(2, '0')}
-                                            </Typography>
-                                            {isEditing ? (
-                                                <TextField
-                                                    value={editValue}
-                                                    onChange={e => setEditValue(e.target.value)}
-                                                    onKeyDown={e => handleEditQueueKeyDown(e, i)}
-                                                    autoFocus
-                                                    variant="standard"
-                                                    size="small"
-                                                    sx={{
-                                                        flex: 1,
-                                                        '& .MuiInputBase-input': {
-                                                            color: '#c9d1d9',
-                                                            fontFamily: '"Rajdhani", sans-serif',
-                                                            fontWeight: 600,
-                                                            fontSize: '1.1rem',
-                                                            letterSpacing: '0.05em',
-                                                            p: 0,
-                                                        },
-                                                    }}
-                                                />
-                                            ) : (
+                                                <Tooltip title={t('builder.captainTooltip')} placement="top" arrow>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => handleToggleCaptain(name)}
+                                                        aria-label={t('builder.captainTooltip')}
+                                                        sx={{
+                                                            p: 0.25,
+                                                            color: isCaptain ? tokens.brand : tokens.faint,
+                                                            '&:hover': { color: tokens.brand, backgroundColor: 'transparent' },
+                                                        }}
+                                                    >
+                                                        {isCaptain
+                                                            ? <StarIcon sx={{ fontSize: '1.05rem' }} />
+                                                            : <StarBorderIcon sx={{ fontSize: '1.05rem' }} />}
+                                                    </IconButton>
+                                                </Tooltip>
                                                 <Typography sx={{
-                                                    fontFamily: '"Rajdhani", sans-serif',
                                                     fontWeight: isCaptain ? 700 : 600,
-                                                    fontSize: '1.1rem',
-                                                    letterSpacing: '0.05em',
-                                                    color: isCaptain ? '#e8670a' : '#c9d1d9',
+                                                    fontSize: '0.95rem',
+                                                    color: isCaptain ? tokens.brand : tokens.ink,
+                                                    px: 0.25,
+                                                    maxWidth: 180,
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap',
                                                 }}>
                                                     {name}
                                                 </Typography>
-                                            )}
-                                        </Box>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            {isEditing ? (
-                                                <>
-                                                    <IconButton
-                                                        size="small"
-                                                        onClick={() => handleSaveEditQueue(i)}
-                                                        sx={{
-                                                            color: '#3a3d45',
-                                                            p: 0.5,
-                                                            borderRadius: 0,
-                                                            '&:hover': { color: '#2dd4bf', backgroundColor: 'transparent' },
-                                                        }}
-                                                    >
-                                                        <CheckIcon sx={{ fontSize: '1rem' }} />
-                                                    </IconButton>
-                                                    <IconButton
-                                                        size="small"
-                                                        onClick={handleCancelEditQueue}
-                                                        sx={{
-                                                            color: '#3a3d45',
-                                                            p: 0.5,
-                                                            borderRadius: 0,
-                                                            '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
-                                                        }}
-                                                    >
-                                                        <CloseIcon sx={{ fontSize: '1rem' }} />
-                                                    </IconButton>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <IconButton
-                                                        size="small"
-                                                        onClick={() => handleStartEditQueue(i, name)}
-                                                        sx={{
-                                                            color: '#3a3d45',
-                                                            p: 0.5,
-                                                            borderRadius: 0,
-                                                            '&:hover': { color: '#e8670a', backgroundColor: 'transparent' },
-                                                        }}
-                                                    >
-                                                        <EditIcon sx={{ fontSize: '1rem' }} />
-                                                    </IconButton>
-                                                    <IconButton
-                                                        size="small"
-                                                        onClick={() => handleRemoveFromQueue(name)}
-                                                        sx={{
-                                                            color: '#3a3d45',
-                                                            p: 0.5,
-                                                            borderRadius: 0,
-                                                            '&:hover': {
-                                                                color: '#f85149',
-                                                                backgroundColor: 'transparent',
-                                                            },
-                                                        }}
-                                                    >
-                                                        <CloseIcon sx={{ fontSize: '1rem' }} />
-                                                    </IconButton>
-                                                </>
-                                            )}
-                                        </Box>
-                                    </Box>
-                                    );
-                                })
-                            )}
-                        </Box>
-                        </Collapse>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => handleRemoveFromQueue(name)}
+                                                    aria-label={`${name} entfernen`}
+                                                    sx={{
+                                                        p: 0.25,
+                                                        color: tokens.faint,
+                                                        '&:hover': { color: tokens.danger, backgroundColor: 'transparent' },
+                                                    }}
+                                                >
+                                                    <CloseIcon sx={{ fontSize: '0.95rem' }} />
+                                                </IconButton>
+                                            </Box>
+                                        );
+                                    })}
+                                </Box>
+                                <Typography sx={{ mt: 1.25, fontSize: '0.78rem', color: tokens.faint }}>
+                                    {t('builder.captainHint')}
+                                </Typography>
+                            </>
+                        )}
                     </Box>
+
+                    {/* Step 2 — number of teams */}
+                    <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
+
+                    {/* Step 3 — generate */}
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        onClick={handleGenerateTeams}
+                        disabled={!canGenerate}
+                        startIcon={<ShuffleIcon />}
+                        sx={{ py: 1.5, fontSize: '1.05rem' }}
+                    >
+                        {teams.length > 0 ? t('builder.generateAgain') : t('builder.generate')}
+                    </Button>
+
+                    {/* Results */}
+                    {teams.length > 0 && (
+                        <Box>
+                            <Typography sx={{ mb: 1.25, fontSize: '0.78rem', color: tokens.faint, textAlign: 'center' }}>
+                                {t('builder.leaderHint')}
+                            </Typography>
+                            <TeamDisplay teams={teams} />
+                        </Box>
+                    )}
                 </Box>
             </TabPanel>
 
@@ -616,22 +483,16 @@ const TabNavigation: React.FC = () => {
 
             {/* ── Coin Flip ── */}
             <TabPanel value={value} index={2}>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    py: 8,
-                    gap: 5,
-                }}>
-                    {/* 3D coin */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: { xs: 6, sm: 8 }, gap: 4 }}>
                     <Box
                         onClick={handleCoinToss}
                         role="button"
                         tabIndex={0}
+                        aria-label={t('coin.tap')}
                         onKeyDown={(e) => e.key === 'Enter' && handleCoinToss()}
                         sx={{
-                            width: 180,
-                            height: 180,
+                            width: 190,
+                            height: 190,
                             perspective: '1000px',
                             cursor: isFlipping ? 'default' : 'pointer',
                             userSelect: 'none',
@@ -648,54 +509,39 @@ const TabNavigation: React.FC = () => {
                             transition: 'transform 2s cubic-bezier(0.2, 0.8, 0.2, 1)',
                             transform: `rotateX(${coinRotation}deg)`,
                         }}>
-                            {/* Front face — HEADS */}
+                            {/* HEADS */}
                             <Box sx={{
-                                position: 'absolute',
-                                inset: 0,
-                                borderRadius: '50%',
-                                border: '2px solid #e8670a',
-                                backgroundColor: '#111318',
+                                position: 'absolute', inset: 0, borderRadius: '50%',
+                                border: `3px solid ${tokens.brand}`,
+                                background: 'radial-gradient(circle at 35% 30%, #1E232E, #11141B)',
                                 backfaceVisibility: 'hidden',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                boxShadow: '0 0 35px rgba(232, 103, 10, 0.3), inset 0 0 30px rgba(232, 103, 10, 0.06)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                boxShadow: '0 0 45px rgba(255,106,43,0.35), inset 0 0 30px rgba(255,106,43,0.08)',
                             }}>
                                 <Typography sx={{
-                                    fontFamily: '"Rajdhani", sans-serif',
-                                    fontWeight: 700,
-                                    fontSize: hasFlipped ? '1.6rem' : '1rem',
-                                    letterSpacing: '0.2em',
-                                    color: '#e8670a',
-                                    textTransform: 'uppercase',
-                                    textShadow: '0 0 24px rgba(232, 103, 10, 0.6)',
+                                    fontFamily: DISPLAY_FONT, fontWeight: 800,
+                                    fontSize: hasFlipped ? '1.7rem' : '1.05rem',
+                                    color: tokens.brand,
+                                    textShadow: '0 0 24px rgba(255,106,43,0.6)',
                                 }}>
                                     {hasFlipped ? t('coin.heads') : t('coin.flip')}
                                 </Typography>
                             </Box>
 
-                            {/* Back face — TAILS */}
+                            {/* TAILS */}
                             <Box sx={{
-                                position: 'absolute',
-                                inset: 0,
-                                borderRadius: '50%',
-                                border: '2px solid #2dd4bf',
-                                backgroundColor: '#111318',
+                                position: 'absolute', inset: 0, borderRadius: '50%',
+                                border: `3px solid ${tokens.teal}`,
+                                background: 'radial-gradient(circle at 35% 30%, #1E232E, #11141B)',
                                 backfaceVisibility: 'hidden',
                                 transform: 'rotateX(180deg)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                boxShadow: '0 0 35px rgba(45, 212, 191, 0.3), inset 0 0 30px rgba(45, 212, 191, 0.06)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                boxShadow: '0 0 45px rgba(34,211,197,0.35), inset 0 0 30px rgba(34,211,197,0.08)',
                             }}>
                                 <Typography sx={{
-                                    fontFamily: '"Rajdhani", sans-serif',
-                                    fontWeight: 700,
-                                    fontSize: '1.6rem',
-                                    letterSpacing: '0.2em',
-                                    color: '#2dd4bf',
-                                    textTransform: 'uppercase',
-                                    textShadow: '0 0 24px rgba(45, 212, 191, 0.6)',
+                                    fontFamily: DISPLAY_FONT, fontWeight: 800, fontSize: '1.7rem',
+                                    color: tokens.teal,
+                                    textShadow: '0 0 24px rgba(34,211,197,0.6)',
                                 }}>
                                     {t('coin.tails')}
                                 </Typography>
@@ -704,14 +550,8 @@ const TabNavigation: React.FC = () => {
                     </Box>
 
                     <Typography sx={{
-                        fontFamily: '"Rajdhani", sans-serif',
-                        fontWeight: 600,
-                        fontSize: '0.62rem',
-                        letterSpacing: '0.22em',
-                        color: '#4a4d55',
-                        textTransform: 'uppercase',
-                        transition: 'opacity 0.3s ease',
-                        opacity: isFlipping ? 1 : 0.6,
+                        fontWeight: 600, fontSize: '0.92rem', color: tokens.muted,
+                        transition: 'opacity 0.3s ease', opacity: isFlipping ? 1 : 0.85,
                     }}>
                         {isFlipping ? t('coin.flipping') : t('coin.tap')}
                     </Typography>
@@ -722,19 +562,13 @@ const TabNavigation: React.FC = () => {
                 open={!!duplicateWarning}
                 autoHideDuration={3000}
                 onClose={() => setDuplicateWarning('')}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                sx={{
-                    top: '50% !important',
-                    left: '50% !important',
-                    right: 'auto !important',
-                    transform: 'translate(-50%, -50%)',
-                }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
                 <Alert
                     severity="warning"
                     variant="filled"
                     onClose={() => setDuplicateWarning('')}
-                    sx={{ fontFamily: '"Rajdhani", sans-serif', fontWeight: 600, letterSpacing: '0.04em' }}
+                    sx={{ fontFamily: BODY_FONT, fontWeight: 600, borderRadius: '12px' }}
                 >
                     {duplicateWarning}
                 </Alert>

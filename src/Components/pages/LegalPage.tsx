@@ -10,9 +10,9 @@ import { legalContent, LegalType, Block } from '../../i18n/legalContent';
 function Strong({ children }: { children: React.ReactNode }) {
   return (
     <Typography component="span" sx={{
-      fontFamily: '"Rajdhani", sans-serif',
+      fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
       fontWeight: 700,
-      color: '#c9d1d9',
+      color: '#EAEDF2',
       fontSize: 'inherit',
     }}>
       {children}
@@ -34,14 +34,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <Box sx={{ mb: 3.5 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-        <Box sx={{ width: 3, height: 16, backgroundColor: '#e8670a', flexShrink: 0 }} />
+        <Box sx={{ width: 3, height: 16, backgroundColor: '#FF6A2B', flexShrink: 0 }} />
         <Typography sx={{
-          fontFamily: '"Rajdhani", sans-serif',
+          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
           fontWeight: 700,
           fontSize: '0.7rem',
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
-          color: '#e8670a',
+          color: '#FF6A2B',
         }}>
           {title}
         </Typography>
@@ -54,9 +54,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Para({ children }: { children: React.ReactNode }) {
   return (
     <Typography sx={{
-      fontFamily: '"Rajdhani", sans-serif',
+      fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
       fontSize: '0.95rem',
-      color: '#8b949e',
+      color: '#9AA4B2',
       lineHeight: 1.7,
       letterSpacing: '0.02em',
       mb: 1,
@@ -72,9 +72,9 @@ function BulletList({ items }: { items: string[] }) {
       {items.map((item, i) => (
         <Box component="li" key={i} sx={{ mb: 0.5 }}>
           <Typography sx={{
-            fontFamily: '"Rajdhani", sans-serif',
+            fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
             fontSize: '0.95rem',
-            color: '#8b949e',
+            color: '#9AA4B2',
             lineHeight: 1.7,
           }}>
             {renderInline(item)}
@@ -122,30 +122,30 @@ const LegalPage: React.FC<LegalPageProps> = ({ type }) => {
     <Box>
       {/* Back link */}
       <RouterLink to="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <ArrowBackIcon sx={{ fontSize: '0.75rem', color: '#8b949e' }} />
+        <ArrowBackIcon sx={{ fontSize: '0.75rem', color: '#9AA4B2' }} />
         <Typography sx={{
-          fontFamily: '"Rajdhani", sans-serif',
+          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
           fontSize: '0.62rem',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
-          color: '#8b949e',
+          color: '#9AA4B2',
           fontWeight: 600,
           transition: 'color 0.15s ease',
-          '&:hover': { color: '#c9d1d9' },
+          '&:hover': { color: '#EAEDF2' },
         }}>
           {t('legal.backToApp')}
         </Typography>
       </RouterLink>
 
       {/* Title */}
-      <Box sx={{ mt: 3, mb: 4, borderBottom: '1px solid #2a2d35', pb: 2 }}>
+      <Box sx={{ mt: 3, mb: 4, borderBottom: '1px solid #272D39', pb: 2 }}>
         <Typography sx={{
-          fontFamily: '"Rajdhani", sans-serif',
+          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
           fontWeight: 700,
           fontSize: '1.5rem',
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
-          color: '#c9d1d9',
+          color: '#EAEDF2',
           lineHeight: 1,
         }}>
           {t(`legal.title.${type}`)}
@@ -155,10 +155,10 @@ const LegalPage: React.FC<LegalPageProps> = ({ type }) => {
       {/* Hinweis: nur in EN gesetzt (deutsche Fassung ist verbindlich) */}
       {bindingNote && (
         <Typography sx={{
-          fontFamily: '"Rajdhani", sans-serif',
+          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
           fontSize: '0.8rem',
           fontStyle: 'italic',
-          color: '#4a4d55',
+          color: '#6B7480',
           lineHeight: 1.6,
           mb: 3,
         }}>

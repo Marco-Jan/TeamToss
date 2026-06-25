@@ -11,21 +11,22 @@ body {
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #08090a;
-  color: #c9d1d9;
-  font-family: 'Rajdhani', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background-color: #0B0D12;
+  color: #F2F4F8;
+  font-family: 'Plus Jakarta Sans Variable', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
   overflow-y: auto;
   position: relative;
 }
 
+/* Soft sporty spotlight behind the app instead of a tactical grid. */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(232, 103, 10, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232, 103, 10, 0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
+  background:
+    radial-gradient(900px 500px at 50% -10%, rgba(255, 106, 43, 0.10), transparent 70%),
+    radial-gradient(700px 500px at 100% 0%, rgba(34, 211, 197, 0.06), transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -35,14 +36,31 @@ body::before {
   z-index: 1;
 }
 
+@keyframes tt-deal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #08090a;
+  background: #0B0D12;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e8670a;
+  background: #272D39;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333B49;
 }

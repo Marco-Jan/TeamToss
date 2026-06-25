@@ -181,17 +181,16 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
               m: 0,
               px: 1.25,
               py: 0.5,
-              color: allSelected ? '#8b949e' : '#e8670a',
-              border: `1px solid ${allSelected ? '#2a2d35' : '#e8670a'}`,
-              borderRadius: 0,
-              fontFamily: '"Rajdhani", sans-serif',
+              color: allSelected ? '#9AA4B2' : '#FF6A2B',
+              border: `1px solid ${allSelected ? '#333B49' : '#FF6A2B'}`,
+              borderRadius: '999px',
+              fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
               fontWeight: 600,
-              fontSize: '0.7rem',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
+              fontSize: '0.78rem',
+              textTransform: 'none',
               '&:hover': {
                 backgroundColor: allSelected ? 'rgba(139, 148, 158, 0.08)' : 'rgba(232, 103, 10, 0.08)',
-                borderColor: allSelected ? '#8b949e' : '#ff8c3a',
+                borderColor: allSelected ? '#9AA4B2' : '#FF8A4D',
               },
             }}
           >
@@ -210,10 +209,10 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
               sx={{
                 width: 112,
                 height: 112,
-                border: `1px solid ${isSelected ? '#e8670a' : '#2a2d35'}`,
-                borderTop: `2px solid ${isSelected ? '#e8670a' : '#3a3d45'}`,
-                backgroundColor: isSelected ? 'rgba(232, 103, 10, 0.1)' : '#111318',
-                boxShadow: isSelected ? '0 0 16px rgba(232, 103, 10, 0.25)' : 'none',
+                borderRadius: '14px',
+                border: `1px solid ${isSelected ? '#FF6A2B' : '#272D39'}`,
+                backgroundColor: isSelected ? 'rgba(255, 106, 43, 0.12)' : '#161A22',
+                boxShadow: isSelected ? '0 0 18px rgba(255, 106, 43, 0.25)' : 'none',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -222,7 +221,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                 cursor: isEditing ? 'default' : 'pointer',
                 position: 'relative',
                 '&:hover': {
-                  borderColor: '#e8670a',
+                  borderColor: '#FF6A2B',
                   backgroundColor: isSelected ? 'rgba(232, 103, 10, 0.15)' : 'rgba(232, 103, 10, 0.05)',
                 },
               }}
@@ -241,8 +240,8 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                     sx={{
                       flex: 1,
                       '& .MuiInputBase-input': {
-                        color: '#c9d1d9',
-                        fontFamily: '"Rajdhani", sans-serif',
+                        color: '#EAEDF2',
+                        fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
                         fontWeight: 700,
                         fontSize: '0.9rem',
                         p: 0,
@@ -254,10 +253,10 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                       size="small"
                       onClick={(e) => { e.stopPropagation(); handleSaveEdit(id, NickName); }}
                       sx={{
-                        color: '#3a3d45',
+                        color: '#5B6472',
                         p: 0.25,
                         borderRadius: 0,
-                        '&:hover': { color: '#2dd4bf', backgroundColor: 'transparent' },
+                        '&:hover': { color: '#22D3C5', backgroundColor: 'transparent' },
                       }}
                     >
                       <CheckIcon fontSize="small" />
@@ -266,10 +265,10 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                       size="small"
                       onClick={(e) => { e.stopPropagation(); handleCancelEdit(); }}
                       sx={{
-                        color: '#3a3d45',
+                        color: '#5B6472',
                         p: 0.25,
                         borderRadius: 0,
-                        '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
+                        '&:hover': { color: '#FB5A52', backgroundColor: 'transparent' },
                       }}
                     >
                       <CloseIcon fontSize="small" />
@@ -279,8 +278,8 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
               ) : (
                 <>
                   <Typography sx={{
-                    color: isSelected ? '#e8670a' : '#c9d1d9',
-                    fontFamily: '"Rajdhani", sans-serif',
+                    color: isSelected ? '#FF6A2B' : '#EAEDF2',
+                    fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
                     fontWeight: 700,
                     fontSize: '0.9rem',
                     letterSpacing: '0.04em',
@@ -295,10 +294,10 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                       size="small"
                       onClick={(e) => { e.stopPropagation(); handleStartEdit(id, NickName); }}
                       sx={{
-                        color: '#3a3d45',
+                        color: '#5B6472',
                         p: 0.25,
                         borderRadius: 0,
-                        '&:hover': { color: '#e8670a', backgroundColor: 'transparent' },
+                        '&:hover': { color: '#FF6A2B', backgroundColor: 'transparent' },
                       }}
                     >
                       <EditIcon fontSize="small" />
@@ -307,10 +306,10 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
                       size="small"
                       onClick={(e) => { e.stopPropagation(); handleDeleteNickname(id); }}
                       sx={{
-                        color: '#3a3d45',
+                        color: '#5B6472',
                         p: 0.25,
                         borderRadius: 0,
-                        '&:hover': { color: '#f85149', backgroundColor: 'transparent' },
+                        '&:hover': { color: '#FB5A52', backgroundColor: 'transparent' },
                       }}
                     >
                       <DeleteIcon fontSize="small" />
@@ -330,13 +329,13 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
             {t('roster.removePrompt')}
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ borderTop: '1px solid #2a2d35', px: 2, py: 1.5 }}>
+        <DialogActions sx={{ borderTop: '1px solid #272D39', px: 2, py: 1.5 }}>
           <Button
             onClick={handleCancelDelete}
             sx={{
-              color: '#8b949e',
-              borderColor: '#2a2d35',
-              border: '1px solid #2a2d35',
+              color: '#9AA4B2',
+              borderColor: '#272D39',
+              border: '1px solid #272D39',
               m: 0,
             }}
           >
@@ -345,9 +344,9 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
           <Button
             onClick={handleConfirmDelete}
             sx={{
-              color: '#f85149',
-              borderColor: '#f85149',
-              border: '1px solid #f85149',
+              color: '#FB5A52',
+              borderColor: '#FB5A52',
+              border: '1px solid #FB5A52',
               m: 0,
               ml: 1,
               '&:hover': { backgroundColor: 'rgba(248, 81, 73, 0.08)' },
@@ -374,7 +373,7 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
           severity="warning"
           variant="filled"
           onClose={() => setDuplicateWarning('')}
-          sx={{ fontFamily: '"Rajdhani", sans-serif', fontWeight: 600, letterSpacing: '0.04em' }}
+          sx={{ fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif', fontWeight: 600, letterSpacing: '0.04em' }}
         >
           {duplicateWarning}
         </Alert>
