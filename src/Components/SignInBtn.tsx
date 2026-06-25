@@ -13,15 +13,15 @@ const SignInButton: React.FC = () => {
       onClick={signInWithGoogle}
       sx={{
         m: 0,
-        borderColor: '#e8670a',
-        color: '#e8670a',
+        borderColor: '#FF6A2B',
+        color: '#FF6A2B',
         fontSize: '0.75rem',
         py: 0.75,
         px: 1.5,
         '&:hover': {
-          borderColor: '#ff8c3a',
+          borderColor: '#FF8A4D',
           backgroundColor: 'rgba(232, 103, 10, 0.08)',
-          color: '#ff8c3a',
+          color: '#FF8A4D',
         },
       }}
     >

@@ -11,27 +11,27 @@ import { useLanguage } from '../../i18n/LanguageContext';
 function StatCard({ label, value, color }: { label: string; value: number | string; color: string }) {
   return (
     <Box sx={{
-      border: '1px solid #2a2d35',
+      border: '1px solid #272D39',
       borderTopWidth: '2px',
       borderTopColor: color,
-      backgroundColor: '#111318',
+      backgroundColor: '#161A22',
       p: 2.5,
       display: 'flex',
       flexDirection: 'column',
       gap: 1,
     }}>
       <Typography sx={{
-        fontFamily: '"Rajdhani", sans-serif',
+        fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
         fontWeight: 700,
         fontSize: '0.55rem',
         letterSpacing: '0.18em',
         textTransform: 'uppercase',
-        color: '#8b949e',
+        color: '#9AA4B2',
       }}>
         {label}
       </Typography>
       <Typography sx={{
-        fontFamily: '"Rajdhani", sans-serif',
+        fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
         fontWeight: 700,
         fontSize: '2.25rem',
         lineHeight: 1,
@@ -46,9 +46,9 @@ function StatCard({ label, value, color }: { label: string; value: number | stri
 function Notice({ children }: { children: React.ReactNode }) {
   return (
     <Typography sx={{
-      fontFamily: '"Rajdhani", sans-serif',
+      fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
       fontSize: '0.95rem',
-      color: '#8b949e',
+      color: '#9AA4B2',
       lineHeight: 1.7,
     }}>
       {children}
@@ -87,29 +87,29 @@ const AdminDashboard: React.FC = () => {
     <Box>
       {/* Back link */}
       <RouterLink to="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <ArrowBackIcon sx={{ fontSize: '0.75rem', color: '#8b949e' }} />
+        <ArrowBackIcon sx={{ fontSize: '0.75rem', color: '#9AA4B2' }} />
         <Typography sx={{
-          fontFamily: '"Rajdhani", sans-serif',
+          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
           fontSize: '0.62rem',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
-          color: '#8b949e',
+          color: '#9AA4B2',
           fontWeight: 600,
-          '&:hover': { color: '#c9d1d9' },
+          '&:hover': { color: '#EAEDF2' },
         }}>
           {t('legal.backToApp')}
         </Typography>
       </RouterLink>
 
       {/* Title */}
-      <Box sx={{ mt: 3, mb: 4, borderBottom: '1px solid #2a2d35', pb: 2 }}>
+      <Box sx={{ mt: 3, mb: 4, borderBottom: '1px solid #272D39', pb: 2 }}>
         <Typography sx={{
-          fontFamily: '"Rajdhani", sans-serif',
+          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
           fontWeight: 700,
           fontSize: '1.5rem',
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
-          color: '#c9d1d9',
+          color: '#EAEDF2',
           lineHeight: 1,
         }}>
           {t('admin.title')}
@@ -130,10 +130,10 @@ const AdminDashboard: React.FC = () => {
           gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
           gap: 1.5,
         }}>
-          <StatCard label={t('admin.totalUsers')} value={stats.totalUsers} color="#e8670a" />
-          <StatCard label={t('admin.active7')} value={stats.activeLast7Days} color="#2dd4bf" />
-          <StatCard label={t('admin.googleAccounts')} value={stats.googleUsers} color="#f0c030" />
-          <StatCard label={t('admin.guests')} value={stats.guests} color="#a855f7" />
+          <StatCard label={t('admin.totalUsers')} value={stats.totalUsers} color="#FF6A2B" />
+          <StatCard label={t('admin.active7')} value={stats.activeLast7Days} color="#22D3C5" />
+          <StatCard label={t('admin.googleAccounts')} value={stats.googleUsers} color="#FBBF24" />
+          <StatCard label={t('admin.guests')} value={stats.guests} color="#A78BFA" />
         </Box>
       )}
     </Box>

@@ -1,78 +1,113 @@
 import { createTheme } from '@mui/material/styles';
 
+// ── Design tokens ──────────────────────────────────────────────
+// Dark & sporty: deep blue-black base, energetic orange brand,
+// neon team colours. Display = Archivo (athletic), UI = Plus Jakarta Sans.
+export const tokens = {
+  bg: '#0B0D12',
+  surface: '#161A22',
+  surface2: '#1E232E',
+  border: '#272D39',
+  border2: '#333B49',
+  ink: '#F2F4F8',
+  muted: '#9AA4B2',
+  faint: '#5B6472',
+  brand: '#FF6A2B',
+  brandLight: '#FF8A4D',
+  brandDark: '#E8540F',
+  danger: '#FB5A52',
+  teal: '#22D3C5',
+};
+
+export const DISPLAY_FONT = '"Archivo Variable", "Plus Jakarta Sans Variable", sans-serif';
+export const BODY_FONT = '"Plus Jakarta Sans Variable", "Helvetica", "Arial", sans-serif';
+
+// Neon "jersey" colours, one per team (cycles for >8 teams).
+export const TEAM_COLORS = [
+  '#FF6A2B', // orange
+  '#22D3C5', // teal
+  '#4D8BFF', // blue
+  '#A78BFA', // violet
+  '#F472B6', // pink
+  '#A3E635', // lime
+  '#FBBF24', // amber
+  '#FB7185', // rose
+];
+
 export const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#e8670a',
-      light: '#ff8c3a',
-      dark: '#b34f00',
-      contrastText: '#ffffff',
+      main: tokens.brand,
+      light: tokens.brandLight,
+      dark: tokens.brandDark,
+      contrastText: '#0B0D12',
     },
     secondary: {
-      main: '#2dd4bf',
-      light: '#5eead4',
-      dark: '#14b8a6',
-      contrastText: '#0a0b0d',
+      main: tokens.teal,
+      light: '#5EEAD4',
+      dark: '#14B8A6',
+      contrastText: '#0B0D12',
     },
     background: {
-      default: '#08090a',
-      paper: '#111318',
+      default: tokens.bg,
+      paper: tokens.surface,
     },
     text: {
-      primary: '#c9d1d9',
-      secondary: '#8b949e',
+      primary: tokens.ink,
+      secondary: tokens.muted,
     },
-    divider: '#2a2d35',
-    error: {
-      main: '#f85149',
-    },
-    success: {
-      main: '#2dd4bf',
-    },
+    divider: tokens.border,
+    error: { main: tokens.danger },
+    success: { main: tokens.teal },
   },
   shape: {
-    borderRadius: 0,
+    borderRadius: 14,
   },
   typography: {
-    fontFamily: '"Rajdhani", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' },
-    h2: { fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' },
-    h3: { fontWeight: 600, letterSpacing: '0.06em' },
-    h6: { fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' },
+    fontFamily: BODY_FONT,
+    h1: { fontFamily: DISPLAY_FONT, fontWeight: 800, letterSpacing: '-0.01em' },
+    h2: { fontFamily: DISPLAY_FONT, fontWeight: 800, letterSpacing: '-0.01em' },
+    h3: { fontFamily: DISPLAY_FONT, fontWeight: 700 },
+    h6: { fontFamily: DISPLAY_FONT, fontWeight: 700 },
+    button: { fontWeight: 700 },
   },
   components: {
     MuiButton: {
+      defaultProps: { disableElevation: true },
       styleOverrides: {
         root: {
-          margin: '10px',
-          borderRadius: 0,
-          letterSpacing: '0.12em',
+          margin: 0,
+          borderRadius: 12,
+          letterSpacing: '0.01em',
           fontWeight: 700,
-          fontFamily: '"Rajdhani", sans-serif',
-          fontSize: '0.85rem',
-          textTransform: 'uppercase',
+          fontFamily: BODY_FONT,
+          fontSize: '0.95rem',
+          textTransform: 'none',
+          paddingTop: 10,
+          paddingBottom: 10,
         },
         contained: {
-          background: 'linear-gradient(135deg, #e8670a, #b34f00)',
-          border: '1px solid #e8670a',
-          boxShadow: '0 0 12px rgba(232, 103, 10, 0.25)',
+          background: 'linear-gradient(135deg, #FF8A4D, #FF6A2B)',
+          color: '#0B0D12',
+          boxShadow: '0 6px 20px rgba(255, 106, 43, 0.30)',
           '&:hover': {
-            background: 'linear-gradient(135deg, #ff8c3a, #e8670a)',
-            boxShadow: '0 0 24px rgba(232, 103, 10, 0.45)',
+            background: 'linear-gradient(135deg, #FF9B61, #FF7434)',
+            boxShadow: '0 8px 28px rgba(255, 106, 43, 0.45)',
           },
         },
         outlined: {
-          borderRadius: 0,
+          borderRadius: 12,
+          borderColor: tokens.border2,
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          background: '#111318',
-          border: '1px solid #2a2d35',
-          borderRadius: 0,
+          background: tokens.surface,
+          border: `1px solid ${tokens.border}`,
+          borderRadius: 16,
         },
       },
     },
@@ -80,78 +115,65 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            borderRadius: 0,
-            fontFamily: '"Rajdhani", sans-serif',
+            borderRadius: 12,
+            backgroundColor: tokens.surface2,
+            fontFamily: BODY_FONT,
             fontSize: '1rem',
-            letterSpacing: '0.05em',
-            '& fieldset': { borderColor: '#2a2d35' },
-            '&:hover fieldset': { borderColor: '#e8670a' },
-            '&.Mui-focused fieldset': { borderColor: '#e8670a' },
+            '& fieldset': { borderColor: tokens.border },
+            '&:hover fieldset': { borderColor: tokens.border2 },
+            '&.Mui-focused fieldset': { borderColor: tokens.brand, borderWidth: '2px' },
           },
           '& .MuiInputLabel-root': {
-            fontFamily: '"Rajdhani", sans-serif',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            fontSize: '0.85rem',
+            fontFamily: BODY_FONT,
+            fontSize: '0.95rem',
           },
           '& .MuiInputLabel-root.Mui-focused': {
-            color: '#e8670a',
+            color: tokens.brand,
           },
         },
-      },
-    },
-    MuiSelect: {
-      styleOverrides: {
-        root: { borderRadius: 0 },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: 0,
-          fontFamily: '"Rajdhani", sans-serif',
-          '& fieldset': { borderColor: '#2a2d35' },
-          '&:hover fieldset': { borderColor: '#e8670a' },
-          '&.Mui-focused fieldset': { borderColor: '#e8670a' },
-        },
-      },
-    },
-    MuiFormLabel: {
-      styleOverrides: {
-        root: {
-          fontFamily: '"Rajdhani", sans-serif',
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          fontSize: '0.85rem',
-          '&.Mui-focused': { color: '#e8670a' },
+          borderRadius: 12,
+          fontFamily: BODY_FONT,
+          '& fieldset': { borderColor: tokens.border },
+          '&:hover fieldset': { borderColor: tokens.border2 },
+          '&.Mui-focused fieldset': { borderColor: tokens.brand },
         },
       },
     },
     MuiTabs: {
       styleOverrides: {
         root: {
-          borderBottom: '1px solid #2a2d35',
+          minHeight: 'unset',
         },
         indicator: {
-          backgroundColor: '#e8670a',
-          height: '2px',
+          display: 'none',
         },
       },
     },
     MuiTab: {
       styleOverrides: {
         root: {
-          fontFamily: '"Rajdhani", sans-serif',
-          fontWeight: 600,
-          letterSpacing: '0.12em',
-          fontSize: '0.82rem',
-          textTransform: 'uppercase',
-          color: '#8b949e',
+          fontFamily: BODY_FONT,
+          fontWeight: 700,
+          letterSpacing: '0.01em',
+          fontSize: '0.92rem',
+          textTransform: 'none',
+          color: tokens.muted,
+          minHeight: 'unset',
+          borderRadius: 10,
+          margin: 3,
+          padding: '8px 12px',
+          transition: 'color 0.15s ease, background-color 0.15s ease',
           '&.Mui-selected': {
-            color: '#e8670a',
+            color: tokens.ink,
+            backgroundColor: tokens.surface2,
           },
           '&.Mui-disabled': {
-            color: '#3a3d45',
+            color: tokens.faint,
           },
         },
       },
@@ -159,56 +181,48 @@ export const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          background: '#111318',
-          border: '1px solid #2a2d35',
-          borderRadius: 0,
+          background: tokens.surface,
+          border: `1px solid ${tokens.border}`,
+          borderRadius: 18,
+          backgroundImage: 'none',
         },
       },
     },
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          fontFamily: '"Rajdhani", sans-serif',
-          fontWeight: 700,
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: '#c9d1d9',
-          borderBottom: '1px solid #2a2d35',
+          fontFamily: DISPLAY_FONT,
+          fontWeight: 800,
+          color: tokens.ink,
         },
       },
     },
     MuiDialogContentText: {
       styleOverrides: {
         root: {
-          fontFamily: '"Rajdhani", sans-serif',
-          color: '#8b949e',
-          letterSpacing: '0.04em',
+          fontFamily: BODY_FONT,
+          color: tokens.muted,
         },
       },
     },
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          fontFamily: '"Rajdhani", sans-serif',
-          letterSpacing: '0.06em',
-          '&.Mui-selected': { backgroundColor: 'rgba(232, 103, 10, 0.15)' },
-          '&:hover': { backgroundColor: 'rgba(232, 103, 10, 0.08)' },
+          fontFamily: BODY_FONT,
+          borderRadius: 8,
+          '&.Mui-selected': { backgroundColor: 'rgba(255, 106, 43, 0.15)' },
+          '&:hover': { backgroundColor: 'rgba(255, 106, 43, 0.08)' },
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
-        root: {
-          background: 'transparent',
-          boxShadow: 'none',
-        },
+        root: { background: 'transparent', boxShadow: 'none' },
       },
     },
     MuiIconButton: {
       styleOverrides: {
-        root: {
-          borderRadius: 0,
-        },
+        root: { borderRadius: 10 },
       },
     },
   },

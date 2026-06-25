@@ -1,11 +1,13 @@
 {
-  "name": "TeamToss",
+  "name": "TeamToss – Faire Teams auslosen",
   "short_name": "TeamToss",
-  "description": "Fair squad generator — add players, pick team count, let TeamToss decide.",
+  "description": "Kostenloser Team-Generator: Namen eintippen, Teamanzahl wählen und faire, zufällige Mannschaften auslosen. Mit Münzwurf und Captains.",
+  "lang": "de",
+  "categories": ["sports", "utilities", "productivity"],
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0e11",
-  "theme_color": "#e8670a",
+  "background_color": "#0B0D12",
+  "theme_color": "#0B0D12",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

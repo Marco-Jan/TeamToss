@@ -15,7 +15,7 @@ import AdminDashboard from './Components/pages/AdminDashboard';
 import InfoModal from './Components/InfoModal';
 import LanguageToggle from './Components/LanguageToggle';
 import { useLanguage } from './i18n/LanguageContext';
-import { theme } from './Components/Thema/theme';
+import { theme, tokens, DISPLAY_FONT } from './Components/Thema/theme';
 
 const NAV_LINKS = [
   { to: '/impressum',   key: 'footer.impressum' },
@@ -45,39 +45,53 @@ const App: React.FC = () => {
       <CssBaseline />
       <Container
         maxWidth="md"
-        sx={{ minHeight: '100vh', py: 3, display: 'flex', flexDirection: 'column' }}
+        sx={{ minHeight: '100vh', py: { xs: 2, sm: 3 }, px: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column' }}
       >
         {/* ── Header ── */}
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: '1px solid #2a2d35',
-          pb: 2.5,
-          mb: 3,
+          flexWrap: 'wrap',
+          gap: 1.5,
+          pb: 2,
+          mb: { xs: 2, sm: 3 },
+          borderBottom: `1px solid ${tokens.border}`,
         }}>
-          <RouterLink to="/" style={{ textDecoration: 'none' }}>
-            <Box>
-              <Typography sx={{
-                fontFamily: '"Rajdhani", sans-serif',
-                fontWeight: 700,
-                fontSize: '1.75rem',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: '#e8670a',
-                lineHeight: 1,
+          <RouterLink to="/" style={{ textDecoration: 'none' }} aria-label="TeamToss home">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
+              {/* Coin mark */}
+              <Box sx={{
+                width: 34,
+                height: 34,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #FF8A4D, #FF6A2B)',
+                boxShadow: '0 4px 14px rgba(255,106,43,0.4)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
               }}>
-                TEAM<span style={{ color: '#c9d1d9' }}>TOSS</span>
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.75 }}>
-                <Box sx={{ width: 28, height: 2, backgroundColor: '#e8670a' }} />
+                <Typography sx={{ fontFamily: DISPLAY_FONT, fontWeight: 900, fontSize: '1.05rem', color: '#0B0D12', lineHeight: 1 }}>
+                  T
+                </Typography>
+              </Box>
+              <Box>
                 <Typography sx={{
-                  fontSize: '0.6rem',
-                  letterSpacing: '0.22em',
-                  textTransform: 'uppercase',
-                  color: '#8b949e',
-                  fontFamily: '"Rajdhani", sans-serif',
+                  fontFamily: DISPLAY_FONT,
+                  fontWeight: 800,
+                  fontSize: '1.45rem',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1,
+                  color: tokens.ink,
+                }}>
+                  Team<Box component="span" sx={{ color: tokens.brand }}>Toss</Box>
+                </Typography>
+                <Typography sx={{
+                  fontSize: '0.72rem',
+                  color: tokens.muted,
                   fontWeight: 600,
+                  mt: 0.35,
                 }}>
                   {t('header.subtitle')}
                 </Typography>
@@ -85,7 +99,7 @@ const App: React.FC = () => {
             </Box>
           </RouterLink>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <LanguageToggle />
             <InfoModal />
             {user ? (
@@ -93,15 +107,12 @@ const App: React.FC = () => {
                 {isAdmin(user) && (
                   <RouterLink to="/admin" style={{ textDecoration: 'none' }}>
                     <Typography sx={{
-                      fontFamily: '"Rajdhani", sans-serif',
-                      fontWeight: 600,
-                      fontSize: '0.72rem',
-                      letterSpacing: '0.16em',
-                      textTransform: 'uppercase',
-                      color: '#8b949e',
+                      fontWeight: 700,
+                      fontSize: '0.8rem',
+                      color: tokens.muted,
                       px: 1,
                       transition: 'color 0.15s ease',
-                      '&:hover': { color: '#e8670a' },
+                      '&:hover': { color: tokens.brand },
                     }}>
                       {t('nav.admin')}
                     </Typography>
@@ -109,9 +120,10 @@ const App: React.FC = () => {
                 )}
                 {userPhoto && (
                   <Box sx={{
-                    width: 36,
-                    height: 36,
-                    border: '1px solid #e8670a',
+                    width: 34,
+                    height: 34,
+                    borderRadius: '50%',
+                    border: `2px solid ${tokens.brand}`,
                     overflow: 'hidden',
                     flexShrink: 0,
                   }}>
@@ -147,23 +159,20 @@ const App: React.FC = () => {
         {/* ── Footer ── */}
         <Box component="footer" sx={{
           mt: 6,
-          pt: 2,
-          borderTop: '1px solid #1e2128',
+          pt: 2.5,
+          borderTop: `1px solid ${tokens.border}`,
           display: 'flex',
           justifyContent: 'center',
-          gap: 4,
+          gap: 3,
         }}>
           {NAV_LINKS.map(({ to, key }) => (
             <RouterLink key={to} to={to} style={{ textDecoration: 'none' }}>
               <Typography sx={{
-                fontSize: '0.58rem',
-                letterSpacing: '0.16em',
-                color: '#3a3d45',
-                textTransform: 'uppercase',
-                fontFamily: '"Rajdhani", sans-serif',
+                fontSize: '0.78rem',
+                color: tokens.faint,
                 fontWeight: 600,
                 transition: 'color 0.15s ease',
-                '&:hover': { color: '#8b949e' },
+                '&:hover': { color: tokens.muted },
               }}>
                 {t(key)}
               </Typography>

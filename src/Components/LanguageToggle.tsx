@@ -13,7 +13,7 @@ const LanguageToggle: React.FC = () => {
       {LANGS.map((l, i) => (
         <React.Fragment key={l}>
           {i > 0 && (
-            <Typography sx={{ color: '#2a2d35', fontSize: '0.7rem', px: 0.25 }}>|</Typography>
+            <Typography sx={{ color: '#272D39', fontSize: '0.7rem', px: 0.25 }}>|</Typography>
           )}
           <Typography
             component="button"
@@ -23,14 +23,14 @@ const LanguageToggle: React.FC = () => {
               border: 'none',
               cursor: 'pointer',
               p: 0,
-              fontFamily: '"Rajdhani", sans-serif',
+              fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
               fontWeight: 700,
               fontSize: '0.72rem',
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              color: lang === l ? '#e8670a' : '#8b949e',
+              color: lang === l ? '#FF6A2B' : '#9AA4B2',
               transition: 'color 0.15s ease',
-              '&:hover': { color: lang === l ? '#e8670a' : '#c9d1d9' },
+              '&:hover': { color: lang === l ? '#FF6A2B' : '#EAEDF2' },
             }}
             aria-pressed={lang === l}
           >

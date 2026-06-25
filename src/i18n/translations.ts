@@ -6,7 +6,7 @@ export type Lang = 'de' | 'en';
 export const translations: Record<Lang, Record<string, string>> = {
   de: {
     // Header / Footer
-    'header.subtitle': 'Squad Generator',
+    'header.subtitle': 'Faire Teams in Sekunden',
     'nav.admin': 'Admin',
     'footer.impressum': 'Impressum',
     'footer.agb': 'AGB',
@@ -32,15 +32,19 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     // Team Builder
     'builder.addOperator': 'Spieler hinzufügen',
-    'builder.numSquads': 'Anzahl Squads',
-    'builder.generate': 'Squads erstellen',
-    'builder.clear': 'Liste leeren',
-    'builder.queuedOne': '{n} Spieler in der Warteschlange',
-    'builder.queuedOther': '{n} Spieler in der Warteschlange',
-    'builder.noQueued': 'Keine Spieler in der Warteschlange',
-    'builder.squad': 'Squad {n}',
-    'builder.captainTooltip': 'Als Captain markieren (wird auf eigenes Squad verteilt)',
-    'builder.duplicate': '„{name}" ist bereits in der Warteschlange',
+    'builder.numSquads': 'Wie viele Teams?',
+    'builder.generate': 'Teams erstellen',
+    'builder.generateAgain': 'Neu mischen',
+    'builder.clear': 'Alle löschen',
+    'builder.queuedOne': '{n} Spieler',
+    'builder.queuedOther': '{n} Spieler',
+    'builder.noQueued': 'Noch keine Spieler',
+    'builder.emptyHint': 'Tippe oben Namen ein, um zu starten.',
+    'builder.captainHint': 'Tipp: Stern antippen macht jemanden zum Captain (eigenes Team).',
+    'builder.leaderHint': 'Tippe einen Namen an, um den Captain zu setzen.',
+    'builder.squad': 'Team {n}',
+    'builder.captainTooltip': 'Als Captain markieren – kommt in ein eigenes Team',
+    'builder.duplicate': '„{name}" ist schon dabei',
 
     // Coin Flip
     'coin.flip': 'WURF',
@@ -62,9 +66,9 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     // Info-Modal
     'info.whatIsThis': 'WAS IST DAS HIER?',
-    'info.intro': 'TeamToss ist ein kostenloser Squad Generator — perfekt wenn ihr schnell faire Teams aus eurer Gruppe braucht, ohne lange zu diskutieren.',
-    'info.feat1.title': 'Squad Generator',
-    'info.feat1.desc': 'Trag deine Spieler ein, wähle die Anzahl der Squads — und TeamToss verteilt alle fair per Zufall.',
+    'info.intro': 'TeamToss ist ein kostenloser Team-Generator — perfekt wenn ihr schnell faire Teams aus eurer Gruppe braucht, ohne lange zu diskutieren.',
+    'info.feat1.title': 'Teams erstellen',
+    'info.feat1.desc': 'Trag deine Spieler ein, wähle die Anzahl der Teams — und TeamToss verteilt alle fair per Zufall.',
     'info.feat2.title': 'Kader speichern',
     'info.feat2.desc': 'Mit Google-Login kannst du dein Team vorab im Kader speichern. Beim nächsten Mal einfach laden — kein Eintippen mehr.',
     'info.feat3.title': 'Coin Flip',
@@ -91,7 +95,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
   en: {
     // Header / Footer
-    'header.subtitle': 'Squad Generator',
+    'header.subtitle': 'Fair teams in seconds',
     'nav.admin': 'Admin',
     'footer.impressum': 'Imprint',
     'footer.agb': 'Terms',
@@ -116,16 +120,20 @@ export const translations: Record<Lang, Record<string, string>> = {
     'tab.coinFlip': 'Coin Flip',
 
     // Team Builder
-    'builder.addOperator': 'Add Operator',
-    'builder.numSquads': 'Number of Squads',
-    'builder.generate': 'Generate Squads',
-    'builder.clear': 'Clear Roster',
-    'builder.queuedOne': '{n} Operator Queued',
-    'builder.queuedOther': '{n} Operators Queued',
-    'builder.noQueued': 'No operators queued',
-    'builder.squad': 'Squad {n}',
-    'builder.captainTooltip': 'Mark as captain (placed in their own squad)',
-    'builder.duplicate': '"{name}" is already in the queue',
+    'builder.addOperator': 'Add player',
+    'builder.numSquads': 'How many teams?',
+    'builder.generate': 'Make teams',
+    'builder.generateAgain': 'Shuffle again',
+    'builder.clear': 'Clear all',
+    'builder.queuedOne': '{n} player',
+    'builder.queuedOther': '{n} players',
+    'builder.noQueued': 'No players yet',
+    'builder.emptyHint': 'Type names above to get started.',
+    'builder.captainHint': 'Tip: tap the star to make someone a captain (own team).',
+    'builder.leaderHint': 'Tap a name to set the captain.',
+    'builder.squad': 'Team {n}',
+    'builder.captainTooltip': 'Mark as captain – goes into its own team',
+    'builder.duplicate': '"{name}" is already added',
 
     // Coin Flip
     'coin.flip': 'FLIP',
@@ -135,21 +143,21 @@ export const translations: Record<Lang, Record<string, string>> = {
     'coin.tap': 'Tap the coin to flip',
 
     // Roster / Nicknames
-    'roster.savedOperators': 'Saved Operators',
-    'roster.saveOperator': 'Save Operator',
+    'roster.savedOperators': 'Saved players',
+    'roster.saveOperator': 'Save player',
     'roster.selectAll': 'Select all',
     'roster.deselectAll': 'Deselect all',
     'roster.duplicate': '"{name}" is already saved',
     'roster.confirmDelete': 'Confirm Delete',
-    'roster.removePrompt': 'Remove this operator from the saved roster?',
+    'roster.removePrompt': 'Remove this player from the saved roster?',
     'common.cancel': 'Cancel',
     'common.delete': 'Delete',
 
     // Info modal
     'info.whatIsThis': 'WHAT IS THIS?',
-    'info.intro': 'TeamToss is a free squad generator — perfect when you quickly need fair teams from your group without long discussions.',
-    'info.feat1.title': 'Squad Generator',
-    'info.feat1.desc': 'Enter your players, pick the number of squads — and TeamToss splits everyone up fairly at random.',
+    'info.intro': 'TeamToss is a free team generator — perfect when you quickly need fair teams from your group without long discussions.',
+    'info.feat1.title': 'Make teams',
+    'info.feat1.desc': 'Enter your players, pick the number of teams — and TeamToss splits everyone up fairly at random.',
     'info.feat2.title': 'Save Roster',
     'info.feat2.desc': 'With a Google login you can save your team in the roster in advance. Next time just load it — no more typing.',
     'info.feat3.title': 'Coin Flip',

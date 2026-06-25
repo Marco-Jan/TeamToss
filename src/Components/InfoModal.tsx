@@ -16,17 +16,17 @@ const InfoModal: React.FC = () => {
 
   const features = [
     {
-      icon: <GroupsIcon sx={{ fontSize: '1.1rem', color: '#e8670a' }} />,
+      icon: <GroupsIcon sx={{ fontSize: '1.1rem', color: '#FF6A2B' }} />,
       title: t('info.feat1.title'),
       desc: t('info.feat1.desc'),
     },
     {
-      icon: <BookmarkIcon sx={{ fontSize: '1.1rem', color: '#2dd4bf' }} />,
+      icon: <BookmarkIcon sx={{ fontSize: '1.1rem', color: '#22D3C5' }} />,
       title: t('info.feat2.title'),
       desc: t('info.feat2.desc'),
     },
     {
-      icon: <CasinoIcon sx={{ fontSize: '1.1rem', color: '#f0c030' }} />,
+      icon: <CasinoIcon sx={{ fontSize: '1.1rem', color: '#FBBF24' }} />,
       title: t('info.feat3.title'),
       desc: t('info.feat3.desc'),
     },
@@ -44,10 +44,10 @@ const InfoModal: React.FC = () => {
         size="small"
         aria-label="Info"
         sx={{
-          color: '#3a3d45',
+          color: '#5B6472',
           borderRadius: 0,
           p: 0.75,
-          '&:hover': { color: '#8b949e', backgroundColor: 'transparent' },
+          '&:hover': { color: '#9AA4B2', backgroundColor: 'transparent' },
         }}
       >
         <InfoOutlinedIcon sx={{ fontSize: '1.2rem' }} />
@@ -62,28 +62,28 @@ const InfoModal: React.FC = () => {
       >
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1 }}>
           <Box>
-            <Box component="span" sx={{ color: '#e8670a' }}>TEAM</Box>
-            <Box component="span" sx={{ color: '#c9d1d9' }}>TOSS</Box>
+            <Box component="span" sx={{ color: '#FF6A2B' }}>TEAM</Box>
+            <Box component="span" sx={{ color: '#EAEDF2' }}>TOSS</Box>
             <Box sx={{
               fontSize: '0.55rem',
               letterSpacing: '0.22em',
-              color: '#8b949e',
+              color: '#9AA4B2',
               mt: 0.5,
               fontWeight: 600,
             }}>
               {t('info.whatIsThis')}
             </Box>
           </Box>
-          <IconButton onClick={handleClose} size="small" sx={{ color: '#3a3d45', '&:hover': { color: '#c9d1d9', backgroundColor: 'transparent' } }}>
+          <IconButton onClick={handleClose} size="small" sx={{ color: '#5B6472', '&:hover': { color: '#EAEDF2', backgroundColor: 'transparent' } }}>
             <CloseIcon sx={{ fontSize: '1rem' }} />
           </IconButton>
         </DialogTitle>
 
         <DialogContent sx={{ pt: 2.5, pb: 3 }}>
           <Typography sx={{
-            fontFamily: '"Rajdhani", sans-serif',
+            fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
             fontSize: '0.88rem',
-            color: '#8b949e',
+            color: '#9AA4B2',
             letterSpacing: '0.04em',
             lineHeight: 1.6,
             mb: 3,
@@ -98,32 +98,32 @@ const InfoModal: React.FC = () => {
                   mt: 0.15,
                   width: 28,
                   height: 28,
-                  border: '1px solid #2a2d35',
+                  border: '1px solid #272D39',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
-                  backgroundColor: '#0d0e11',
+                  backgroundColor: '#11141B',
                 }}>
                   {icon}
                 </Box>
                 <Box>
                   <Typography sx={{
-                    fontFamily: '"Rajdhani", sans-serif',
+                    fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
                     fontWeight: 700,
                     fontSize: '0.85rem',
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
-                    color: '#c9d1d9',
+                    color: '#EAEDF2',
                     lineHeight: 1.2,
                     mb: 0.4,
                   }}>
                     {title}
                   </Typography>
                   <Typography sx={{
-                    fontFamily: '"Rajdhani", sans-serif',
+                    fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
                     fontSize: '0.82rem',
-                    color: '#8b949e',
+                    color: '#9AA4B2',
                     letterSpacing: '0.03em',
                     lineHeight: 1.55,
                   }}>

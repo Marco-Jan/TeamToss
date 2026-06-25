@@ -1,8 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Search Console verification -->
+    <meta name="google-site-verification" content="bnnjAO7MTbfcfQk2CvhdYcNdgjOTlqLaQ3PYHcFTNow" />
+
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -10,31 +14,115 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <meta name="msapplication-TileImage" content="/mstile-150x150.png">
-    <meta name="msapplication-TileColor" content="#0d0e11">
-    <meta name="theme-color" content="#e8670a">
-    <meta name="description" content="Fair squad generator — add players, pick team count, let TeamToss decide.">
+    <meta name="msapplication-TileColor" content="#0B0D12">
+    <meta name="theme-color" content="#0B0D12">
+
+    <!-- SEO -->
+    <title>TeamToss – Faire Teams & Mannschaften zufällig auslosen | Gratis Team-Generator</title>
+    <meta name="description" content="TeamToss ist der kostenlose Team-Generator: Spielernamen eintippen, Teamanzahl wählen und sofort faire, zufällige Mannschaften auslosen. Mit Münzwurf und Captains – ohne Anmeldung, direkt im Browser.">
+    <meta name="keywords" content="Team Generator, Mannschaften auslosen, Teams einteilen, Gruppen zufällig aufteilen, Team Randomizer, Münzwurf online, faire Teams, Spieler aufteilen, TeamToss">
+    <meta name="author" content="TeamToss">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://teamtoss.vercel.app/">
 
     <!-- Open Graph / link preview -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TeamToss">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:locale:alternate" content="en_US">
     <meta property="og:url" content="https://teamtoss.vercel.app/">
-    <meta property="og:title" content="TeamToss">
-    <meta property="og:description" content="Fair squad generator — add players, pick team count, let TeamToss decide.">
+    <meta property="og:title" content="TeamToss – Faire Teams in Sekunden auslosen">
+    <meta property="og:description" content="Kostenloser Team-Generator: Namen eintippen, Teamanzahl wählen, fertig. Faire, zufällige Mannschaften plus Münzwurf – ohne Anmeldung.">
     <meta property="og:image" content="https://teamtoss.vercel.app/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
     <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="TeamToss">
-    <meta name="twitter:description" content="Fair squad generator — add players, pick team count, let TeamToss decide.">
+    <meta name="twitter:title" content="TeamToss – Faire Teams in Sekunden auslosen">
+    <meta name="twitter:description" content="Kostenloser Team-Generator: Namen eintippen, Teamanzahl wählen, fertig. Faire, zufällige Mannschaften plus Münzwurf – ohne Anmeldung.">
     <meta name="twitter:image" content="https://teamtoss.vercel.app/og-image.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>TeamToss</title>
+
+    <!-- Structured data: helps Google rich results and gives LLMs a clean description -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "TeamToss",
+      "url": "https://teamtoss.vercel.app/",
+      "description": "Kostenloser Team-Generator zum fairen, zufälligen Auslosen von Mannschaften. Spielernamen eintippen, Teamanzahl wählen und sofort ausgewogene Teams erstellen. Mit Münzwurf und Captain-Funktion, ohne Anmeldung.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "inLanguage": ["de", "en"],
+      "browserRequirements": "Requires JavaScript",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "featureList": [
+        "Faire, zufällige Teams aus einer Namensliste erstellen",
+        "Anzahl der Teams frei wählen",
+        "Captains markieren und auf eigene Teams verteilen",
+        "Münzwurf für die Seitenwahl",
+        "Kader speichern mit Google-Login"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Wie lose ich mit TeamToss faire Teams aus?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Spielernamen eintippen, die gewünschte Anzahl an Teams wählen und auf \"Teams erstellen\" tippen. TeamToss verteilt alle Spieler zufällig und gleichmäßig auf die Teams."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ist TeamToss kostenlos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja, TeamToss ist komplett kostenlos und funktioniert direkt im Browser – ohne Anmeldung. Optional kannst du dich mit Google anmelden, um deinen Kader zu speichern."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kann ich Captains festlegen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Markiere einen Spieler mit dem Stern als Captain – beim Erstellen werden Captains auf verschiedene Teams verteilt."
+          }
+        }
+      ]
+    }
+    </script>
+
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Crawler/LLM fallback: real content shown until the app boots (and if JS is disabled). -->
+      <noscript>
+        <main style="max-width:680px;margin:40px auto;padding:0 20px;font-family:sans-serif;color:#F2F4F8;background:#0B0D12;">
+          <h1>TeamToss – Faire Teams in Sekunden auslosen</h1>
+          <p>TeamToss ist ein kostenloser Team-Generator. Tippe die Namen deiner Gruppe ein, wähle die Anzahl der Teams und lasse faire, zufällige Mannschaften erstellen – ideal für Sport, Spieleabende, Schule oder Büro.</p>
+          <h2>So funktioniert es</h2>
+          <ol>
+            <li>Spielernamen eintippen.</li>
+            <li>Anzahl der Teams wählen.</li>
+            <li>Auf „Teams erstellen" tippen – fertig.</li>
+          </ol>
+          <h2>Funktionen</h2>
+          <ul>
+            <li>Faire, zufällige Verteilung der Spieler auf die Teams</li>
+            <li>Captains markieren, die auf eigene Teams verteilt werden</li>
+            <li>Integrierter Münzwurf für die Seitenwahl</li>
+            <li>Kader speichern mit Google-Login</li>
+          </ul>
+          <p>Bitte aktiviere JavaScript, um TeamToss zu nutzen.</p>
+        </main>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
