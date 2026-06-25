@@ -75,10 +75,10 @@ export const translations: Record<Lang, Record<string, string>> = {
     'info.feat3.desc': 'Wer darf zuerst wählen? Wirf eine Münze und lass das Schicksal entscheiden.',
 
     // Admin
-    'admin.title': 'Admin Terminal',
+    'admin.title': 'Admin-Übersicht',
     'admin.loading': 'Lädt…',
     'admin.loadingStats': 'Lade Statistik…',
-    'admin.noAccess': 'Kein Zugriff. Dieses Terminal ist nur für den Betreiber sichtbar.',
+    'admin.noAccess': 'Kein Zugriff. Diese Seite ist nur für den Betreiber sichtbar.',
     'admin.error': 'Statistik konnte nicht geladen werden. Sind die Firestore-Rules korrekt deployt?',
     'admin.totalUsers': 'Nutzer gesamt',
     'admin.active7': 'Aktiv (7 Tage)',
@@ -164,10 +164,10 @@ export const translations: Record<Lang, Record<string, string>> = {
     'info.feat3.desc': 'Who gets to pick first? Flip a coin and let fate decide.',
 
     // Admin
-    'admin.title': 'Admin Terminal',
+    'admin.title': 'Admin overview',
     'admin.loading': 'Loading…',
     'admin.loadingStats': 'Loading stats…',
-    'admin.noAccess': 'No access. This terminal is only visible to the operator.',
+    'admin.noAccess': 'No access. This page is only visible to the operator.',
     'admin.error': 'Could not load the stats. Are the Firestore rules deployed correctly?',
     'admin.totalUsers': 'Total users',
     'admin.active7': 'Active (7 days)',

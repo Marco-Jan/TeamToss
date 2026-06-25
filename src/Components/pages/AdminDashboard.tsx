@@ -5,40 +5,40 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { auth, isAdmin, getAdminStats, AdminStats } from '../../firebase/firebaseInit';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { tokens, DISPLAY_FONT, BODY_FONT } from '../Thema/theme';
 
 // ── Sub-components ───────────────────────────────────────────────────────
 
 function StatCard({ label, value, color }: { label: string; value: number | string; color: string }) {
   return (
     <Box sx={{
-      border: '1px solid #272D39',
-      borderTopWidth: '2px',
-      borderTopColor: color,
-      backgroundColor: '#161A22',
-      p: 2.5,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 1,
+      borderRadius: '16px',
+      overflow: 'hidden',
+      border: `1px solid ${tokens.border}`,
+      backgroundColor: tokens.surface,
     }}>
-      <Typography sx={{
-        fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
-        fontWeight: 700,
-        fontSize: '0.55rem',
-        letterSpacing: '0.18em',
-        textTransform: 'uppercase',
-        color: '#9AA4B2',
-      }}>
-        {label}
-      </Typography>
-      <Typography sx={{
-        fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
-        fontWeight: 700,
-        fontSize: '2.25rem',
-        lineHeight: 1,
-        color: color,
-      }}>
-        {value}
-      </Typography>
+      <Box sx={{ height: 4, backgroundColor: color }} />
+      <Box sx={{ p: 2.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Typography sx={{
+          fontFamily: BODY_FONT,
+          fontWeight: 700,
+          fontSize: '0.7rem',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          color: tokens.muted,
+        }}>
+          {label}
+        </Typography>
+        <Typography sx={{
+          fontFamily: DISPLAY_FONT,
+          fontWeight: 800,
+          fontSize: '2.4rem',
+          lineHeight: 1,
+          color: color,
+        }}>
+          {value}
+        </Typography>
+      </Box>
     </Box>
   );
 }
@@ -46,9 +46,9 @@ function StatCard({ label, value, color }: { label: string; value: number | stri
 function Notice({ children }: { children: React.ReactNode }) {
   return (
     <Typography sx={{
-      fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
+      fontFamily: BODY_FONT,
       fontSize: '0.95rem',
-      color: '#9AA4B2',
+      color: tokens.muted,
       lineHeight: 1.7,
     }}>
       {children}
@@ -87,30 +87,28 @@ const AdminDashboard: React.FC = () => {
     <Box>
       {/* Back link */}
       <RouterLink to="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <ArrowBackIcon sx={{ fontSize: '0.75rem', color: '#9AA4B2' }} />
+        <ArrowBackIcon sx={{ fontSize: '0.95rem', color: tokens.muted }} />
         <Typography sx={{
-          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
-          fontSize: '0.62rem',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          color: '#9AA4B2',
+          fontFamily: BODY_FONT,
+          fontSize: '0.85rem',
+          color: tokens.muted,
           fontWeight: 600,
-          '&:hover': { color: '#EAEDF2' },
+          transition: 'color 0.15s ease',
+          '&:hover': { color: tokens.ink },
         }}>
           {t('legal.backToApp')}
         </Typography>
       </RouterLink>
 
       {/* Title */}
-      <Box sx={{ mt: 3, mb: 4, borderBottom: '1px solid #272D39', pb: 2 }}>
-        <Typography sx={{
-          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
-          fontWeight: 700,
-          fontSize: '1.5rem',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          color: '#EAEDF2',
-          lineHeight: 1,
+      <Box sx={{ mt: 2.5, mb: 4, borderBottom: `1px solid ${tokens.border}`, pb: 2 }}>
+        <Typography component="h1" sx={{
+          fontFamily: DISPLAY_FONT,
+          fontWeight: 800,
+          fontSize: '1.9rem',
+          letterSpacing: '-0.01em',
+          color: tokens.ink,
+          lineHeight: 1.1,
         }}>
           {t('admin.title')}
         </Typography>
