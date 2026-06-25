@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { legalContent, LegalType, Block } from '../../i18n/legalContent';
+import { tokens, DISPLAY_FONT, BODY_FONT } from '../Thema/theme';
 
 // ── Shared sub-components ──────────────────────────────────────────────────
 
@@ -33,15 +34,13 @@ function renderInline(text: string): React.ReactNode {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <Box sx={{ mb: 3.5 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-        <Box sx={{ width: 3, height: 16, backgroundColor: '#FF6A2B', flexShrink: 0 }} />
-        <Typography sx={{
-          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mb: 1.5 }}>
+        <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: tokens.brand, flexShrink: 0 }} />
+        <Typography component="h2" sx={{
+          fontFamily: DISPLAY_FONT,
           fontWeight: 700,
-          fontSize: '0.7rem',
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
-          color: '#FF6A2B',
+          fontSize: '1rem',
+          color: tokens.ink,
         }}>
           {title}
         </Typography>
@@ -122,31 +121,28 @@ const LegalPage: React.FC<LegalPageProps> = ({ type }) => {
     <Box>
       {/* Back link */}
       <RouterLink to="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <ArrowBackIcon sx={{ fontSize: '0.75rem', color: '#9AA4B2' }} />
+        <ArrowBackIcon sx={{ fontSize: '0.95rem', color: tokens.muted }} />
         <Typography sx={{
-          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
-          fontSize: '0.62rem',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          color: '#9AA4B2',
+          fontFamily: BODY_FONT,
+          fontSize: '0.85rem',
+          color: tokens.muted,
           fontWeight: 600,
           transition: 'color 0.15s ease',
-          '&:hover': { color: '#EAEDF2' },
+          '&:hover': { color: tokens.ink },
         }}>
           {t('legal.backToApp')}
         </Typography>
       </RouterLink>
 
       {/* Title */}
-      <Box sx={{ mt: 3, mb: 4, borderBottom: '1px solid #272D39', pb: 2 }}>
-        <Typography sx={{
-          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
-          fontWeight: 700,
-          fontSize: '1.5rem',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          color: '#EAEDF2',
-          lineHeight: 1,
+      <Box sx={{ mt: 2.5, mb: 4, borderBottom: `1px solid ${tokens.border}`, pb: 2 }}>
+        <Typography component="h1" sx={{
+          fontFamily: DISPLAY_FONT,
+          fontWeight: 800,
+          fontSize: '1.9rem',
+          letterSpacing: '-0.01em',
+          color: tokens.ink,
+          lineHeight: 1.1,
         }}>
           {t(`legal.title.${type}`)}
         </Typography>
@@ -155,7 +151,7 @@ const LegalPage: React.FC<LegalPageProps> = ({ type }) => {
       {/* Hinweis: nur in EN gesetzt (deutsche Fassung ist verbindlich) */}
       {bindingNote && (
         <Typography sx={{
-          fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
+          fontFamily: BODY_FONT,
           fontSize: '0.8rem',
           fontStyle: 'italic',
           color: '#6B7480',
