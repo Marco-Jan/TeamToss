@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
-import { addNickname, getNicknames, deleteNickname, updateNickname } from '../firebase/firebaseInit';
+import { deleteNickname, updateNickname } from '../firebase/firebaseInit';
 import { Nickname } from '../types/nickname';
-import { auth } from '../firebase/firebaseInit';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useLanguage } from '../i18n/LanguageContext';
 import {
   Typography,
@@ -22,69 +19,43 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Snackbar,
-  Alert
 } from '@mui/material';
 
 export interface NicknameManagerProps {
   onAddPlayer: (nickname: string) => void;
   updatePlayerList: (playerList: string[]) => void;
   playerList: string[];
+  // Gespeicherte Spieler – wird vom Parent verwaltet (geteilt mit dem Speichern oben).
+  nicknames: Nickname[];
+  refreshNicknames: () => void | Promise<void>;
 }
 
-const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerList, updatePlayerList }) => {
+const NicknameManager: React.FC<NicknameManagerProps> = ({
+  onAddPlayer,
+  playerList,
+  updatePlayerList,
+  nicknames,
+  refreshNicknames,
+}) => {
   const { t } = useLanguage();
-  const [nickname, setNickname] = useState<string>('');
-  const [nicknames, setNicknames] = useState<Nickname[]>([]);
-  const [, setSelectedNickname] = useState('');
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string>('');
   const [editingId, setEditingId] = useState<string>('');
   const [editValue, setEditValue] = useState<string>('');
-  const [duplicateWarning, setDuplicateWarning] = useState<string>('');
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      if (user) {
-        fetchNicknames();
-      } else {
-        setNicknames([]);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const fetchNicknames = async () => {
-    const fetchedNicknames = await getNicknames();
-    setNicknames(fetchedNicknames);
-  };
-
-  useEffect(() => {
-    fetchNicknames();
-  }, []);
-
-  const handleAddNickname = async () => {
-    const trimmed = nickname.trim();
-    if (trimmed === '') return;
-    if (nicknames.some(n => n.NickName === trimmed)) {
-      setDuplicateWarning(t('roster.duplicate', { name: trimmed }));
-      return;
-    }
-    await addNickname(trimmed);
-    setNickname('');
-    await fetchNicknames();
-  };
-
-  const handleDeleteNickname = async (id: string) => {
+  const handleDeleteNickname = (id: string) => {
     setSelectedPlayerId(id);
     setOpenDeleteDialog(true);
   };
 
   const handleConfirmDelete = async () => {
-    const updatedPlayerList = playerList.filter(player => player !== selectedPlayerId);
-    updatePlayerList(updatedPlayerList);
+    const target = nicknames.find(n => n.id === selectedPlayerId);
+    // Falls der Spieler gerade in der Queue ist, dort ebenfalls entfernen.
+    if (target) {
+      updatePlayerList(playerList.filter(player => player !== target.NickName));
+    }
     await deleteNickname(selectedPlayerId);
-    await fetchNicknames();
+    await refreshNicknames();
     setOpenDeleteDialog(false);
   };
 
@@ -114,12 +85,12 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
       return;
     }
     await updateNickname(id, newName);
-    // Falls der Operator gerade in der Queue ist, dort ebenfalls umbenennen
+    // Falls der Spieler gerade in der Queue ist, dort ebenfalls umbenennen
     if (playerList.includes(oldName)) {
       updatePlayerList(playerList.map(p => (p === oldName ? newName : p)));
     }
     handleCancelEdit();
-    await fetchNicknames();
+    await refreshNicknames();
   };
 
   const handleEditKeyDown = (e: React.KeyboardEvent, id: string, oldName: string) => {
@@ -132,7 +103,6 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
       updatePlayerList(playerList.filter(p => p !== selectedNickname));
     } else {
       onAddPlayer(selectedNickname);
-      setSelectedNickname('');
     }
   };
 
@@ -149,55 +119,42 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleAddNickname();
-  };
+  if (nicknames.length === 0) {
+    return (
+      <Box sx={{ width: '100%', mt: 1 }}>
+        <Typography sx={{ color: '#5B6472', fontSize: '0.85rem', letterSpacing: '0.02em', lineHeight: 1.5 }}>
+          {t('roster.empty')}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
-    <Box sx={{ width: '100%', mt: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-        <TextField
-          fullWidth
-          label={t('roster.saveOperator')}
-          value={nickname}
-          onChange={e => setNickname(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
+    <Box sx={{ width: '100%', mt: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
         <Button
-          variant="contained"
-          onClick={handleAddNickname}
-          sx={{ minWidth: 56, height: 56, m: 0, px: 1 }}
+          onClick={handleToggleAll}
+          startIcon={allSelected ? <RemoveDoneIcon /> : <DoneAllIcon />}
+          sx={{
+            m: 0,
+            px: 1.25,
+            py: 0.5,
+            color: allSelected ? '#9AA4B2' : '#FF6A2B',
+            border: `1px solid ${allSelected ? '#333B49' : '#FF6A2B'}`,
+            borderRadius: '999px',
+            fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
+            fontWeight: 600,
+            fontSize: '0.78rem',
+            textTransform: 'none',
+            '&:hover': {
+              backgroundColor: allSelected ? 'rgba(139, 148, 158, 0.08)' : 'rgba(232, 103, 10, 0.08)',
+              borderColor: allSelected ? '#9AA4B2' : '#FF8A4D',
+            },
+          }}
         >
-          <AddCircleOutlineIcon />
+          {allSelected ? t('roster.deselectAll') : t('roster.selectAll')}
         </Button>
       </Box>
-
-      {nicknames.length > 0 && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-          <Button
-            onClick={handleToggleAll}
-            startIcon={allSelected ? <RemoveDoneIcon /> : <DoneAllIcon />}
-            sx={{
-              m: 0,
-              px: 1.25,
-              py: 0.5,
-              color: allSelected ? '#9AA4B2' : '#FF6A2B',
-              border: `1px solid ${allSelected ? '#333B49' : '#FF6A2B'}`,
-              borderRadius: '999px',
-              fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif',
-              fontWeight: 600,
-              fontSize: '0.78rem',
-              textTransform: 'none',
-              '&:hover': {
-                backgroundColor: allSelected ? 'rgba(139, 148, 158, 0.08)' : 'rgba(232, 103, 10, 0.08)',
-                borderColor: allSelected ? '#9AA4B2' : '#FF8A4D',
-              },
-            }}
-          >
-            {allSelected ? t('roster.deselectAll') : t('roster.selectAll')}
-          </Button>
-        </Box>
-      )}
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
         {nicknames.map(({ id, NickName }) => {
@@ -356,28 +313,6 @@ const NicknameManager: React.FC<NicknameManagerProps> = ({ onAddPlayer, playerLi
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Snackbar
-        open={!!duplicateWarning}
-        autoHideDuration={3000}
-        onClose={() => setDuplicateWarning('')}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{
-          top: '50% !important',
-          left: '50% !important',
-          right: 'auto !important',
-          transform: 'translate(-50%, -50%)',
-        }}
-      >
-        <Alert
-          severity="warning"
-          variant="filled"
-          onClose={() => setDuplicateWarning('')}
-          sx={{ fontFamily: '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", sans-serif', fontWeight: 600, letterSpacing: '0.04em' }}
-        >
-          {duplicateWarning}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

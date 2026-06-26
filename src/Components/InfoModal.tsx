@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupsIcon from '@mui/icons-material/Groups';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CasinoIcon from '@mui/icons-material/Casino';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import { useLanguage } from '../i18n/LanguageContext';
 
 const InfoModal: React.FC = () => {
@@ -24,6 +25,11 @@ const InfoModal: React.FC = () => {
       icon: <BookmarkIcon sx={{ fontSize: '1.1rem', color: '#22D3C5' }} />,
       title: t('info.feat2.title'),
       desc: t('info.feat2.desc'),
+    },
+    {
+      icon: <SportsEsportsIcon sx={{ fontSize: '1.1rem', color: '#4D8BFF' }} />,
+      title: t('info.feat4.title'),
+      desc: t('info.feat4.desc'),
     },
     {
       icon: <CasinoIcon sx={{ fontSize: '1.1rem', color: '#FBBF24' }} />,

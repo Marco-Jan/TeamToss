@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,9 +18,9 @@
     <meta name="theme-color" content="#0B0D12">
 
     <!-- SEO -->
-    <title>TeamToss – Faire Teams & Mannschaften zufällig auslosen | Gratis Team-Generator</title>
-    <meta name="description" content="TeamToss ist der kostenlose Team-Generator: Spielernamen eintippen, Teamanzahl wählen und sofort faire, zufällige Mannschaften auslosen. Mit Münzwurf und Captains – ohne Anmeldung, direkt im Browser.">
-    <meta name="keywords" content="Team Generator, Mannschaften auslosen, Teams einteilen, Gruppen zufällig aufteilen, Team Randomizer, Münzwurf online, faire Teams, Spieler aufteilen, TeamToss">
+    <title>TeamToss – Team Generator &amp; Random Loadout Generator (Valorant, CS2, Tarkov…)</title>
+    <meta name="description" content="Free team generator: enter player names, pick the number of teams and instantly create fair, random teams. Plus Gear Roll – a random loadout &amp; gear generator for Valorant, CS2, Rainbow Six Siege, League of Legends, ARC Raiders and Escape from Tarkov. With coin flip and captains – no sign-up, right in your browser.">
+    <meta name="keywords" content="team generator, random team picker, team randomizer, split into teams, coin flip online, gear roll, random loadout generator, loadout randomizer, random gear generator, gun randomizer, Valorant random agent generator, Valorant loadout randomizer, CS2 random weapon generator, Rainbow Six operator randomizer, League of Legends random champion, ARC Raiders random gear, Escape from Tarkov random loadout, TeamToss">
     <meta name="author" content="TeamToss">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <link rel="canonical" href="https://teamtoss.vercel.app/">
@@ -28,19 +28,19 @@
     <!-- Open Graph / link preview -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="TeamToss">
-    <meta property="og:locale" content="de_DE">
-    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="de_DE">
     <meta property="og:url" content="https://teamtoss.vercel.app/">
-    <meta property="og:title" content="TeamToss – Faire Teams in Sekunden auslosen">
-    <meta property="og:description" content="Kostenloser Team-Generator: Namen eintippen, Teamanzahl wählen, fertig. Faire, zufällige Mannschaften plus Münzwurf – ohne Anmeldung.">
+    <meta property="og:title" content="TeamToss – Fair Teams &amp; Random Loadouts in Seconds">
+    <meta property="og:description" content="Free team generator plus Gear Roll: random loadouts &amp; gear for Valorant, CS2, Rainbow Six, League of Legends, ARC Raiders &amp; Escape from Tarkov. Coin flip &amp; captains, no sign-up.">
     <meta property="og:image" content="https://teamtoss.vercel.app/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
     <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="TeamToss – Faire Teams in Sekunden auslosen">
-    <meta name="twitter:description" content="Kostenloser Team-Generator: Namen eintippen, Teamanzahl wählen, fertig. Faire, zufällige Mannschaften plus Münzwurf – ohne Anmeldung.">
+    <meta name="twitter:title" content="TeamToss – Fair Teams &amp; Random Loadouts in Seconds">
+    <meta name="twitter:description" content="Free team generator plus Gear Roll: random loadouts &amp; gear for Valorant, CS2, Rainbow Six, League of Legends, ARC Raiders &amp; Escape from Tarkov. Coin flip &amp; captains, no sign-up.">
     <meta name="twitter:image" content="https://teamtoss.vercel.app/og-image.png">
 
     <!-- Structured data: helps Google rich results and gives LLMs a clean description -->
@@ -50,18 +50,20 @@
       "@type": "WebApplication",
       "name": "TeamToss",
       "url": "https://teamtoss.vercel.app/",
-      "description": "Kostenloser Team-Generator zum fairen, zufälligen Auslosen von Mannschaften. Spielernamen eintippen, Teamanzahl wählen und sofort ausgewogene Teams erstellen. Mit Münzwurf und Captain-Funktion, ohne Anmeldung.",
-      "applicationCategory": "UtilitiesApplication",
+      "description": "Free team generator for fair, random teams: enter player names, pick the number of teams and instantly create balanced teams. Includes Gear Roll, a random loadout and gear generator for Valorant, CS2, Rainbow Six Siege, League of Legends, ARC Raiders and Escape from Tarkov, plus a coin flip and captain function. No sign-up required.",
+      "applicationCategory": "GameApplication",
       "operatingSystem": "All",
-      "inLanguage": ["de", "en"],
+      "inLanguage": ["en", "de"],
       "browserRequirements": "Requires JavaScript",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
       "featureList": [
-        "Faire, zufällige Teams aus einer Namensliste erstellen",
-        "Anzahl der Teams frei wählen",
-        "Captains markieren und auf eigene Teams verteilen",
-        "Münzwurf für die Seitenwahl",
-        "Kader speichern mit Google-Login"
+        "Create fair, random teams from a list of names",
+        "Choose the number of teams freely",
+        "Mark captains and spread them across separate teams",
+        "Coin flip for picking sides",
+        "Gear Roll: random loadout & gear generator for Valorant, CS2, Rainbow Six Siege, League of Legends, ARC Raiders and Escape from Tarkov",
+        "Per-player loadouts and fun gameplay challenges",
+        "Save your roster with Google sign-in"
       ]
     }
     </script>
@@ -72,26 +74,34 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Wie lose ich mit TeamToss faire Teams aus?",
+          "name": "How do I create fair teams with TeamToss?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Spielernamen eintippen, die gewünschte Anzahl an Teams wählen und auf \"Teams erstellen\" tippen. TeamToss verteilt alle Spieler zufällig und gleichmäßig auf die Teams."
+            "text": "Enter the player names, choose how many teams you want and tap \"Make teams\". TeamToss randomly and evenly splits everyone across the teams."
           }
         },
         {
           "@type": "Question",
-          "name": "Ist TeamToss kostenlos?",
+          "name": "Which games does the Gear Roll loadout randomizer support?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Ja, TeamToss ist komplett kostenlos und funktioniert direkt im Browser – ohne Anmeldung. Optional kannst du dich mit Google anmelden, um deinen Kader zu speichern."
+            "text": "Gear Roll generates random loadouts and gear for Valorant, CS2, Rainbow Six Siege, League of Legends, ARC Raiders and Escape from Tarkov. You can roll a single loadout, a loadout for every player on your team, or a fun gameplay challenge. Valorant and League of Legends use live, up-to-date data."
           }
         },
         {
           "@type": "Question",
-          "name": "Kann ich Captains festlegen?",
+          "name": "Is TeamToss free?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Ja. Markiere einen Spieler mit dem Stern als Captain – beim Erstellen werden Captains auf verschiedene Teams verteilt."
+            "text": "Yes, TeamToss is completely free and runs right in your browser without sign-up. You can optionally sign in with Google to save your roster."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I set captains?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Mark a player with the star to make them a captain – when teams are created, captains are spread across different teams."
           }
         }
       ]
@@ -104,22 +114,24 @@
       <!-- Crawler/LLM fallback: real content shown until the app boots (and if JS is disabled). -->
       <noscript>
         <main style="max-width:680px;margin:40px auto;padding:0 20px;font-family:sans-serif;color:#F2F4F8;background:#0B0D12;">
-          <h1>TeamToss – Faire Teams in Sekunden auslosen</h1>
-          <p>TeamToss ist ein kostenloser Team-Generator. Tippe die Namen deiner Gruppe ein, wähle die Anzahl der Teams und lasse faire, zufällige Mannschaften erstellen – ideal für Sport, Spieleabende, Schule oder Büro.</p>
-          <h2>So funktioniert es</h2>
+          <h1>TeamToss – Fair Teams &amp; Random Loadouts in Seconds</h1>
+          <p>TeamToss is a free team generator. Enter your group's names, pick the number of teams and create fair, random teams – great for sports, game nights, school or the office.</p>
+          <h2>How it works</h2>
           <ol>
-            <li>Spielernamen eintippen.</li>
-            <li>Anzahl der Teams wählen.</li>
-            <li>Auf „Teams erstellen" tippen – fertig.</li>
+            <li>Enter the player names.</li>
+            <li>Choose the number of teams.</li>
+            <li>Tap “Make teams” – done.</li>
           </ol>
-          <h2>Funktionen</h2>
+          <h2>Features</h2>
           <ul>
-            <li>Faire, zufällige Verteilung der Spieler auf die Teams</li>
-            <li>Captains markieren, die auf eigene Teams verteilt werden</li>
-            <li>Integrierter Münzwurf für die Seitenwahl</li>
-            <li>Kader speichern mit Google-Login</li>
+            <li>Fair, random distribution of players across teams</li>
+            <li>Mark captains that are spread across separate teams</li>
+            <li>Built-in coin flip for picking sides</li>
+            <li>Gear Roll – a random loadout &amp; gear generator for Valorant, CS2, Rainbow Six Siege, League of Legends, ARC Raiders and Escape from Tarkov</li>
+            <li>Per-player loadouts and fun gameplay challenges</li>
+            <li>Save your roster with Google sign-in</li>
           </ul>
-          <p>Bitte aktiviere JavaScript, um TeamToss zu nutzen.</p>
+          <p>Please enable JavaScript to use TeamToss.</p>
         </main>
       </noscript>
     </div>

@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Tabs, Tab, Typography, Button, TextField, IconButton, Tooltip, Snackbar, Alert } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Box, Tabs, Tab, Typography, Button, TextField, IconButton, Tooltip, Snackbar, Alert, Collapse } from '@mui/material';
 import TeamSizeSelector from './TeamSizeSelector';
-import { PlayersList } from './PlayerList';
 import NicknameManager from './NickNameManager';
+import Randomizer from './Randomizer';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/firebaseInit';
+import { auth, getNicknames, addNickname } from '../firebase/firebaseInit';
+import { Nickname } from '../types/nickname';
 import { useLanguage } from '../i18n/LanguageContext';
 import { tokens, DISPLAY_FONT, BODY_FONT, TEAM_COLORS } from './Thema/theme';
 
@@ -70,17 +73,44 @@ const TabNavigation: React.FC = () => {
     });
 
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [rosterOpen, setRosterOpen] = useState<boolean>(false);
+    // Gespeicherte Spieler (Firestore) – zentral hier, damit Speichern oben und
+    // Auswählen unten dieselbe Liste teilen.
+    const [nicknames, setNicknames] = useState<Nickname[]>([]);
     const [teamSize, setTeamSize] = useState<string>('Team2');
+
+    const refreshNicknames = useCallback(async () => {
+        setNicknames(await getNicknames());
+    }, []);
     // Hinweis, wenn ein bereits vorhandener Name in die Liste soll.
     const [duplicateWarning, setDuplicateWarning] = useState<string>('');
+    // Bestätigung nach dem Speichern in den Kader.
+    const [saveMessage, setSaveMessage] = useState<string>('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             // Roster (Firestore) nur für vollwertige Google-Konten – nicht für anonyme Gäste.
-            setIsLoggedIn(!!user && !user.isAnonymous);
+            const loggedIn = !!user && !user.isAnonymous;
+            setIsLoggedIn(loggedIn);
+            if (loggedIn) {
+                void refreshNicknames();
+            } else {
+                setNicknames([]);
+            }
         });
         return unsubscribe;
-    }, []);
+    }, [refreshNicknames]);
+
+    // Alle noch nicht gespeicherten Spieler der Queue auf einmal in den Kader speichern.
+    const handleSaveAll = async (): Promise<void> => {
+        const toSave = playerList.filter(p => !nicknames.some(n => n.NickName === p));
+        if (toSave.length === 0) return;
+        for (const name of toSave) {
+            await addNickname(name);
+        }
+        await refreshNicknames();
+        setSaveMessage(t('builder.savedAll', { n: toSave.length }));
+    };
 
     useEffect(() => {
         localStorage.setItem('tt_queue', JSON.stringify(playerList));
@@ -314,7 +344,7 @@ const TabNavigation: React.FC = () => {
                     sx={{ width: '100%', minHeight: 'unset' }}
                 >
                     <Tab label={t('tab.teamBuilder')} {...a11yProps(0)} />
-                    <Tab label={t('tab.roster')} {...a11yProps(1)} disabled={!isLoggedIn} />
+                    <Tab label={t('tab.randomizer')} {...a11yProps(1)} />
                     <Tab label={t('tab.coinFlip')} {...a11yProps(2)} />
                 </Tabs>
             </Box>
@@ -351,19 +381,37 @@ const TabNavigation: React.FC = () => {
                                     ? t('builder.queuedOne', { n: playerList.length })
                                     : t('builder.queuedOther', { n: playerList.length })}
                             </Typography>
-                            {playerList.length > 0 && (
-                                <Button
-                                    onClick={handleClearList}
-                                    sx={{
-                                        py: 0.25, px: 1, minWidth: 0,
-                                        fontSize: '0.78rem', fontWeight: 600,
-                                        color: tokens.faint,
-                                        '&:hover': { color: tokens.danger, backgroundColor: 'transparent' },
-                                    }}
-                                >
-                                    {t('builder.clear')}
-                                </Button>
-                            )}
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                {isLoggedIn && playerList.some(p => !nicknames.some(n => n.NickName === p)) && (
+                                    <Button
+                                        onClick={() => void handleSaveAll()}
+                                        startIcon={<BookmarkBorderIcon sx={{ fontSize: '1rem' }} />}
+                                        sx={{
+                                            py: 0.25, px: 1.25, minWidth: 0,
+                                            fontSize: '0.78rem', fontWeight: 700,
+                                            color: tokens.teal,
+                                            border: `1px solid ${tokens.teal}66`,
+                                            borderRadius: '999px',
+                                            '&:hover': { backgroundColor: 'rgba(34,211,197,0.08)', borderColor: tokens.teal },
+                                        }}
+                                    >
+                                        {t('builder.saveAll')}
+                                    </Button>
+                                )}
+                                {playerList.length > 0 && (
+                                    <Button
+                                        onClick={handleClearList}
+                                        sx={{
+                                            py: 0.25, px: 1, minWidth: 0,
+                                            fontSize: '0.78rem', fontWeight: 600,
+                                            color: tokens.faint,
+                                            '&:hover': { color: tokens.danger, backgroundColor: 'transparent' },
+                                        }}
+                                    >
+                                        {t('builder.clear')}
+                                    </Button>
+                                )}
+                            </Box>
                         </Box>
 
                         {playerList.length === 0 ? (
@@ -387,10 +435,15 @@ const TabNavigation: React.FC = () => {
                                                 display: 'inline-flex',
                                                 alignItems: 'center',
                                                 gap: 0.25,
-                                                pl: 0.5, pr: 0.25, py: 0.25,
-                                                borderRadius: 999,
+                                                pl: 0.5, pr: 0.25, py: 0.4,
+                                                borderRadius: '8px',
                                                 border: `1px solid ${isCaptain ? tokens.brand : tokens.border2}`,
-                                                backgroundColor: isCaptain ? 'rgba(255,106,43,0.12)' : tokens.surface2,
+                                                background: isCaptain
+                                                    ? `linear-gradient(180deg, ${tokens.brand}24, ${tokens.brand}10)`
+                                                    : `linear-gradient(180deg, ${tokens.surface2}, ${tokens.surface})`,
+                                                boxShadow: isCaptain
+                                                    ? `inset 0 1px 0 ${tokens.brand}55, 0 2px 0 ${tokens.brand}55, 0 4px 10px ${tokens.brand}2E`
+                                                    : 'inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 0 #0B0D12, 0 3px 6px rgba(0,0,0,0.4)',
                                             }}>
                                                 <Tooltip title={t('builder.captainTooltip')} placement="top" arrow>
                                                     <IconButton
@@ -443,6 +496,45 @@ const TabNavigation: React.FC = () => {
                         )}
                     </Box>
 
+                    {/* Gespeicherte Spieler laden (Kader) – nur mit Google-Login */}
+                    {isLoggedIn && (
+                        <Box>
+                            <Box
+                                onClick={() => setRosterOpen(o => !o)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => e.key === 'Enter' && setRosterOpen(o => !o)}
+                                sx={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                    cursor: 'pointer', py: 0.5,
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: tokens.brand }} />
+                                    <Typography component="h2" sx={{ fontFamily: DISPLAY_FONT, fontWeight: 700, fontSize: '0.95rem', color: tokens.ink }}>
+                                        {t('builder.loadRoster')}
+                                    </Typography>
+                                </Box>
+                                <ExpandMoreIcon sx={{
+                                    color: tokens.muted,
+                                    transform: rosterOpen ? 'rotate(180deg)' : 'none',
+                                    transition: 'transform 0.2s ease',
+                                }} />
+                            </Box>
+                            <Collapse in={rosterOpen}>
+                                <Box sx={{ pt: 1 }}>
+                                    <NicknameManager
+                                        playerList={playerList}
+                                        onAddPlayer={handleAddPlayer}
+                                        updatePlayerList={updatePlayerList}
+                                        nicknames={nicknames}
+                                        refreshNicknames={refreshNicknames}
+                                    />
+                                </Box>
+                            </Collapse>
+                        </Box>
+                    )}
+
                     {/* Step 2 — number of teams */}
                     <TeamSizeSelector teamSize={teamSize} setTeamSize={setTeamSize} />
 
@@ -469,16 +561,6 @@ const TabNavigation: React.FC = () => {
                         </Box>
                     )}
                 </Box>
-            </TabPanel>
-
-            {/* ── Saved Roster ── */}
-            <TabPanel value={value} index={1}>
-                <PlayersList />
-                <NicknameManager
-                    playerList={playerList}
-                    onAddPlayer={handleAddPlayer}
-                    updatePlayerList={updatePlayerList}
-                />
             </TabPanel>
 
             {/* ── Coin Flip ── */}
@@ -558,6 +640,15 @@ const TabNavigation: React.FC = () => {
                 </Box>
             </TabPanel>
 
+            {/* ── Gear Roll ── */}
+            <TabPanel value={value} index={1}>
+                <Randomizer
+                    players={playerList}
+                    onAddPlayer={handleAddPlayer}
+                    onRemovePlayer={handleRemoveFromQueue}
+                />
+            </TabPanel>
+
             <Snackbar
                 open={!!duplicateWarning}
                 autoHideDuration={3000}
@@ -571,6 +662,22 @@ const TabNavigation: React.FC = () => {
                     sx={{ fontFamily: BODY_FONT, fontWeight: 600, borderRadius: '12px' }}
                 >
                     {duplicateWarning}
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={!!saveMessage}
+                autoHideDuration={2500}
+                onClose={() => setSaveMessage('')}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    severity="success"
+                    variant="filled"
+                    onClose={() => setSaveMessage('')}
+                    sx={{ fontFamily: BODY_FONT, fontWeight: 600, borderRadius: '12px' }}
+                >
+                    {saveMessage}
                 </Alert>
             </Snackbar>
         </Box>
