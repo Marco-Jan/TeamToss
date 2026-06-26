@@ -167,10 +167,12 @@ export const theme = createTheme({
           borderRadius: 10,
           margin: 3,
           padding: '8px 12px',
-          transition: 'color 0.15s ease, background-color 0.15s ease',
+          transition: 'color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease',
+          // Aktiver Tab "hebt sich" mit leichtem 3D-Effekt aus der Leiste.
           '&.Mui-selected': {
             color: tokens.ink,
-            backgroundColor: tokens.surface2,
+            background: `linear-gradient(180deg, ${tokens.surface2}, ${tokens.surface})`,
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 0 #0B0D12, 0 4px 10px rgba(0,0,0,0.5)',
           },
           '&.Mui-disabled': {
             color: tokens.faint,
