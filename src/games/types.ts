@@ -9,8 +9,11 @@ import type { Lang } from '../i18n/translations';
 // Ein einzelnes wählbares Item (Waffe, Agent, Map, Champion …).
 export interface GearItem {
   name: string;
-  category?: string; // optionale Klassifizierung, z. B. "Rifle"
-  image?: string;    // optionale Bild-URL (nur API-Packs liefern Bilder)
+  category?: string;          // optionale Klassifizierung, z. B. "Rifle"
+  image?: string;             // optionale Bild-URL (nur API-Packs liefern Bilder)
+  // Lokalisierte Anzeige (überschreibt name), z. B. „Mit Rüstung"/"Armored".
+  // Für Eigennamen (Waffen, Maps) unnötig – die sind sprachneutral.
+  nameLoc?: Record<Lang, string>;
 }
 
 // Ein Slot eines Loadouts – hält den Pool an möglichen Items.
